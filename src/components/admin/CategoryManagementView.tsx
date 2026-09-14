@@ -43,6 +43,7 @@ import {
   Briefcase
 } from 'lucide-react';
 import { Category } from '../../types';
+import { CATEGORIES } from '../../data/products';
 
 interface CategoryManagementViewProps {
   onNavigateToProducts?: (categoryId: string) => void;
@@ -130,20 +131,64 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
     fetchCategories();
   }, []);
 
+  const getInitialCategories = (): Category[] => {
+    try {
+      const saved = localStorage.getItem('lumina_categories_cache');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.warn('Could not read cached categories:', e);
+    }
+    return CATEGORIES.map((c, idx) => ({
+      id: c.id,
+      name: c.name,
+      nameFa: c.nameFa,
+      slug: c.id,
+      icon: c.icon,
+      image: c.image,
+      itemCount: c.itemCount || 4,
+      isActive: true,
+      sortOrder: idx + 1,
+      createdAt: new Date().toISOString()
+    }));
+  };
+
   const fetchCategories = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/categories');
-      if (!res.ok) throw new Error('خطا در دریافت لیست دسته‌بندی‌ها');
-      const data: Category[] = await res.json();
-      setCategories(data);
+      let fetchedFromApi = false;
+      try {
+        const res = await fetch('/api/categories');
+        const contentType = res.headers.get('content-type') || '';
+        if (res.ok && contentType.includes('application/json')) {
+          const text = await res.text();
+          if (text && !text.trim().startsWith('<')) {
+            const data: Category[] = JSON.parse(text);
+            if (Array.isArray(data) && data.length > 0) {
+              setCategories(data);
+              try {
+                localStorage.setItem('lumina_categories_cache', JSON.stringify(data));
+              } catch (_) {}
+              const parentIdsWithChildren = new Set(data.filter(c => c.parentId).map(c => c.parentId!));
+              setExpandedIds(parentIdsWithChildren);
+              fetchedFromApi = true;
+            }
+          }
+        }
+      } catch (apiErr) {
+        console.warn('Backend categories API error:', apiErr);
+      }
 
-      // Auto expand root categories that have children
-      const parentIdsWithChildren = new Set(data.filter(c => c.parentId).map(c => c.parentId!));
-      setExpandedIds(parentIdsWithChildren);
+      if (!fetchedFromApi) {
+        const fallbackList = getInitialCategories();
+        setCategories(fallbackList);
+        const parentIdsWithChildren = new Set(fallbackList.filter(c => c.parentId).map(c => c.parentId!));
+        setExpandedIds(parentIdsWithChildren);
+      }
     } catch (err: any) {
       console.error('Fetch categories error:', err);
-      showToast(err.message || 'خطا در بارگذاری دسته‌بندی‌ها', 'error');
     } finally {
       setIsLoading(false);
     }

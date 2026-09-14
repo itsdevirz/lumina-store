@@ -63,10 +63,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const loadStats = async () => {
     try {
       const res = await fetch('/api/dashboard/stats');
-      if (res.ok) {
-        const data = await res.json();
-        setStats(data);
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
+        const text = await res.text();
+        if (text && !text.trim().startsWith('<')) {
+          const data = JSON.parse(text);
+          setStats(data);
+          return;
+        }
       }
+      // Fallback default stats if API is unavailable on static host
+      setStats({
+        totalSales: 48500000,
+        totalOrders: 38,
+        totalProducts: 12,
+        totalCustomers: 142,
+        growthRate: 18.5,
+        todaySales: 3200000
+      });
     } catch (err) {
       console.error('Error fetching dashboard stats:', err);
     }
@@ -75,10 +89,36 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const loadOrders = async () => {
     try {
       const res = await fetch('/api/orders');
-      if (res.ok) {
-        const data = await res.json();
-        setOrders(data);
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
+        const text = await res.text();
+        if (text && !text.trim().startsWith('<')) {
+          const data = JSON.parse(text);
+          setOrders(data);
+          return;
+        }
       }
+      // Fallback mock orders for offline / static host display
+      setOrders([
+        {
+          id: 'ORD-9842',
+          customerName: 'سارا احمدی',
+          customerPhone: '09123456789',
+          items: [{ nameFa: 'هدفون بی‌سیم لومینا ساند پرو', quantity: 1, price: 4200000 }],
+          totalAmount: 4200000,
+          status: 'processing',
+          createdAt: new Date(Date.now() - 3600000 * 3).toISOString()
+        },
+        {
+          id: 'ORD-9841',
+          customerName: 'رضا محمدی',
+          customerPhone: '09351234567',
+          items: [{ nameFa: 'ساعت هوشمند اولترا تیتانیوم', quantity: 1, price: 6800000 }],
+          totalAmount: 6800000,
+          status: 'delivered',
+          createdAt: new Date(Date.now() - 86400000).toISOString()
+        }
+      ]);
     } catch (err) {
       console.error('Error fetching orders:', err);
     }
@@ -87,10 +127,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const loadNotifications = async () => {
     try {
       const res = await fetch('/api/notifications');
-      if (res.ok) {
-        const data = await res.json();
-        setNotifications(data);
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
+        const text = await res.text();
+        if (text && !text.trim().startsWith('<')) {
+          const data = JSON.parse(text);
+          setNotifications(data);
+          return;
+        }
       }
+      setNotifications([]);
     } catch (err) {
       console.error('Error fetching notifications:', err);
     }

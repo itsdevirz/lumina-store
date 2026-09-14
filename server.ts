@@ -6,7 +6,7 @@ import { apiRouter } from './server/api';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   // Ensure uploads directory exists
   const uploadsDir = path.join(process.cwd(), 'uploads');

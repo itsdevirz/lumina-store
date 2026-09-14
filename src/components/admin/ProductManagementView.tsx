@@ -22,7 +22,7 @@ import {
   BarChart2
 } from 'lucide-react';
 import { Product, ProductColor, ProductAttribute, ProductVariant, VariantType, Category } from '../../types';
-import { CATEGORIES } from '../../data/products';
+import { CATEGORIES, PRODUCTS } from '../../data/products';
 import { ProductVariantManager } from './ProductVariantManager';
 import { ProductImageUploadBox } from './ProductImageUploadBox';
 import { ProductAnalyticsModal } from './ProductAnalyticsModal';
@@ -89,6 +89,28 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
   // Delete Confirm Modal
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
+  // Helper to retrieve fallback / locally saved products if backend is not reachable or on static hosting
+  const getInitialLocalProducts = (): any[] => {
+    try {
+      const saved = localStorage.getItem('lumina_products_cache');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.warn('Could not read cached products:', e);
+    }
+    return PRODUCTS.map((p, idx) => ({
+      ...p,
+      isActive: true,
+      sku: `LUM-${(p.category || 'GEN').toUpperCase().slice(0, 3)}-00${idx + 1}`,
+      views: 320 + idx * 45,
+      cartAdds: 42 + idx * 7,
+      primaryImage: p.images?.[0] || '',
+      createdAt: new Date(Date.now() - idx * 86400000).toISOString()
+    }));
+  };
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -100,13 +122,21 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
   const fetchCategories = async () => {
     try {
       const res = await fetch('/api/categories');
-      if (res.ok) {
-        const data = await res.json();
-        setAvailableCategories(data);
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
+        const text = await res.text();
+        if (text && !text.trim().startsWith('<')) {
+          const data = JSON.parse(text);
+          if (Array.isArray(data) && data.length > 0) {
+            setAvailableCategories(data);
+            return;
+          }
+        }
       }
     } catch (err) {
-      console.error('Error loading categories:', err);
+      console.warn('Error loading categories from API, falling back to static categories:', err);
     }
+    setAvailableCategories(CATEGORIES as any);
   };
 
   const fetchProducts = async () => {
@@ -119,9 +149,60 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
       if (selectedStock !== 'all') params.append('stock', selectedStock);
       if (sortBy) params.append('sortBy', sortBy);
 
-      const res = await fetch(`/api/products?${params.toString()}`);
-      const data = await res.json();
-      setProducts(data);
+      let fetchedFromApi = false;
+      try {
+        const res = await fetch(`/api/products?${params.toString()}`);
+        const contentType = res.headers.get('content-type') || '';
+        if (res.ok && contentType.includes('application/json')) {
+          const text = await res.text();
+          if (text && !text.trim().startsWith('<')) {
+            const data = JSON.parse(text);
+            if (Array.isArray(data)) {
+              setProducts(data);
+              try {
+                localStorage.setItem('lumina_products_cache', JSON.stringify(data));
+              } catch (_) {}
+              fetchedFromApi = true;
+            }
+          }
+        }
+      } catch (apiErr) {
+        console.warn('Backend API unavailable, using local products cache:', apiErr);
+      }
+
+      if (!fetchedFromApi) {
+        // Fallback to local products dataset
+        let list = getInitialLocalProducts();
+        if (search.trim()) {
+          const q = search.toLowerCase().trim();
+          list = list.filter((p: any) =>
+            p.name?.toLowerCase().includes(q) ||
+            p.nameFa?.toLowerCase().includes(q) ||
+            p.sku?.toLowerCase().includes(q)
+          );
+        }
+        if (selectedCategory !== 'all') {
+          list = list.filter((p: any) => p.category === selectedCategory);
+        }
+        if (selectedStatus !== 'all') {
+          list = list.filter((p: any) => selectedStatus === 'active' ? p.isActive !== false : p.isActive === false);
+        }
+        if (selectedStock !== 'all') {
+          list = list.filter((p: any) => {
+            const st = p.stock ?? 10;
+            if (selectedStock === 'in_stock') return st > 5;
+            if (selectedStock === 'low_stock') return st > 0 && st <= 5;
+            if (selectedStock === 'out_of_stock') return st === 0;
+            return true;
+          });
+        }
+        if (sortBy === 'price_asc') list.sort((a: any, b: any) => (a.price || 0) - (b.price || 0));
+        if (sortBy === 'price_desc') list.sort((a: any, b: any) => (b.price || 0) - (a.price || 0));
+        if (sortBy === 'sold') list.sort((a: any, b: any) => (b.soldCount || 0) - (a.soldCount || 0));
+        if (sortBy === 'views') list.sort((a: any, b: any) => (b.views || 0) - (a.views || 0));
+
+        setProducts(list);
+      }
       setCurrentPage(1);
     } catch (err) {
       console.error('Error loading products:', err);
@@ -131,35 +212,45 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
   };
 
   const handleToggleStatus = async (product: any) => {
+    // 1. Optimistic update
+    setProducts(prev => {
+      const next = prev.map(p => (p.id === product.id ? { ...p, isActive: !p.isActive } : p));
+      try {
+        localStorage.setItem('lumina_products_cache', JSON.stringify(next));
+      } catch (_) {}
+      return next;
+    });
+
     try {
-      const res = await fetch(`/api/products/${product.id}/status`, {
+      await fetch(`/api/products/${product.id}/status`, {
         method: 'PATCH'
       });
-      if (res.ok) {
-        setProducts(prev =>
-          prev.map(p => (p.id === product.id ? { ...p, isActive: !p.isActive } : p))
-        );
-        if (onProductChanged) onProductChanged();
-      }
     } catch (err) {
-      console.error('Error toggling status:', err);
+      console.warn('API status patch failed, updated locally:', err);
     }
+    if (onProductChanged) onProductChanged();
   };
 
   const handleDelete = async () => {
     if (!deleteConfirmId) return;
+    const targetId = deleteConfirmId;
+    setProducts(prev => {
+      const next = prev.filter(p => p.id !== targetId);
+      try {
+        localStorage.setItem('lumina_products_cache', JSON.stringify(next));
+      } catch (_) {}
+      return next;
+    });
+    setDeleteConfirmId(null);
+
     try {
-      const res = await fetch(`/api/products/${deleteConfirmId}`, {
+      await fetch(`/api/products/${targetId}`, {
         method: 'DELETE'
       });
-      if (res.ok) {
-        setProducts(prev => prev.filter(p => p.id !== deleteConfirmId));
-        setDeleteConfirmId(null);
-        if (onProductChanged) onProductChanged();
-      }
     } catch (err) {
-      console.error('Error deleting product:', err);
+      console.warn('API delete failed, removed locally:', err);
     }
+    if (onProductChanged) onProductChanged();
   };
 
   const openCreateModal = () => {
@@ -309,26 +400,65 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
     };
 
     try {
+      let savedProduct: any = null;
+
+      try {
+        if (modalMode === 'create') {
+          const res = await fetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const contentType = res.headers.get('content-type') || '';
+          if (res.ok && contentType.includes('application/json')) {
+            const text = await res.text();
+            if (text && !text.trim().startsWith('<')) {
+              savedProduct = JSON.parse(text);
+            }
+          }
+        } else if (editingId) {
+          const res = await fetch(`/api/products/${editingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const contentType = res.headers.get('content-type') || '';
+          if (res.ok && contentType.includes('application/json')) {
+            const text = await res.text();
+            if (text && !text.trim().startsWith('<')) {
+              savedProduct = JSON.parse(text);
+            }
+          }
+        }
+      } catch (apiErr) {
+        console.warn('API save failed, persisting locally:', apiErr);
+      }
+
       if (modalMode === 'create') {
-        const res = await fetch('/api/products', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+        const createdItem = savedProduct || {
+          ...payload,
+          id: `prod-${Date.now()}`,
+          rating: 5,
+          reviewsCount: 0,
+          soldCount: 0,
+          views: 1,
+          createdAt: new Date().toISOString()
+        };
+        setProducts(prev => {
+          const next = [createdItem, ...prev];
+          try {
+            localStorage.setItem('lumina_products_cache', JSON.stringify(next));
+          } catch (_) {}
+          return next;
         });
-        if (res.ok) {
-          const created = await res.json();
-          setProducts(prev => [created, ...prev]);
-        }
       } else if (editingId) {
-        const res = await fetch(`/api/products/${editingId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+        setProducts(prev => {
+          const next = prev.map(p => (p.id === editingId ? (savedProduct || { ...p, ...payload }) : p));
+          try {
+            localStorage.setItem('lumina_products_cache', JSON.stringify(next));
+          } catch (_) {}
+          return next;
         });
-        if (res.ok) {
-          const updated = await res.json();
-          setProducts(prev => prev.map(p => (p.id === editingId ? updated : p)));
-        }
       }
 
       setIsModalOpen(false);

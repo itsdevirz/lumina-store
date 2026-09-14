@@ -1,0 +1,27 @@
+# Lumina E-Commerce Store - Apache Configuration
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Do not rewrite real files or directories
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 2. Prevent rewriting uploads directory
+  RewriteRule ^uploads/(.*)$ uploads/$1 [L]
+
+  # 3. Route all client SPA pages to index.html
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Enable Gzip compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Set UTF-8 encoding
+AddDefaultCharset UTF-8
