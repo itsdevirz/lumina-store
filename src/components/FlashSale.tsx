@@ -34,45 +34,59 @@ export const FlashSale: React.FC = () => {
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
-    <section id="flash-sale-section" className="py-8 sm:py-10">
+    <section id="flash-sale-section" className="py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Flash Sale Header Strip */}
-        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-rose-950 via-slate-900 to-slate-900 text-white shadow-md mb-6 flex flex-col sm:flex-row items-center justify-between gap-4 border border-rose-900/40">
+        <div className="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900 dark:bg-[#111726] text-white shadow-xs mb-4 sm:mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 border border-slate-800">
           
           {/* Title & Tag */}
-          <div className="flex items-center gap-3 text-center sm:text-right">
-            <div className="w-12 h-12 rounded-2xl bg-rose-600/20 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/30">
-              <Flame className="w-6 h-6 animate-pulse text-rose-500" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-rose-400 uppercase tracking-wider mb-0.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{lang === 'fa' ? 'پیشنهاد محدود روزانه' : 'Limited Daily Offer'}</span>
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center shrink-0 border border-rose-500/20">
+                <Flame className="w-5 h-5 text-rose-500" />
               </div>
-              <h2 className="text-lg sm:text-xl font-black tracking-tight">
-                {lang === 'fa' ? 'پیشنهادهای شگفت‌انگیز لومینا' : 'Lumina Flash Sale Deals'}
-              </h2>
+              <div>
+                <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-rose-400 uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3" />
+                  <span>{lang === 'fa' ? 'پیشنهاد روز' : 'Daily Deal'}</span>
+                </div>
+                <h2 className="text-sm sm:text-base lg:text-lg font-black tracking-tight">
+                  {lang === 'fa' ? 'پیشنهادهای شگفت‌انگیز لومینا' : 'Lumina Flash Sale'}
+                </h2>
+              </div>
             </div>
+
+            {/* Mobile View All Button */}
+            <button
+              onClick={() => {
+                setFilters(prev => ({ ...prev, onSaleOnly: true, selectedCategory: 'all' }));
+                setActiveTab('shop');
+              }}
+              className="sm:hidden flex items-center gap-1 text-[11px] font-bold text-slate-300 hover:text-white"
+            >
+              <span>{lang === 'fa' ? 'همه' : 'All'}</span>
+              <ArrowLeft className="w-3 h-3 rtl:rotate-0 ltr:rotate-180" />
+            </button>
           </div>
 
-          {/* Countdown Clock & CTA */}
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
-              <Clock className="w-4 h-4 text-amber-400 shrink-0" />
-              <span className="text-xs text-slate-300 font-medium">
+          {/* Countdown Clock & Desktop CTA */}
+          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-2 bg-black/40 px-3 py-1.5 rounded-xl border border-white/10 text-xs">
+              <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span className="text-[10px] sm:text-xs text-slate-300 font-medium">
                 {lang === 'fa' ? 'زمان باقی‌مانده:' : 'Ends In:'}
               </span>
-              <div className="flex items-center gap-1 font-mono text-xs sm:text-sm font-black" style={{ direction: 'ltr' }}>
-                <span className="bg-slate-900 text-amber-400 px-2.5 py-1 rounded-lg border border-slate-800 shadow-xs">
+              <div className="flex items-center gap-1 font-mono text-xs font-black" style={{ direction: 'ltr' }}>
+                <span className="bg-slate-800 text-amber-400 px-1.5 py-0.5 rounded text-[11px]">
                   {formatNumber(timeLeft.hours)}
                 </span>
                 <span className="text-slate-500 font-bold">:</span>
-                <span className="bg-slate-900 text-amber-400 px-2.5 py-1 rounded-lg border border-slate-800 shadow-xs">
+                <span className="bg-slate-800 text-amber-400 px-1.5 py-0.5 rounded text-[11px]">
                   {formatNumber(timeLeft.minutes)}
                 </span>
                 <span className="text-slate-500 font-bold">:</span>
-                <span className="bg-slate-900 text-amber-400 px-2.5 py-1 rounded-lg border border-slate-800 shadow-xs">
+                <span className="bg-slate-800 text-amber-400 px-1.5 py-0.5 rounded text-[11px]">
                   {formatNumber(timeLeft.seconds)}
                 </span>
               </div>
@@ -83,7 +97,7 @@ export const FlashSale: React.FC = () => {
                 setFilters(prev => ({ ...prev, onSaleOnly: true, selectedCategory: 'all' }));
                 setActiveTab('shop');
               }}
-              className="flex items-center gap-1 text-xs font-bold text-slate-200 hover:text-white transition-colors cursor-pointer"
+              className="hidden sm:flex items-center gap-1 text-xs font-bold text-slate-200 hover:text-white transition-colors cursor-pointer"
             >
               <span>{lang === 'fa' ? 'مشاهده همه تخفیف‌ها' : 'View All Deals'}</span>
               <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
@@ -91,8 +105,8 @@ export const FlashSale: React.FC = () => {
           </div>
         </div>
 
-        {/* Product Cards Grid with stock progress indicators */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* Product Cards Grid: 2 columns on mobile, 4 on desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
           {flashProducts.map(product => {
             const soldPercent = Math.min(100, Math.round((product.soldCount / (product.soldCount + product.stock)) * 100));
 
@@ -101,20 +115,20 @@ export const FlashSale: React.FC = () => {
                 <ProductCard product={product} />
 
                 {/* Stock Progress Bar */}
-                <div className="mt-2.5 px-2">
-                  <div className="flex items-center justify-between text-[11px] mb-1 font-medium">
-                    <span className="text-slate-500 dark:text-slate-400 tabular-nums">
+                <div className="mt-1.5 px-1">
+                  <div className="flex items-center justify-between text-[10px] mb-1 font-medium">
+                    <span className="text-slate-400 dark:text-slate-500 tabular-nums">
                       {lang === 'fa'
-                        ? `تنها ${product.stock} عدد در انبار باقی‌مانده`
-                        : `Only ${product.stock} left in stock`}
+                        ? `${product.stock} عدد در انبار`
+                        : `${product.stock} in stock`}
                     </span>
-                    <span className="text-rose-600 dark:text-rose-400 font-bold tabular-nums">
-                      {lang === 'fa' ? `${soldPercent}٪ فروخته شد` : `${soldPercent}% sold`}
+                    <span className="text-rose-500 font-bold tabular-nums">
+                      {soldPercent}٪
                     </span>
                   </div>
-                  <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-1 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-rose-600 rounded-full transition-all duration-300"
+                      className="h-full bg-rose-500 rounded-full transition-all duration-300"
                       style={{ width: `${soldPercent}%` }}
                     />
                   </div>

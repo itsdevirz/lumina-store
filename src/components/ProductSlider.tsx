@@ -36,7 +36,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
     const updateItemsPerPage = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        setItemsPerPage(1);
+        setItemsPerPage(2);
       } else if (width < 768) {
         setItemsPerPage(2);
       } else if (width < 1024) {
@@ -154,7 +154,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
       {/* Slider Carousel Viewport */}
       <div className="relative overflow-hidden rounded-2xl w-full">
         <div
-          className="flex transition-transform duration-500 ease-out -mx-2 sm:-mx-2.5"
+          className="flex transition-transform duration-500 ease-out -mx-1.5 sm:-mx-2.5"
           style={{
             transform: `translateX(${translateXValue}%)`,
           }}
@@ -163,7 +163,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
             <div
               key={product.id}
               style={{ width: `${itemWidthPercent}%` }}
-              className="shrink-0 px-2 sm:px-2.5"
+              className="shrink-0 px-1.5 sm:px-2.5"
             >
               <ProductCard product={product} />
             </div>

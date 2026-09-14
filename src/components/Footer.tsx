@@ -46,63 +46,63 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
   };
 
   return (
-    <footer className="bg-[#090D16] text-slate-400 border-t border-slate-800/80 pt-12 pb-24 sm:pb-12 mt-20">
+    <footer className="bg-[#090D16] text-slate-400 border-t border-slate-800/80 pt-10 pb-20 sm:pb-10 mt-12 sm:mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Value Proposition Strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-12 border-b border-slate-800/80">
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center shrink-0">
-              <Truck className="w-5 h-5" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-6 pb-8 sm:pb-10 border-b border-slate-800/80">
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center shrink-0">
+              <Truck className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-black text-white">
-                {lang === 'fa' ? 'تحویل اکسپرس لومینا' : 'Express Delivery'}
+                {lang === 'fa' ? 'تحویل اکسپرس' : 'Express Delivery'}
               </h4>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                {lang === 'fa' ? 'تحویل در همان روز کاری' : 'Same-day fast shipment'}
+              <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                {lang === 'fa' ? 'تحویل سریع کاری' : 'Fast shipment'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-5 h-5" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-black text-white">
-                {lang === 'fa' ? 'ضمانت ۱۰۰٪ اصالت کالا' : '100% Authentic'}
+                {lang === 'fa' ? 'ضمانت ۱۰۰٪ اصالت' : '100% Authentic'}
               </h4>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                {lang === 'fa' ? 'گارانتی رسمی و معتبر شرکتی' : 'Guaranteed original products'}
+              <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                {lang === 'fa' ? 'گارانتی معتبر شرکتی' : 'Guaranteed original'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0">
-              <RotateCcw className="w-5 h-5" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center shrink-0">
+              <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-black text-white">
                 {lang === 'fa' ? '۷ روز مهلت بازگشت' : '7-Day Return'}
               </h4>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                {lang === 'fa' ? 'استرداد بی‌قید و شرط وجه' : 'Hassle-free refunds'}
+              <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                {lang === 'fa' ? 'استرداد بی‌قید و شرط' : 'Hassle-free refunds'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center shrink-0">
-              <Headphones className="w-5 h-5" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center shrink-0">
+              <Headphones className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-black text-white">
-                {lang === 'fa' ? 'پشتیبانی تخصصی ۲۴/۷' : '24/7 Expert Support'}
+                {lang === 'fa' ? 'پشتیبانی ۲۴/۷' : '24/7 Support'}
               </h4>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                {lang === 'fa' ? 'همراهی گام‌به‌گام کارشناسان' : 'Always here to help you'}
+              <p className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5">
+                {lang === 'fa' ? 'همراهی کارشناسان' : 'Always here to help'}
               </p>
             </div>
           </div>

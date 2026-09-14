@@ -7,7 +7,7 @@
     --font-sans: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color-scheme: light;
     
-    /* Centralized Design System Tokens - Modern Luxury Tech Store */
+    /* Centralized Design System Tokens - Minimalist Luxury Tech Store */
     --bg-main: #F8FAFC;
     --surface: #FFFFFF;
     --surface-secondary: #F1F5F9;
@@ -20,7 +20,7 @@
     --border: #E2E8F0;
     --border-subtle: #F1F5F9;
     
-    /* Primary Persian Sapphire / Royal Indigo Accent */
+    /* Primary Persian Sapphire / Refined Cobalt Accent */
     --primary: #2563EB;
     --primary-hover: #1D4ED8;
     --primary-light: #EFF6FF;
@@ -32,17 +32,17 @@
 
   .dark {
     color-scheme: dark;
-    --bg-main: #090D16;
-    --surface: #0F172A;
-    --surface-secondary: #1E293B;
-    --surface-tertiary: #334155;
+    --bg-main: #0B0F19;
+    --surface: #111726;
+    --surface-secondary: #1A2234;
+    --surface-tertiary: #242E44;
     
     --text-primary: #F8FAFC;
     --text-secondary: #CBD5E1;
     --text-muted: #64748B;
     
     --border: #1E293B;
-    --border-subtle: #172033;
+    --border-subtle: #151D2D;
     
     --primary: #3B82F6;
     --primary-hover: #60A5FA;
@@ -143,23 +143,23 @@
 .lumina-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.03);
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
 }
 
 .lumina-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(37, 99, 235, 0.28);
-  box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.22);
+  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.06);
 }
 
 .dark .lumina-card {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
 }
 
 .dark .lumina-card:hover {
-  border-color: rgba(59, 130, 246, 0.35);
-  box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4);
 }
 
 /* Primary Action Buttons */

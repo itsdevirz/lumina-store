@@ -82,12 +82,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState('انتخاب آدرس');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const megaMenuContainerRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -468,12 +470,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
           </div>
 
           {/* LEFT SIDE (RTL): Bell, Auth Button, Separator, Cart Icon */}
-          <div className="flex items-center gap-2 sm:gap-3.5">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             {/* Mobile Search Trigger */}
             <button
               onClick={() => {
-                setIsSearchOpen(true);
-                setTimeout(() => searchInputRef.current?.focus(), 40);
+                setIsMobileSearchOpen(true);
+                setTimeout(() => mobileSearchInputRef.current?.focus(), 80);
               }}
               className="md:hidden p-2 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl cursor-pointer"
               aria-label="جستجو"
@@ -489,7 +491,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                 aria-label="اعلان‌ها"
               >
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#EF394E]" />
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500" />
               </button>
 
               {/* Notifications Dropdown */}
@@ -504,16 +506,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                   >
                     <div className="font-bold text-slate-800 dark:text-slate-100 pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                       <span>{lang === 'fa' ? 'پیام‌ها و اعلان‌ها' : 'Notifications'}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-50 text-[#EF394E] font-bold">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-bold">
                         ۲ جدید
                       </span>
                     </div>
                     <div className="space-y-2 pt-2">
                       <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200 text-[11px] leading-relaxed">
-                        🎉 جشنواره ویژه لومینا آغاز شد! تا ۲۰٪ تخفیف روی محصولات برگزیده فعال گردید.
+                        🎉 فستیوال محصولات مینیمال لومینا فعال شد؛ محصولات صوتی و ارگونومیک با تخفیف ویژه.
                       </div>
                       <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200 text-[11px] leading-relaxed">
-                        ⚡ ارسال سریع و اکسپرس برای سفارش‌های امروز ثبت گردید.
+                        ⚡ ارسال سریع و اکسپرس سفارش‌های امروز در سراسر کشور.
                       </div>
                     </div>
                   </motion.div>
@@ -521,30 +523,31 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
               </AnimatePresence>
             </div>
 
-            {/* Auth Button: "ورود | ثبت‌نام" with Door LogIn Icon */}
+            {/* Auth Button: Compact on mobile to prevent overflow */}
             <div ref={userMenuRef} className="relative">
               {isAuthenticated ? (
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors cursor-pointer"
                 >
                   <img
                     src={userProfile.avatar}
                     alt=""
-                    className="w-6 h-6 rounded-full object-cover"
+                    className="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover"
                   />
                   <span className="hidden sm:inline text-xs font-bold text-slate-800 dark:text-slate-200 truncate max-w-[85px]">
                     {userProfile.name}
                   </span>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:inline" />
                 </button>
               ) : (
                 <button
                   onClick={openLoginModal}
-                  className="flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-800 dark:text-slate-200 text-xs font-bold transition-colors cursor-pointer"
                 >
-                  <LogIn className="w-4 h-4 text-slate-700 dark:text-slate-300 rtl:rotate-180" />
-                  <span>{lang === 'fa' ? 'ورود | ثبت‌نام' : 'Sign In | Register'}</span>
+                  <LogIn className="w-4 h-4 text-slate-700 dark:text-slate-300 rtl:rotate-180 shrink-0" />
+                  <span className="hidden sm:inline">{lang === 'fa' ? 'ورود | ثبت‌نام' : 'Sign In | Register'}</span>
+                  <span className="sm:hidden text-[11px]">{lang === 'fa' ? 'ورود' : 'Login'}</span>
                 </button>
               )}
 
@@ -616,7 +619,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
             >
               <ShoppingCart className="w-5 h-5" />
               {totalCartCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 rounded-full bg-[#EF394E] text-white text-[10px] font-black flex items-center justify-center tabular-nums shadow-xs">
+                <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 rounded-full bg-blue-600 text-white text-[10px] font-black flex items-center justify-center tabular-nums shadow-xs">
                   {totalCartCount}
                 </span>
               )}
@@ -895,6 +898,141 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                     )}
                   </button>
                 ))}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* 3.5. MOBILE DEDICATED SEARCH MODAL */}
+      <AnimatePresence>
+        {isMobileSearchOpen && (
+          <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex flex-col justify-start md:hidden">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.18 }}
+              className="bg-white dark:bg-[#0F172A] border-b border-slate-200 dark:border-slate-800 shadow-2xl p-4 flex flex-col max-h-[85vh] overflow-hidden"
+            >
+              {/* Search Bar Input Row */}
+              <div className="flex items-center gap-2 mb-3">
+                <div className="relative flex-1 flex items-center bg-slate-100 dark:bg-slate-800/90 rounded-xl px-3 py-2.5">
+                  <Search className="w-4 h-4 text-slate-400 shrink-0 rtl:ml-2 ltr:mr-2" />
+                  <input
+                    ref={mobileSearchInputRef}
+                    type="text"
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        handleSearchSubmit(searchTerm);
+                        setIsMobileSearchOpen(false);
+                      }
+                    }}
+                    placeholder={lang === 'fa' ? 'جستجوی نام کالا یا برند...' : 'Search products or brands...'}
+                    className="w-full bg-transparent text-xs font-medium text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none"
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+                <button
+                  onClick={() => setIsMobileSearchOpen(false)}
+                  className="px-3 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+                >
+                  {lang === 'fa' ? 'بستن' : 'Cancel'}
+                </button>
+              </div>
+
+              {/* Quick Suggestion Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none mb-3">
+                <span className="text-[10px] text-slate-400 shrink-0 font-medium">
+                  {lang === 'fa' ? 'پیشنهادها:' : 'Popular:'}
+                </span>
+                {[
+                  { label: 'هدفون', q: 'هدفون' },
+                  { label: 'کیبورد', q: 'کیبورد' },
+                  { label: 'ساعت', q: 'ساعت' },
+                  { label: 'قهوه‌ساز', q: 'قهوه' }
+                ].map(item => (
+                  <button
+                    key={item.q}
+                    onClick={() => {
+                      setSearchTerm(item.q);
+                      handleSearchSubmit(item.q);
+                      setIsMobileSearchOpen(false);
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-[11px] font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap hover:bg-slate-200 cursor-pointer"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Results Container */}
+              <div className="flex-1 overflow-y-auto space-y-2 pr-0.5">
+                {matchingProducts.length > 0 ? (
+                  <div>
+                    <div className="text-[11px] font-bold text-slate-400 mb-2">
+                      {lang === 'fa' ? 'نتایج جستجو' : 'Search Results'} ({matchingProducts.length})
+                    </div>
+                    <div className="space-y-1.5">
+                      {matchingProducts.map(p => (
+                        <div
+                          key={p.id}
+                          onClick={() => {
+                            openProductDetails(p);
+                            setIsMobileSearchOpen(false);
+                          }}
+                          className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                        >
+                          <img
+                            src={p.images[0]}
+                            alt=""
+                            className="w-11 h-11 rounded-lg object-cover bg-white shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                              {lang === 'fa' ? p.nameFa : p.name}
+                            </h4>
+                            <div className="flex items-center justify-between text-[11px] text-slate-500 mt-0.5">
+                              <span className="truncate">{p.brand}</span>
+                              <span className="font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+                                {formatPrice(p.price, p.priceUSD)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : searchTerm.trim() ? (
+                  <div className="text-center py-8">
+                    <p className="text-xs text-slate-400 mb-3">
+                      {lang === 'fa' ? 'محصولی مطابق با جستجوی شما یافت نشد.' : 'No products found matching your search.'}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setFilters(prev => ({ ...prev, selectedCategory: 'all' }));
+                        setActiveTab('shop');
+                        setIsMobileSearchOpen(false);
+                      }}
+                      className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
+                    >
+                      {lang === 'fa' ? 'مشاهده تمام محصولات' : 'View All Products'}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center py-6 text-slate-400 text-xs">
+                    {lang === 'fa' ? 'عبارت مورد نظر خود را بنویسید...' : 'Type to search products...'}
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
