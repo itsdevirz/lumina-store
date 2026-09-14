@@ -24,7 +24,7 @@ apiRouter.post('/admin/login', (req: Request, res: Response) => {
         email: 'admin@luminastore.ir',
         username: 'admin',
         role: 'super_admin',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80&auto=format&fit=crop',
+        avatar: '/images/products/photo-1534528741775-53994a69daeb.jpg',
         lastLogin: 'هم‌اکنون'
       }
     });

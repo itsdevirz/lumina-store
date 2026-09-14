@@ -370,7 +370,7 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
     const finalImages =
       formState.images.length > 0
         ? formState.images
-        : ['https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&q=80&auto=format&fit=crop'];
+        : ['/images/products/photo-1526170375885-4d8ecf77b99f.jpg'];
     const finalPrimaryImage = formState.primaryImage || finalImages[0];
 
     const payload = {
@@ -596,7 +596,7 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     <td className="py-4 pr-6">
                       <div className="flex items-center gap-3">
                         <img
-                          src={p.images?.[0] || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&q=80&auto=format&fit=crop'}
+                          src={p.images?.[0] || '/images/products/photo-1526170375885-4d8ecf77b99f.jpg'}
                           alt=""
                           className="w-12 h-12 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
                         />

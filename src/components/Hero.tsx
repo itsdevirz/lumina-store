@@ -33,7 +33,7 @@ export const Hero: React.FC = () => {
       price: 12800000,
       priceUSD: 249,
       originalPrice: 15500000,
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&q=85',
+      image: '/images/products/photo-1505740420928-5e560c06d30e.jpg',
       badge: lang === 'fa' ? '۱۸٪ تخفیف ویژه' : '18% OFF',
       category: 'audio',
       productId: 'prod-1'
@@ -49,7 +49,7 @@ export const Hero: React.FC = () => {
       price: 4900000,
       priceUSD: 99,
       originalPrice: 5800000,
-      image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=1200&q=85',
+      image: '/images/products/photo-1527864550417-7fd91fc51a46.jpg',
       badge: lang === 'fa' ? 'پرفروش‌ترین' : 'Best Seller',
       category: 'workspace',
       productId: 'prod-3'
@@ -65,7 +65,7 @@ export const Hero: React.FC = () => {
       price: 18500000,
       priceUSD: 360,
       originalPrice: 21000000,
-      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&q=85',
+      image: '/images/products/photo-1523275335684-37898b6baf30.jpg',
       badge: lang === 'fa' ? 'تکنولوژی ۲۰۲۶' : '2026 Tech',
       category: 'smart-wear',
       productId: 'prod-2'
@@ -201,7 +201,7 @@ export const Hero: React.FC = () => {
               className="flex-1 relative rounded-3xl overflow-hidden bg-slate-900 p-5 flex flex-col justify-end text-white shadow-md group cursor-pointer border border-slate-800"
             >
               <img
-                src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&q=80"
+                src="/images/products/photo-1546435770-a3e426bf472b.jpg"
                 alt="Audio Collection"
                 className="absolute inset-0 w-full h-full object-cover opacity-45 group-hover:scale-105 transition-transform duration-500"
               />
@@ -232,7 +232,7 @@ export const Hero: React.FC = () => {
               className="flex-1 relative rounded-3xl overflow-hidden bg-slate-900 p-5 flex flex-col justify-end text-white shadow-md group cursor-pointer border border-slate-800"
             >
               <img
-                src="https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=600&q=80"
+                src="/images/products/photo-1593062096033-9a26b09da705.jpg"
                 alt="Workspace Gear"
                 className="absolute inset-0 w-full h-full object-cover opacity-45 group-hover:scale-105 transition-transform duration-500"
               />

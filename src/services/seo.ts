@@ -155,7 +155,7 @@ export function generateSeoMetadata(params: {
       : `${shortDesc} | Price: ${priceText} Tomans | In Stock. Free shipping & warranty at Lumina Store.`;
 
     const canonicalUrl = `${origin}/product/${p.id}`;
-    const primaryImage = p.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&q=80';
+    const primaryImage = p.images?.[0] || '/images/products/photo-1505740420928-5e560c06d30e.jpg';
 
     // JSON-LD Structured Data for Google Product Rich Snippet
     const jsonLd = {
@@ -274,7 +274,7 @@ export function generateSeoMetadata(params: {
           : 'Browse our complete catalog of precision-engineered audio, smart wearables, workspace essentials, and specialty lifestyle gear.',
       canonicalUrl: `${origin}/shop`,
       ogType: 'website',
-      ogImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&q=80',
+      ogImage: '/images/products/photo-1505740420928-5e560c06d30e.jpg',
       keywords: isFa
         ? ['فروشگاه اینترنتی', 'خرید گجت', 'هدفون بلوتوث', 'ساعت هوشمند', 'لوازم دیجیتال لوکس']
         : ['online store', 'tech shop', 'gadgets catalog', 'audiophile gear', 'smart accessories']
@@ -348,7 +348,7 @@ export function generateSeoMetadata(params: {
       : 'Lumina Store offers top-tier active noise cancelling audio, titanium smartwatches, and minimalist workspace lifestyle products designed for perfection.',
     canonicalUrl: `${origin}/`,
     ogType: 'website',
-    ogImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&q=80',
+    ogImage: '/images/products/photo-1505740420928-5e560c06d30e.jpg',
     keywords: isFa
       ? ['فروشگاه اینترنتی لومینا', 'خرید گجت مدرن', 'هدفون نویزکنسلینگ', 'ساعت هوشمند', 'میز کار مینیمال']
       : ['lumina store', 'modern ecommerce', 'premium audio', 'minimalist gadgets', 'lifestyle tech'],

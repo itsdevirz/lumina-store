@@ -72,7 +72,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
           email: 'admin@luminastore.ir',
           username: 'admin',
           role: 'super_admin',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80&auto=format&fit=crop',
+          avatar: '/images/products/photo-1534528741775-53994a69daeb.jpg',
           lastLogin: 'هم‌اکنون'
         };
         const fallbackToken = 'jwt_admin_lumina_secret_session_token';
@@ -102,7 +102,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
         email: 'admin@luminastore.ir',
         username: 'admin',
         role: 'super_admin',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80&auto=format&fit=crop',
+        avatar: '/images/products/photo-1534528741775-53994a69daeb.jpg',
         lastLogin: 'هم‌اکنون'
       };
       localStorage.setItem('lumina_admin_token', 'jwt_admin_lumina_secret_session_token');

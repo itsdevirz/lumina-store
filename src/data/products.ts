@@ -6,7 +6,7 @@ export const CATEGORIES = [
     name: 'Apparel & Fashion',
     nameFa: 'پوشاک و مد',
     icon: 'Shirt',
-    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1521572267360-ee0c2909d518.jpg',
     itemCount: 3,
   },
   {
@@ -14,7 +14,7 @@ export const CATEGORIES = [
     name: 'Audio',
     nameFa: 'تجهیزات صوتی',
     icon: 'Headphones',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1505740420928-5e560c06d30e.jpg',
     itemCount: 2,
   },
   {
@@ -22,7 +22,7 @@ export const CATEGORIES = [
     name: 'Workspace',
     nameFa: 'میز کار',
     icon: 'Laptop',
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1527864550417-7fd91fc51a46.jpg',
     itemCount: 2,
   },
   {
@@ -30,7 +30,7 @@ export const CATEGORIES = [
     name: 'Smart Gadgets',
     nameFa: 'گجت هوشمند',
     icon: 'Watch',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1523275335684-37898b6baf30.jpg',
     itemCount: 1,
   },
   {
@@ -38,7 +38,7 @@ export const CATEGORIES = [
     name: 'Lifestyle',
     nameFa: 'لوازم روزمره',
     icon: 'Briefcase',
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1553062407-98eeb64c6a62.jpg',
     itemCount: 1,
   },
   {
@@ -46,7 +46,7 @@ export const CATEGORIES = [
     name: 'Coffee',
     nameFa: 'قهوه و کافه',
     icon: 'Coffee',
-    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1514432324607-a09d9b4aefdd.jpg',
     itemCount: 1,
   },
   {
@@ -54,7 +54,7 @@ export const CATEGORIES = [
     name: 'Home Decor',
     nameFa: 'دکوراسیون',
     icon: 'Home',
-    image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1507473885765-e6ed057f782c.jpg',
     itemCount: 1,
   }
 ];
@@ -81,9 +81,9 @@ export const PRODUCTS: Product[] = [
     featured: true,
     rank: 1,
     images: [
-      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=900&q=85&auto=format&fit=crop',
+      '/images/products/photo-1505740420928-5e560c06d30e.jpg',
+      '/images/products/photo-1484704849700-f032a568e944.jpg',
+      '/images/products/photo-1546435770-a3e426bf472b.jpg',
     ],
     description: 'Ultra-refined active noise cancellation with 45mm custom titanium drivers and 40-hour continuous battery life. Crafted from anodized aluminum and memory foam leather cushions.',
     descriptionFa: 'حذف نویز هوشمند و تطبیقی با درایورهای اختصاصی ۴۵ میلی‌متری تیتانیوم، شارژدهی خیره‌کننده ۴۰ ساعته با بدنه آلومینیوم برس‌خورده و پدهای ارگونومیک مموری فوم.',
@@ -109,14 +109,14 @@ export const PRODUCTS: Product[] = [
     tags: ['ANC', 'Wireless', 'Premium', 'BestSeller'],
     variantType: 'color_only',
     colors: [
-      { id: 'c-space-gray', name: 'خاکستری تیتانیوم', hex: '#374151', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=85&auto=format&fit=crop', stock: 4, active: true },
-      { id: 'c-silver', name: 'نقره‌ای استودیویی', hex: '#cbd5e1', image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=900&q=85&auto=format&fit=crop', stock: 3, active: true },
-      { id: 'c-navy', name: 'سرمه‌ای مات', hex: '#1e293b', image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=900&q=85&auto=format&fit=crop', stock: 0, active: true }
+      { id: 'c-space-gray', name: 'خاکستری تیتانیوم', hex: '#374151', image: '/images/products/photo-1505740420928-5e560c06d30e.jpg', stock: 4, active: true },
+      { id: 'c-silver', name: 'نقره‌ای استودیویی', hex: '#cbd5e1', image: '/images/products/photo-1484704849700-f032a568e944.jpg', stock: 3, active: true },
+      { id: 'c-navy', name: 'سرمه‌ای مات', hex: '#1e293b', image: '/images/products/photo-1546435770-a3e426bf472b.jpg', stock: 0, active: true }
     ],
     variants: [
-      { id: 'v-lum01-gray', sku: 'LUM01-SGY', colorName: 'خاکستری تیتانیوم', colorHex: '#374151', stock: 4, price: 14800000, active: true, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-lum01-silv', sku: 'LUM01-SLV', colorName: 'نقره‌ای استودیویی', colorHex: '#cbd5e1', stock: 3, price: 14800000, active: true, image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-lum01-navy', sku: 'LUM01-NVY', colorName: 'سرمه‌ای مات', colorHex: '#1e293b', stock: 0, price: 15200000, active: true, image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=900&q=85&auto=format&fit=crop' }
+      { id: 'v-lum01-gray', sku: 'LUM01-SGY', colorName: 'خاکستری تیتانیوم', colorHex: '#374151', stock: 4, price: 14800000, active: true, image: '/images/products/photo-1505740420928-5e560c06d30e.jpg' },
+      { id: 'v-lum01-silv', sku: 'LUM01-SLV', colorName: 'نقره‌ای استودیویی', colorHex: '#cbd5e1', stock: 3, price: 14800000, active: true, image: '/images/products/photo-1484704849700-f032a568e944.jpg' },
+      { id: 'v-lum01-navy', sku: 'LUM01-NVY', colorName: 'سرمه‌ای مات', colorHex: '#1e293b', stock: 0, price: 15200000, active: true, image: '/images/products/photo-1546435770-a3e426bf472b.jpg' }
     ]
   },
   {
@@ -139,9 +139,9 @@ export const PRODUCTS: Product[] = [
     featured: true,
     rank: 2,
     images: [
-      'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1595225476474-87563907a212?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1587829741301-dc798b83add3.jpg',
+      '/images/products/photo-1618384887929-16ec33fab9ef.jpg',
+      '/images/products/photo-1595225476474-87563907a212.jpg'
     ],
     description: 'A 75% compact mechanical keyboard engineered with hot-swappable tactile switches, sound-dampening silicone gaskets, and premium PBT dye-sub keycaps.',
     descriptionFa: 'کیبورد مکانیکی جمع‌وجور ۷۵ درصد با ساختار گسکت مانت، سوئیچ‌های روان و سایلنت با قابلیت تعویض آنی (Hot-Swap) و کلیدهای دابل شات PBT ضدسایش.',
@@ -187,9 +187,9 @@ export const PRODUCTS: Product[] = [
     featured: true,
     rank: 3,
     images: [
-      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1523275335684-37898b6baf30.jpg',
+      '/images/products/photo-1508685096489-7aacd43bd3b1.jpg',
+      '/images/products/photo-1546868871-7041f2a55e12.jpg'
     ],
     description: 'Aerospace-grade titanium chassis matched with ultra-clear sapphire crystal glass. Features precise ECG, SpO2 monitoring, and 14-day battery reserve.',
     descriptionFa: 'فریم تیتانیوم گرید هوافضا با صفحه شیشه‌ای ضدخش یاقوت کبود (Sapphire)، سنسور سنجش ضربان قلب، نوار قلب ECG و باتری ۱۴ روزه با شارژ وایرلس.',
@@ -234,9 +234,9 @@ export const PRODUCTS: Product[] = [
     featured: true,
     rank: 4,
     images: [
-      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1553062407-98eeb64c6a62.jpg',
+      '/images/products/photo-1548036328-c9fa89d128fa.jpg',
+      '/images/products/photo-1584917865442-de89df76afd3.jpg'
     ],
     description: 'Handcrafted from vegetable-tanned full-grain Italian leather that ages with a magnificent patina. YKK Excella brass zippers and padded 16-inch laptop pocket.',
     descriptionFa: 'ساخته شده با چرم گاوی درجه یک ایتالیایی با دباغی گیاهی، یراق‌آلات برنجی لوکس، محفظه اختصاصی محافظت‌شده برای لپ‌تاپ ۱۶ اینچی و آستر ضدآب.',
@@ -281,9 +281,9 @@ export const PRODUCTS: Product[] = [
     soldCount: 52,
     featured: false,
     images: [
-      'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1514432324607-a09d9b4aefdd.jpg',
+      '/images/products/photo-1495474472287-4d71bcdd2085.jpg',
+      '/images/products/photo-1511920170033-f8396924c348.jpg'
     ],
     description: 'Hand-thrown matte black ceramic dripper with precision internal spirals designed for steady thermal retention and balanced coffee extraction.',
     descriptionFa: 'دریپر سرامیکی دست‌ساز با خطوط مارپیچ ارگونومیک برای حفظ حرارت ثابت و استخراج یکنواخت و شفاف عطر و طعم دانه‌های تخصصی قهوه.',
@@ -326,9 +326,9 @@ export const PRODUCTS: Product[] = [
     soldCount: 41,
     featured: true,
     images: [
-      'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1540932239986-30128078f3c5?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1507473885765-e6ed057f782c.jpg',
+      '/images/products/photo-1513506003901-1e6a229e2d15.jpg',
+      '/images/products/photo-1540932239986-30128078f3c5.jpg'
     ],
     description: 'Circular architectural ambient light featuring dimmable 2700K warm LED illumination embedded into solid sustainably sourced North American walnut.',
     descriptionFa: 'لوستر و چراغ خواب رومیزی حلقه‌ای مینیمال با نورپردازی گرم ۲۷۰۰ کلوین و دیمر لمسی بدون وقفه، تراشیده شده از چوب گردوی سالید آمریکای شمالی.',
@@ -371,9 +371,9 @@ export const PRODUCTS: Product[] = [
     soldCount: 65,
     featured: false,
     images: [
-      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1527864550417-7fd91fc51a46.jpg',
+      '/images/products/photo-1615663245857-ac93bb7c39e7.jpg',
+      '/images/products/photo-1593305841991-05c297ba4575.jpg'
     ],
     description: 'Sculpted for hand ergonomics with dual scroll wheels, MagSpeed electromagnetic scrolling, and silent clicks for peak workspace focus.',
     descriptionFa: 'طراحی کامپکت و ارگونومیک سازگار با آناتومی مچ دست، اسکرول مغناطیسی فوق‌سریع و کلیک‌های سایلنت ۹۰٪ بی‌صدا برای تمرکز بالا در محیط کار.',
@@ -417,9 +417,9 @@ export const PRODUCTS: Product[] = [
     soldCount: 110,
     featured: true,
     images: [
-      'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1590658268037-6bf12165a8df.jpg',
+      '/images/products/photo-1572536147248-ac59a8abfa4b.jpg',
+      '/images/products/photo-1606220588913-b3aacb4d2f46.jpg'
     ],
     description: 'Dynamic spatial audio head-tracking, ultra-low latency game mode, and adaptive silicone ear tips for all-day featherweight comfort.',
     descriptionFa: 'پشتیبانی از صدای سه‌بعدی Spatial Audio با ردیابی حرکات سر، مود گیمینگ با کمترین تاخیر و کیس شارژ بی‌سیم مجهز به شارژ سریع.',
@@ -462,10 +462,10 @@ export const PRODUCTS: Product[] = [
     featured: true,
     rank: 2,
     images: [
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1521572267360-ee0c2909d518.jpg',
+      '/images/products/photo-1581655353564-df123a1eb820.jpg',
+      '/images/products/photo-1583743814966-8936f5b7be1a.jpg',
+      '/images/products/photo-1618354691373-d851c5c3a990.jpg'
     ],
     description: '100% premium combed organic cotton (280 GSM), custom drop-shoulder silhouette, reinforced ribbed collar, pre-shrunk minimal aesthetic.',
     descriptionFa: '۱۰۰٪ نخ پنبه ارگانیک شانه شده با گرماژ سنگین ۲۸۰ گرم، الگو و قواره اورسایز با سرشانه افتاده (Drop-shoulder)، یقه کشباف مقاوم ضد دفرمه شدن و رنگرزی راکتیو بدون پرزدهی.',
@@ -494,7 +494,7 @@ export const PRODUCTS: Product[] = [
         id: 'c-blk',
         name: 'مشکی',
         hex: '#18181b',
-        image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85&auto=format&fit=crop',
+        image: '/images/products/photo-1521572267360-ee0c2909d518.jpg',
         stock: 13,
         active: true
       },
@@ -502,7 +502,7 @@ export const PRODUCTS: Product[] = [
         id: 'c-wht',
         name: 'سفید صدفی',
         hex: '#f8fafc',
-        image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900&q=85&auto=format&fit=crop',
+        image: '/images/products/photo-1581655353564-df123a1eb820.jpg',
         stock: 11,
         active: true
       },
@@ -510,7 +510,7 @@ export const PRODUCTS: Product[] = [
         id: 'c-crm',
         name: 'کرم نود',
         hex: '#e2d5c3',
-        image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&q=85&auto=format&fit=crop',
+        image: '/images/products/photo-1583743814966-8936f5b7be1a.jpg',
         stock: 9,
         active: true
       },
@@ -518,7 +518,7 @@ export const PRODUCTS: Product[] = [
         id: 'c-blu',
         name: 'سرمه‌ای اقیانوسی',
         hex: '#1e3a8a',
-        image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900&q=85&auto=format&fit=crop',
+        image: '/images/products/photo-1618354691373-d851c5c3a990.jpg',
         stock: 7,
         active: true
       },
@@ -526,7 +526,7 @@ export const PRODUCTS: Product[] = [
         id: 'c-red',
         name: 'زرشکی مات',
         hex: '#881337',
-        image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900&q=85&auto=format&fit=crop',
+        image: '/images/products/photo-1503342217505-b0a15ec3261c.jpg',
         stock: 5,
         active: true
       }
@@ -534,39 +534,39 @@ export const PRODUCTS: Product[] = [
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     variants: [
       // Black combinations
-      { id: 'v-tee-blk-xs', sku: 'LUM-TEE-BLK-XS', colorName: 'مشکی', colorHex: '#18181b', size: 'XS', stock: 2, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-blk-s',  sku: 'LUM-TEE-BLK-S',  colorName: 'مشکی', colorHex: '#18181b', size: 'S',  stock: 4, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-blk-m',  sku: 'LUM-TEE-BLK-M',  colorName: 'مشکی', colorHex: '#18181b', size: 'M',  stock: 8, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-blk-l',  sku: 'LUM-TEE-BLK-L',  colorName: 'مشکی', colorHex: '#18181b', size: 'L',  stock: 5, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-blk-xl', sku: 'LUM-TEE-BLK-XL', colorName: 'مشکی', colorHex: '#18181b', size: 'XL', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-blk-xxl',sku: 'LUM-TEE-BLK-2XL',colorName: 'مشکی', colorHex: '#18181b', size: 'XXL', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=900&q=85&auto=format&fit=crop' },
+      { id: 'v-tee-blk-xs', sku: 'LUM-TEE-BLK-XS', colorName: 'مشکی', colorHex: '#18181b', size: 'XS', stock: 2, price: 890000, active: true, image: '/images/products/photo-1521572267360-ee0c2909d518.jpg' },
+      { id: 'v-tee-blk-s',  sku: 'LUM-TEE-BLK-S',  colorName: 'مشکی', colorHex: '#18181b', size: 'S',  stock: 4, price: 890000, active: true, image: '/images/products/photo-1521572267360-ee0c2909d518.jpg' },
+      { id: 'v-tee-blk-m',  sku: 'LUM-TEE-BLK-M',  colorName: 'مشکی', colorHex: '#18181b', size: 'M',  stock: 8, price: 890000, active: true, image: '/images/products/photo-1521572267360-ee0c2909d518.jpg' },
+      { id: 'v-tee-blk-l',  sku: 'LUM-TEE-BLK-L',  colorName: 'مشکی', colorHex: '#18181b', size: 'L',  stock: 5, price: 890000, active: true, image: '/images/products/photo-1521572267360-ee0c2909d518.jpg' },
+      { id: 'v-tee-blk-xl', sku: 'LUM-TEE-BLK-XL', colorName: 'مشکی', colorHex: '#18181b', size: 'XL', stock: 0, price: 890000, active: true, image: '/images/products/photo-1521572267360-ee0c2909d518.jpg' },
+      { id: 'v-tee-blk-xxl',sku: 'LUM-TEE-BLK-2XL',colorName: 'مشکی', colorHex: '#18181b', size: 'XXL', stock: 0, price: 890000, active: true, image: '/images/products/photo-1521572267360-ee0c2909d518.jpg' },
 
       // White combinations
-      { id: 'v-tee-wht-xs', sku: 'LUM-TEE-WHT-XS', colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'XS', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-wht-s',  sku: 'LUM-TEE-WHT-S',  colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'S',  stock: 3, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-wht-m',  sku: 'LUM-TEE-WHT-M',  colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'M',  stock: 7, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-wht-l',  sku: 'LUM-TEE-WHT-L',  colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'L',  stock: 4, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-wht-xl', sku: 'LUM-TEE-WHT-XL', colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'XL', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-wht-xxl',sku: 'LUM-TEE-WHT-2XL',colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'XXL', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=900&q=85&auto=format&fit=crop' },
+      { id: 'v-tee-wht-xs', sku: 'LUM-TEE-WHT-XS', colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'XS', stock: 0, price: 890000, active: true, image: '/images/products/photo-1581655353564-df123a1eb820.jpg' },
+      { id: 'v-tee-wht-s',  sku: 'LUM-TEE-WHT-S',  colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'S',  stock: 3, price: 890000, active: true, image: '/images/products/photo-1581655353564-df123a1eb820.jpg' },
+      { id: 'v-tee-wht-m',  sku: 'LUM-TEE-WHT-M',  colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'M',  stock: 7, price: 890000, active: true, image: '/images/products/photo-1581655353564-df123a1eb820.jpg' },
+      { id: 'v-tee-wht-l',  sku: 'LUM-TEE-WHT-L',  colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'L',  stock: 4, price: 890000, active: true, image: '/images/products/photo-1581655353564-df123a1eb820.jpg' },
+      { id: 'v-tee-wht-xl', sku: 'LUM-TEE-WHT-XL', colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'XL', stock: 0, price: 890000, active: true, image: '/images/products/photo-1581655353564-df123a1eb820.jpg' },
+      { id: 'v-tee-wht-xxl',sku: 'LUM-TEE-WHT-2XL',colorName: 'سفید صدفی', colorHex: '#f8fafc', size: 'XXL', stock: 0, price: 890000, active: true, image: '/images/products/photo-1581655353564-df123a1eb820.jpg' },
 
       // Cream combinations
-      { id: 'v-tee-crm-xs', sku: 'LUM-TEE-CRM-XS', colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'XS', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-crm-s',  sku: 'LUM-TEE-CRM-S',  colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'S',  stock: 3, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-crm-m',  sku: 'LUM-TEE-CRM-M',  colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'M',  stock: 6, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-crm-l',  sku: 'LUM-TEE-CRM-L',  colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'L',  stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-crm-xl', sku: 'LUM-TEE-CRM-XL', colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'XL', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&q=85&auto=format&fit=crop' },
+      { id: 'v-tee-crm-xs', sku: 'LUM-TEE-CRM-XS', colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'XS', stock: 0, price: 890000, active: true, image: '/images/products/photo-1583743814966-8936f5b7be1a.jpg' },
+      { id: 'v-tee-crm-s',  sku: 'LUM-TEE-CRM-S',  colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'S',  stock: 3, price: 890000, active: true, image: '/images/products/photo-1583743814966-8936f5b7be1a.jpg' },
+      { id: 'v-tee-crm-m',  sku: 'LUM-TEE-CRM-M',  colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'M',  stock: 6, price: 890000, active: true, image: '/images/products/photo-1583743814966-8936f5b7be1a.jpg' },
+      { id: 'v-tee-crm-l',  sku: 'LUM-TEE-CRM-L',  colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'L',  stock: 0, price: 890000, active: true, image: '/images/products/photo-1583743814966-8936f5b7be1a.jpg' },
+      { id: 'v-tee-crm-xl', sku: 'LUM-TEE-CRM-XL', colorName: 'کرم نود', colorHex: '#e2d5c3', size: 'XL', stock: 0, price: 890000, active: true, image: '/images/products/photo-1583743814966-8936f5b7be1a.jpg' },
 
       // Navy combinations
-      { id: 'v-tee-blu-s',  sku: 'LUM-TEE-BLU-S',  colorName: 'سرمه‌ای اقیانوسی', colorHex: '#1e3a8a', size: 'S',  stock: 2, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-blu-m',  sku: 'LUM-TEE-BLU-M',  colorName: 'سرمه‌ای اقیانوسی', colorHex: '#1e3a8a', size: 'M',  stock: 5, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-blu-l',  sku: 'LUM-TEE-BLU-L',  colorName: 'سرمه‌ای اقیانوسی', colorHex: '#1e3a8a', size: 'L',  stock: 2, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-blu-xl', sku: 'LUM-TEE-BLU-XL', colorName: 'سرمه‌ای اقیانوسی', colorHex: '#1e3a8a', size: 'XL', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=900&q=85&auto=format&fit=crop' },
+      { id: 'v-tee-blu-s',  sku: 'LUM-TEE-BLU-S',  colorName: 'سرمه‌ای اقیانوسی', colorHex: '#1e3a8a', size: 'S',  stock: 2, price: 890000, active: true, image: '/images/products/photo-1618354691373-d851c5c3a990.jpg' },
+      { id: 'v-tee-blu-m',  sku: 'LUM-TEE-BLU-M',  colorName: 'سرمه‌ای اقیانوسی', colorHex: '#1e3a8a', size: 'M',  stock: 5, price: 890000, active: true, image: '/images/products/photo-1618354691373-d851c5c3a990.jpg' },
+      { id: 'v-tee-blu-l',  sku: 'LUM-TEE-BLU-L',  colorName: 'سرمه‌ای اقیانوسی', colorHex: '#1e3a8a', size: 'L',  stock: 2, price: 890000, active: true, image: '/images/products/photo-1618354691373-d851c5c3a990.jpg' },
+      { id: 'v-tee-blu-xl', sku: 'LUM-TEE-BLU-XL', colorName: 'سرمه‌ای اقیانوسی', colorHex: '#1e3a8a', size: 'XL', stock: 0, price: 890000, active: true, image: '/images/products/photo-1618354691373-d851c5c3a990.jpg' },
 
       // Maroon combinations
-      { id: 'v-tee-red-s',  sku: 'LUM-TEE-RED-S',  colorName: 'زرشکی مات', colorHex: '#881337', size: 'S',  stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-red-m',  sku: 'LUM-TEE-RED-M',  colorName: 'زرشکی مات', colorHex: '#881337', size: 'M',  stock: 4, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-red-l',  sku: 'LUM-TEE-RED-L',  colorName: 'زرشکی مات', colorHex: '#881337', size: 'L',  stock: 1, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-tee-red-xl', sku: 'LUM-TEE-RED-XL', colorName: 'زرشکی مات', colorHex: '#881337', size: 'XL', stock: 0, price: 890000, active: true, image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900&q=85&auto=format&fit=crop' }
+      { id: 'v-tee-red-s',  sku: 'LUM-TEE-RED-S',  colorName: 'زرشکی مات', colorHex: '#881337', size: 'S',  stock: 0, price: 890000, active: true, image: '/images/products/photo-1503342217505-b0a15ec3261c.jpg' },
+      { id: 'v-tee-red-m',  sku: 'LUM-TEE-RED-M',  colorName: 'زرشکی مات', colorHex: '#881337', size: 'M',  stock: 4, price: 890000, active: true, image: '/images/products/photo-1503342217505-b0a15ec3261c.jpg' },
+      { id: 'v-tee-red-l',  sku: 'LUM-TEE-RED-L',  colorName: 'زرشکی مات', colorHex: '#881337', size: 'L',  stock: 1, price: 890000, active: true, image: '/images/products/photo-1503342217505-b0a15ec3261c.jpg' },
+      { id: 'v-tee-red-xl', sku: 'LUM-TEE-RED-XL', colorName: 'زرشکی مات', colorHex: '#881337', size: 'XL', stock: 0, price: 890000, active: true, image: '/images/products/photo-1503342217505-b0a15ec3261c.jpg' }
     ]
   },
   {
@@ -588,9 +588,9 @@ export const PRODUCTS: Product[] = [
     featured: false,
     rank: 8,
     images: [
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1556905055-8f358a7a47b2.jpg',
+      '/images/products/photo-1578587018452-892bacefd3f2.jpg',
+      '/images/products/photo-1509967419530-da38b4704bc6.jpg'
     ],
     description: 'Ultra-dense double-faced thermal fleece (360 GSM), YKK matte two-way zipper, ergonomic raglan sleeves, wind-resistant double-layered hood.',
     descriptionFa: 'پشم فلیس دولایه متراکم ۳۶۰ گرم با عایق گرمایی بالا، زیپ دوطرفه فلزی مات اورجینال YKK، دوخت رگلان آزادی حرکت بالا و کلاه دوجداره ضد باد با استایل مدرن مینیمال.',
@@ -615,25 +615,25 @@ export const PRODUCTS: Product[] = [
     tags: ['Apparel', 'Hoodie', 'Fleece', 'WinterWear'],
     variantType: 'color_size',
     colors: [
-      { id: 'c-charcoal', name: 'زغالی مات', hex: '#27272a', image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=900&q=85&auto=format&fit=crop', stock: 10, active: true },
-      { id: 'c-melange', name: 'طوسی ملانژ', hex: '#64748b', image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=900&q=85&auto=format&fit=crop', stock: 8, active: true },
-      { id: 'c-olive', name: 'سبز زیتونی', hex: '#3f6212', image: 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=900&q=85&auto=format&fit=crop', stock: 4, active: true }
+      { id: 'c-charcoal', name: 'زغالی مات', hex: '#27272a', image: '/images/products/photo-1556905055-8f358a7a47b2.jpg', stock: 10, active: true },
+      { id: 'c-melange', name: 'طوسی ملانژ', hex: '#64748b', image: '/images/products/photo-1578587018452-892bacefd3f2.jpg', stock: 8, active: true },
+      { id: 'c-olive', name: 'سبز زیتونی', hex: '#3f6212', image: '/images/products/photo-1509967419530-da38b4704bc6.jpg', stock: 4, active: true }
     ],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     variants: [
-      { id: 'v-hood-chr-s', sku: 'LUM-HOD-CHR-S', colorName: 'زغالی مات', colorHex: '#27272a', size: 'S', stock: 3, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-hood-chr-m', sku: 'LUM-HOD-CHR-M', colorName: 'زغالی مات', colorHex: '#27272a', size: 'M', stock: 4, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-hood-chr-l', sku: 'LUM-HOD-CHR-L', colorName: 'زغالی مات', colorHex: '#27272a', size: 'L', stock: 3, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-hood-chr-xl', sku: 'LUM-HOD-CHR-XL', colorName: 'زغالی مات', colorHex: '#27272a', size: 'XL', stock: 0, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-hood-chr-2xl', sku: 'LUM-HOD-CHR-2XL', colorName: 'زغالی مات', colorHex: '#27272a', size: 'XXL', stock: 2, price: 1950000, originalPrice: 2300000, active: true, image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=900&q=85&auto=format&fit=crop' },
+      { id: 'v-hood-chr-s', sku: 'LUM-HOD-CHR-S', colorName: 'زغالی مات', colorHex: '#27272a', size: 'S', stock: 3, price: 1850000, active: true, image: '/images/products/photo-1556905055-8f358a7a47b2.jpg' },
+      { id: 'v-hood-chr-m', sku: 'LUM-HOD-CHR-M', colorName: 'زغالی مات', colorHex: '#27272a', size: 'M', stock: 4, price: 1850000, active: true, image: '/images/products/photo-1556905055-8f358a7a47b2.jpg' },
+      { id: 'v-hood-chr-l', sku: 'LUM-HOD-CHR-L', colorName: 'زغالی مات', colorHex: '#27272a', size: 'L', stock: 3, price: 1850000, active: true, image: '/images/products/photo-1556905055-8f358a7a47b2.jpg' },
+      { id: 'v-hood-chr-xl', sku: 'LUM-HOD-CHR-XL', colorName: 'زغالی مات', colorHex: '#27272a', size: 'XL', stock: 0, price: 1850000, active: true, image: '/images/products/photo-1556905055-8f358a7a47b2.jpg' },
+      { id: 'v-hood-chr-2xl', sku: 'LUM-HOD-CHR-2XL', colorName: 'زغالی مات', colorHex: '#27272a', size: 'XXL', stock: 2, price: 1950000, originalPrice: 2300000, active: true, image: '/images/products/photo-1556905055-8f358a7a47b2.jpg' },
 
-      { id: 'v-hood-mel-s', sku: 'LUM-HOD-MEL-S', colorName: 'طوسی ملانژ', colorHex: '#64748b', size: 'S', stock: 2, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-hood-mel-m', sku: 'LUM-HOD-MEL-M', colorName: 'طوسی ملانژ', colorHex: '#64748b', size: 'M', stock: 3, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-hood-mel-l', sku: 'LUM-HOD-MEL-L', colorName: 'طوسی ملانژ', colorHex: '#64748b', size: 'L', stock: 3, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-hood-mel-xl', sku: 'LUM-HOD-MEL-XL', colorName: 'طوسی ملانژ', colorHex: '#64748b', size: 'XL', stock: 0, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=900&q=85&auto=format&fit=crop' },
+      { id: 'v-hood-mel-s', sku: 'LUM-HOD-MEL-S', colorName: 'طوسی ملانژ', colorHex: '#64748b', size: 'S', stock: 2, price: 1850000, active: true, image: '/images/products/photo-1578587018452-892bacefd3f2.jpg' },
+      { id: 'v-hood-mel-m', sku: 'LUM-HOD-MEL-M', colorName: 'طوسی ملانژ', colorHex: '#64748b', size: 'M', stock: 3, price: 1850000, active: true, image: '/images/products/photo-1578587018452-892bacefd3f2.jpg' },
+      { id: 'v-hood-mel-l', sku: 'LUM-HOD-MEL-L', colorName: 'طوسی ملانژ', colorHex: '#64748b', size: 'L', stock: 3, price: 1850000, active: true, image: '/images/products/photo-1578587018452-892bacefd3f2.jpg' },
+      { id: 'v-hood-mel-xl', sku: 'LUM-HOD-MEL-XL', colorName: 'طوسی ملانژ', colorHex: '#64748b', size: 'XL', stock: 0, price: 1850000, active: true, image: '/images/products/photo-1578587018452-892bacefd3f2.jpg' },
 
-      { id: 'v-hood-olv-m', sku: 'LUM-HOD-OLV-M', colorName: 'سبز زیتونی', colorHex: '#3f6212', size: 'M', stock: 2, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=900&q=85&auto=format&fit=crop' },
-      { id: 'v-hood-olv-l', sku: 'LUM-HOD-OLV-L', colorName: 'سبز زیتونی', colorHex: '#3f6212', size: 'L', stock: 2, price: 1850000, active: true, image: 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=900&q=85&auto=format&fit=crop' }
+      { id: 'v-hood-olv-m', sku: 'LUM-HOD-OLV-M', colorName: 'سبز زیتونی', colorHex: '#3f6212', size: 'M', stock: 2, price: 1850000, active: true, image: '/images/products/photo-1509967419530-da38b4704bc6.jpg' },
+      { id: 'v-hood-olv-l', sku: 'LUM-HOD-OLV-L', colorName: 'سبز زیتونی', colorHex: '#3f6212', size: 'L', stock: 2, price: 1850000, active: true, image: '/images/products/photo-1509967419530-da38b4704bc6.jpg' }
     ]
   },
   {
@@ -655,8 +655,8 @@ export const PRODUCTS: Product[] = [
     featured: false,
     rank: 9,
     images: [
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=900&q=85&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=900&q=85&auto=format&fit=crop'
+      '/images/products/photo-1624378439575-d8705ad7ae80.jpg',
+      '/images/products/photo-1473966968600-fa801b869a1a.jpg'
     ],
     description: 'Cotton twill with 2% elastane for flexible movement, tailored straight-leg fit, durable reinforced pockets, and anti-crease wash finish.',
     descriptionFa: 'کتان توییل با ۲ درصد الیاف الاستان برای راحتی و انعطاف بالا، فیت راسته استاندارد، دکمه‌های بیورزین مقاوم، جیب‌های تقویت‌شده و فرآیند شستشوی ضد چروک.',
@@ -681,9 +681,9 @@ export const PRODUCTS: Product[] = [
     tags: ['Apparel', 'Pants', 'Chino', 'Casual'],
     variantType: 'color_size',
     colors: [
-      { id: 'c-ch-blk', name: 'مشکی', hex: '#18181b', image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=900&q=85&auto=format&fit=crop', stock: 12, active: true },
-      { id: 'c-ch-crm', name: 'خاکی کرم', hex: '#d4b996', image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=900&q=85&auto=format&fit=crop', stock: 8, active: true },
-      { id: 'c-ch-grn', name: 'دودی ملایم', hex: '#475569', image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=900&q=85&auto=format&fit=crop', stock: 4, active: true }
+      { id: 'c-ch-blk', name: 'مشکی', hex: '#18181b', image: '/images/products/photo-1624378439575-d8705ad7ae80.jpg', stock: 12, active: true },
+      { id: 'c-ch-crm', name: 'خاکی کرم', hex: '#d4b996', image: '/images/products/photo-1473966968600-fa801b869a1a.jpg', stock: 8, active: true },
+      { id: 'c-ch-grn', name: 'دودی ملایم', hex: '#475569', image: '/images/products/photo-1624378439575-d8705ad7ae80.jpg', stock: 4, active: true }
     ],
     sizes: ['38', '40', '42', '44', '46'],
     variants: [
@@ -708,7 +708,7 @@ export const REVIEWS = [
   {
     id: 'rev-1',
     userName: 'علیرضا راد',
-    userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+    userAvatar: '/images/products/photo-1534528741775-53994a69daeb.jpg',
     rating: 5,
     date: '۲ روز پیش',
     comment: 'کیفیت ساخت و تفکیک صدای این هدفون شگفت‌انگیزه! بسته‌بندی در حد محصولات اپل بود و خیلی سریع به دستم رسید.',
@@ -717,7 +717,7 @@ export const REVIEWS = [
   {
     id: 'rev-2',
     userName: 'سارا تهرانی',
-    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+    userAvatar: '/images/products/photo-1494790108377-be9c29b29330.jpg',
     rating: 5,
     date: 'هفته گذشته',
     comment: 'رنگ و متریال چرم کیف دقیقاً مثل عکس‌هاست و بوی چرم طبیعی میده. پشتیبانی فروشگاه هم در پاسخگویی عالی بود.',
@@ -726,7 +726,7 @@ export const REVIEWS = [
   {
     id: 'rev-3',
     userName: 'محمد کاظمی',
-    userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+    userAvatar: '/images/products/photo-1507003211169-0a1dd7228f2d.jpg',
     rating: 4,
     date: '۳ روز پیش',
     comment: 'کیبورد صدای فوق‌العاده نرم و ارضاکننده‌ای داره. بدون هیچ لگی با مک و ویندوز سوییچ میکنه. کاملاً راضی‌ام.',

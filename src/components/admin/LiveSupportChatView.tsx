@@ -22,6 +22,14 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { SupportSession, SupportMessage, AgentStatusResponse } from '../../types/support';
+import {
+  getLocalAgentStatus,
+  saveLocalAgentStatus,
+  getLocalSupportSessions,
+  getLocalSupportSessionById,
+  addLocalSupportMessage,
+  markLocalSupportRead
+} from '../../utils/supportStorage';
 
 export const LiveSupportChatView: React.FC = () => {
   const [agentStatus, setAgentStatus] = useState<AgentStatusResponse>({
@@ -45,20 +53,23 @@ export const LiveSupportChatView: React.FC = () => {
   // Fetch agent status & sessions list
   const fetchAgentStatus = async () => {
     try {
-      const res = await fetch('/api/support/agent-status');
-      if (res.ok) {
+      const res = await fetch('/api/support/agent-status').catch(() => null);
+      if (res && res.ok) {
         const data = await res.json();
         setAgentStatus(data);
+      } else {
+        setAgentStatus(getLocalAgentStatus());
       }
     } catch (err) {
-      console.error('Error fetching agent status:', err);
+      console.warn('Error fetching agent status, using local fallback:', err);
+      setAgentStatus(getLocalAgentStatus());
     }
   };
 
   const fetchSessions = async () => {
     try {
-      const res = await fetch('/api/support/sessions');
-      if (res.ok) {
+      const res = await fetch('/api/support/sessions').catch(() => null);
+      if (res && res.ok) {
         const data: SupportSession[] = await res.json();
         setSessions(data);
 
@@ -66,21 +77,43 @@ export const LiveSupportChatView: React.FC = () => {
         if (!selectedSessionId && data.length > 0) {
           setSelectedSessionId(data[0].id);
         }
+      } else {
+        const localSessions = getLocalSupportSessions();
+        setSessions(localSessions);
+        if (!selectedSessionId && localSessions.length > 0) {
+          setSelectedSessionId(localSessions[0].id);
+        }
       }
     } catch (err) {
-      console.error('Error fetching support sessions:', err);
+      console.warn('Error fetching support sessions, using local fallback:', err);
+      const localSessions = getLocalSupportSessions();
+      setSessions(localSessions);
+      if (!selectedSessionId && localSessions.length > 0) {
+        setSelectedSessionId(localSessions[0].id);
+      }
     }
   };
 
   const fetchSingleSession = async (sessionId: string) => {
     try {
-      const res = await fetch(`/api/support/sessions/${sessionId}?readBy=admin`);
-      if (res.ok) {
+      const res = await fetch(`/api/support/sessions/${sessionId}?readBy=admin`).catch(() => null);
+      if (res && res.ok) {
         const data: SupportSession = await res.json();
         setSelectedSession(data);
+      } else {
+        const localSess = getLocalSupportSessionById(sessionId);
+        if (localSess) {
+          markLocalSupportRead(sessionId, 'admin');
+          setSelectedSession({ ...localSess });
+        }
       }
     } catch (err) {
-      console.error('Error fetching single session:', err);
+      console.warn('Error fetching single session, using local fallback:', err);
+      const localSess = getLocalSupportSessionById(sessionId);
+      if (localSess) {
+        markLocalSupportRead(sessionId, 'admin');
+        setSelectedSession({ ...localSess });
+      }
     }
   };
 
@@ -119,13 +152,18 @@ export const LiveSupportChatView: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isOnline: newStatus })
-      });
-      if (res.ok) {
+      }).catch(() => null);
+      if (res && res.ok) {
         const data = await res.json();
         setAgentStatus(data);
+      } else {
+        const saved = saveLocalAgentStatus({ isOnline: newStatus });
+        setAgentStatus(saved);
       }
     } catch (err) {
-      console.error('Error toggling agent status:', err);
+      console.warn('Error toggling agent status, using local fallback:', err);
+      const saved = saveLocalAgentStatus({ isOnline: newStatus });
+      setAgentStatus(saved);
     }
   };
 
@@ -134,15 +172,22 @@ export const LiveSupportChatView: React.FC = () => {
     if (e) e.preventDefault();
     if ((!messageText.trim() && !attachedFile) || !selectedSessionId) return;
 
-    try {
-      const payload = {
-        sender: 'agent',
-        text: messageText.trim(),
-        fileUrl: attachedFile?.url,
-        fileName: attachedFile?.name,
-        fileType: attachedFile?.type
-      };
+    const currentText = messageText.trim();
+    const currentAttachment = attachedFile;
 
+    setMessageText('');
+    setAttachedFile(null);
+
+    const payload = {
+      sessionId: selectedSessionId,
+      sender: 'agent' as const,
+      text: currentText,
+      fileUrl: currentAttachment?.url,
+      fileName: currentAttachment?.name,
+      fileType: currentAttachment?.type
+    };
+
+    try {
       const res = await fetch(`/api/support/sessions/${selectedSessionId}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -150,13 +195,16 @@ export const LiveSupportChatView: React.FC = () => {
       });
 
       if (res.ok) {
-        setMessageText('');
-        setAttachedFile(null);
         fetchSingleSession(selectedSessionId);
         fetchSessions();
+        return;
       }
+      throw new Error('Server agent message send failed');
     } catch (err) {
-      console.error('Error sending support message:', err);
+      console.warn('Error sending support message to server, using local persistent fallback:', err);
+      const result = addLocalSupportMessage(payload);
+      setSelectedSession({ ...result.session });
+      fetchSessions();
     }
   };
 
@@ -189,9 +237,20 @@ export const LiveSupportChatView: React.FC = () => {
             name: data.fileName,
             type: data.fileType
           });
+        } else {
+          setAttachedFile({
+            url: base64,
+            name: file.name,
+            type: isImage ? 'image' : 'file'
+          });
         }
       } catch (err) {
-        console.error('Upload error:', err);
+        console.warn('Upload error, using direct base64 fallback:', err);
+        setAttachedFile({
+          url: base64,
+          name: file.name,
+          type: isImage ? 'image' : 'file'
+        });
       } finally {
         setIsUploading(false);
       }

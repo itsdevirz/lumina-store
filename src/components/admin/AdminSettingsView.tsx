@@ -14,7 +14,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [name, setName] = useState(adminUser?.name || 'مدیر ارشد لومینا');
   const [email, setEmail] = useState(adminUser?.email || 'admin@luminastore.ir');
   const [avatar, setAvatar] = useState(
-    adminUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80&auto=format&fit=crop'
+    adminUser?.avatar || '/images/products/photo-1534528741775-53994a69daeb.jpg'
   );
 
   // Store settings

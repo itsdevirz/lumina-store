@@ -22,6 +22,10 @@ async function startServer() {
   // Serve uploads statically
   app.use('/uploads', express.static(uploadsDir));
 
+  // Serve public images statically
+  const publicDir = path.join(process.cwd(), 'public');
+  app.use(express.static(publicDir));
+
   // JSON Body Parser with increased payload size limit for image & file uploads
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));

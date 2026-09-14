@@ -93,7 +93,7 @@ export const ProductAnalyticsModal: React.FC<ProductAnalyticsModalProps> = ({
           categoryFa: 'صوتی',
           price: 4500000,
           stock: 14,
-          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80&auto=format&fit=crop',
+          image: '/images/products/photo-1505740420928-5e560c06d30e.jpg',
           viewsToday: 42,
           viewsWeek: 215,
           viewsMonth: 890,

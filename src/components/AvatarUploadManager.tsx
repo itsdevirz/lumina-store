@@ -324,7 +324,7 @@ export const AvatarUploadManager: React.FC = () => {
   };
 
   const handleResetToDefault = () => {
-    const defaultAvatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400';
+    const defaultAvatar = '/images/products/photo-1534528741775-53994a69daeb.jpg';
     updateUserProfile({ avatar: defaultAvatar });
     setSelectedPresetId(null);
     addToast({

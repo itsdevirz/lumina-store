@@ -410,7 +410,7 @@ export const ProductImageUploadBox: React.FC<ProductImageUploadBoxProps> = ({
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       onError={e => {
                         (e.target as HTMLImageElement).src =
-                          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80&auto=format&fit=crop';
+                          '/images/products/photo-1526170375885-4d8ecf77b99f.jpg';
                       }}
                     />
 

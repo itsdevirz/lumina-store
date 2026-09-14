@@ -279,7 +279,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
       slug: '',
       parentId: defaultParentId || null,
       description: '',
-      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80&auto=format&fit=crop',
+      image: '/images/products/photo-1521572267360-ee0c2909d518.jpg',
       icon: 'Folder',
       sortOrder: categories.length + 1,
       isActive: true
@@ -800,7 +800,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                             className="w-full h-full object-cover"
                             onError={e => {
                               (e.target as HTMLImageElement).src =
-                                'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=200&q=80&auto=format&fit=crop';
+                                '/images/products/photo-1521572267360-ee0c2909d518.jpg';
                             }}
                           />
                         ) : (
@@ -1267,7 +1267,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                         className="w-full h-full object-cover"
                         onError={e => {
                           (e.target as HTMLImageElement).src =
-                            'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=200&q=80&auto=format&fit=crop';
+                            '/images/products/photo-1521572267360-ee0c2909d518.jpg';
                         }}
                       />
                     ) : (

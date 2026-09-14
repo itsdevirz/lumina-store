@@ -128,7 +128,7 @@ export const UserManagementView: React.FC = () => {
                     <td className="py-4 pr-6">
                       <div className="flex items-center gap-3">
                         <img
-                          src={u.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80&auto=format&fit=crop'}
+                          src={u.avatar || '/images/products/photo-1534528741775-53994a69daeb.jpg'}
                           alt=""
                           className="w-10 h-10 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
                         />

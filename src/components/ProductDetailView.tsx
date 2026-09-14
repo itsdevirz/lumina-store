@@ -225,7 +225,7 @@ export const ProductDetailView: React.FC = () => {
         list.push(v.image);
       }
     });
-    return list.length > 0 ? list : ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800'];
+    return list.length > 0 ? list : ['/images/products/photo-1505740420928-5e560c06d30e.jpg'];
   }, [selectedProduct]);
 
   // Compute matched variant

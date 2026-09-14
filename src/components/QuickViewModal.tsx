@@ -19,7 +19,7 @@ export const QuickViewModal: React.FC = () => {
 
   const images = quickViewProduct.images && quickViewProduct.images.length > 0
     ? quickViewProduct.images
-    : ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800'];
+    : ['/images/products/photo-1505740420928-5e560c06d30e.jpg'];
 
   const nextImg = (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -178,7 +178,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             className="flex items-center gap-2 p-1 pl-2.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
             <img
-              src={adminUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80&auto=format&fit=crop'}
+              src={adminUser?.avatar || '/images/products/photo-1534528741775-53994a69daeb.jpg'}
               alt=""
               className="w-7 h-7 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-slate-700"
             />

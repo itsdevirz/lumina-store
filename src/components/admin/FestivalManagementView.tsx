@@ -120,7 +120,7 @@ export const FestivalManagementView: React.FC<FestivalManagementViewProps> = ({
     const future = new Date(Date.now() + 7 * 86400000);
     setStartDate(now.toISOString().split('T')[0]);
     setEndDate(future.toISOString().split('T')[0]);
-    setBannerImage('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&q=80&auto=format&fit=crop');
+    setBannerImage('/images/products/photo-1505740420928-5e560c06d30e.jpg');
     
     // Pre-select 2 top products
     if (allProducts.length > 0) {

@@ -188,7 +188,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/50 flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
             <img
-              src={adminUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&q=80&auto=format&fit=crop'}
+              src={adminUser?.avatar || '/images/products/photo-1534528741775-53994a69daeb.jpg'}
               alt=""
               className="w-8 h-8 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
             />

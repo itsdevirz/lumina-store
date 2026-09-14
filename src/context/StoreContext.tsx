@@ -255,7 +255,7 @@ const DEMO_USER: StoredUser = {
   name: 'کیان مهرآذر',
   email: 'kian.mehrazar@lumina.io',
   phone: '۰۹۱۲۳۴۵۶۷۸۹',
-  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80',
+  avatar: '/images/products/photo-1535713875002-d1d0cf377fde.jpg',
   role: 'vip',
   password: 'password123',
   createdAt: '۱۴۰۲/۱۱/۱۰',
@@ -707,7 +707,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             productId: 'lum-01',
             productName: 'Lumina Horizon Pro Wireless Headphones',
             productNameFa: 'هدفون بی‌سیم لومینا هورایزن پرو - نویزکنسلینگ فعال',
-            image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80',
+            image: '/images/products/photo-1505740420928-5e560c06d30e.jpg',
             price: 14500000,
             quantity: 1
           }
@@ -739,7 +739,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             productId: 'lum-03',
             productName: 'Aura Studio Ambient Smart Lamp',
             productNameFa: 'چراغ رومیزی هوشمند امبینت آئورا استودیو',
-            image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&q=80',
+            image: '/images/products/photo-1507473885765-e6ed057f782c.jpg',
             price: 5200000,
             quantity: 1
           },
@@ -748,7 +748,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             productId: 'lum-04',
             productName: 'Chrono Apex Titanium Smartwatch',
             productNameFa: 'ساعت هوشمند پرچمدار کورونو اپکس تیتانیومی',
-            image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80',
+            image: '/images/products/photo-1523275335684-37898b6baf30.jpg',
             price: 19800000,
             quantity: 1
           }
@@ -780,7 +780,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             productId: 'lum-02',
             productName: 'Kanso Minimalist Mechanical Keyboard',
             productNameFa: 'کیبورد مکانیکال بی‌سیم کانسو مینیمال ۷۵٪',
-            image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&q=80',
+            image: '/images/products/photo-1587829741301-dc798b83add3.jpg',
             price: 8900000,
             quantity: 1,
           }
@@ -811,7 +811,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       name: lang === 'fa' ? 'کاربر مهمان' : 'Guest User',
       email: 'guest@lumina.io',
       phone: '۰۹۱۲۰۰۰۰۰۰۰',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80',
+      avatar: '/images/products/photo-1535713875002-d1d0cf377fde.jpg',
       role: 'regular',
       addresses: [
         {
@@ -967,7 +967,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       email: trimmedEmail,
       phone: trimmedPhone,
       password: data.password || 'password123',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80',
+      avatar: '/images/products/photo-1535713875002-d1d0cf377fde.jpg',
       role: 'regular',
       createdAt: new Date().toLocaleDateString(lang === 'fa' ? 'fa-IR' : 'en-US'),
       addresses: [

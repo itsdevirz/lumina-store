@@ -13,7 +13,7 @@ export const PromotionalBanners: React.FC = () => {
           {/* Banner 1: Audio & Studio Essentials */}
           <div className="relative rounded-3xl overflow-hidden bg-slate-900 text-white p-6 sm:p-8 flex flex-col justify-between min-h-[260px] border border-slate-800 shadow-md group">
             <img
-              src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=700&q=80"
+              src="/images/products/photo-1546435770-a3e426bf472b.jpg"
               alt="Audio gear"
               className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
             />
@@ -52,7 +52,7 @@ export const PromotionalBanners: React.FC = () => {
           {/* Banner 2: Minimal Workspace */}
           <div className="relative rounded-3xl overflow-hidden bg-slate-900 text-white p-6 sm:p-8 flex flex-col justify-between min-h-[260px] border border-slate-800 shadow-md group">
             <img
-              src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=700&q=80"
+              src="/images/products/photo-1587829741301-dc798b83add3.jpg"
               alt="Keyboard"
               className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-500"
             />

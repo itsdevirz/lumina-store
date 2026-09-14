@@ -54,7 +54,7 @@ const BANNER_SLIDES: BannerSlide[] = [
     targetCategory: 'audio',
     bgGradient: 'from-slate-900 via-indigo-950 to-slate-900 dark:from-[#0b0e14] dark:via-[#131b2e] dark:to-[#0b0e14]',
     accentBorder: 'border-indigo-500/30',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1505740420928-5e560c06d30e.jpg',
     perks: [
       { icon: Truck, fa: 'ارسال اکسپرس رایگان', en: 'Free Express Delivery' },
       { icon: ShieldCheck, fa: 'گارانتی اصالت ۲۴ ماهه', en: '24-Mo Warranty' },
@@ -78,7 +78,7 @@ const BANNER_SLIDES: BannerSlide[] = [
     targetCategory: 'workspace',
     bgGradient: 'from-emerald-950 via-slate-900 to-teal-950 dark:from-[#061e18] dark:via-[#0c161d] dark:to-[#08241e]',
     accentBorder: 'border-emerald-500/30',
-    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1587829741301-dc798b83add3.jpg',
     perks: [
       { icon: Sparkles, fa: 'سوئیچ‌های هات‌سواپ', en: 'Hot-Swappable' },
       { icon: ShieldCheck, fa: 'ضمانت بازگشت ۷ روزه', en: '7-Day Return' },
@@ -102,7 +102,7 @@ const BANNER_SLIDES: BannerSlide[] = [
     targetCategory: 'smart-wear',
     bgGradient: 'from-amber-950/80 via-slate-900 to-rose-950/80 dark:from-[#251405] dark:via-[#121019] dark:to-[#220710]',
     accentBorder: 'border-amber-500/30',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80&auto=format&fit=crop',
+    image: '/images/products/photo-1523275335684-37898b6baf30.jpg',
     perks: [
       { icon: Flame, fa: 'موجودی محدود', en: 'Limited Quantity' },
       { icon: ShieldCheck, fa: 'پشتیبانی ۲۴ ساعته', en: '24/7 Support' },
