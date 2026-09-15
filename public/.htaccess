@@ -1,27 +1,40 @@
-# Lumina E-Commerce Store - Apache Configuration
+# ====================================================================
+# Lumina E-Commerce Store - Apache & LiteSpeed Configuration
+# Fixes 404 Not Found error on page refresh for SPA sub-routes
+# ====================================================================
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # 1. Do not rewrite real files or directories
+  # 1. If requesting index.html directly, stop rewriting
+  RewriteRule ^index\.html$ - [L]
+
+  # 2. Allow existing real files or directories (images, assets, etc.)
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 2. Prevent rewriting uploads directory
+  # 3. Allow direct access to uploaded files and built assets
   RewriteRule ^uploads/(.*)$ uploads/$1 [L]
+  RewriteRule ^assets/(.*)$ assets/$1 [L]
 
-  # 3. Route all client SPA pages to index.html
-  RewriteRule ^ index.html [L]
+  # 4. Route all other requests to /index.html with absolute root slash
+  # (Crucial: Using /index.html prevents LiteSpeed from resolving to /product/index.html)
+  RewriteRule . /index.html [L]
 </IfModule>
 
-# Enable Gzip compression
+# Fallback error handler: If mod_rewrite is disabled or bypassed by server, serve /index.html
+ErrorDocument 404 /index.html
+
+# Enable Gzip / Deflate compression for optimal speed
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json image/svg+xml
 </IfModule>
 
-# Prevent directory listing
+# Security: Prevent directory listing
 Options -Indexes
 
-# Set UTF-8 encoding
+# Character encoding
 AddDefaultCharset UTF-8
+

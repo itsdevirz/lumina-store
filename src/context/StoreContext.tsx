@@ -304,15 +304,16 @@ function parseRouteFromUrl(availableProducts: Product[]) {
   const searchParams = new URLSearchParams(window.location.search);
 
   // 1. Product Detail Check: /product/:id or ?product=:id
-  if (pathname.startsWith('/product/')) {
-    const prodId = pathname.replace('/product/', '').split('/')[0];
+  const prodMatch = pathname.match(/\/product\/([^/?#]+)/);
+  if (prodMatch && prodMatch[1]) {
+    const prodId = decodeURIComponent(prodMatch[1]);
     const found = availableProducts.find(p => p.id === prodId);
     if (found) {
       return { tab: 'product-detail', product: found, category: found.category };
     }
   }
   if (searchParams.has('product')) {
-    const prodId = searchParams.get('product');
+    const prodId = decodeURIComponent(searchParams.get('product') || '');
     const found = availableProducts.find(p => p.id === prodId);
     if (found) {
       return { tab: 'product-detail', product: found, category: found.category };
@@ -320,29 +321,30 @@ function parseRouteFromUrl(availableProducts: Product[]) {
   }
 
   // 2. Category Check: /category/:id or ?category=:id
-  if (pathname.startsWith('/category/')) {
-    const catId = pathname.replace('/category/', '').split('/')[0];
+  const catMatch = pathname.match(/\/category\/([^/?#]+)/);
+  if (catMatch && catMatch[1]) {
+    const catId = decodeURIComponent(catMatch[1]);
     return { tab: 'shop', product: null, category: catId };
   }
   if (searchParams.has('category')) {
-    const catId = searchParams.get('category') || 'all';
+    const catId = decodeURIComponent(searchParams.get('category') || 'all');
     return { tab: 'shop', product: null, category: catId };
   }
 
   // 3. Shop All / tab query check
-  if (pathname === '/shop' || searchParams.get('tab') === 'shop') {
+  if (pathname.endsWith('/shop') || searchParams.get('tab') === 'shop') {
     return { tab: 'shop', product: null, category: 'all' };
   }
-  if (pathname === '/cart' || searchParams.get('tab') === 'cart') {
+  if (pathname.endsWith('/cart') || searchParams.get('tab') === 'cart') {
     return { tab: 'cart', product: null, category: 'all' };
   }
-  if (pathname === '/checkout' || searchParams.get('tab') === 'checkout') {
+  if (pathname.endsWith('/checkout') || searchParams.get('tab') === 'checkout') {
     return { tab: 'checkout', product: null, category: 'all' };
   }
-  if (pathname === '/wishlist' || searchParams.get('tab') === 'wishlist') {
+  if (pathname.endsWith('/wishlist') || searchParams.get('tab') === 'wishlist') {
     return { tab: 'wishlist', product: null, category: 'all' };
   }
-  if (pathname === '/account' || searchParams.get('tab') === 'account') {
+  if (pathname.endsWith('/account') || searchParams.get('tab') === 'account') {
     return { tab: 'account', product: null, category: 'all' };
   }
 

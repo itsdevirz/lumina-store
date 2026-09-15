@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>فروشگاه لومینا - انتقال هوشمند</title>
+    <script>
+      // Single Page Application client-side router fallback
+      (function() {
+        var pathname = window.location.pathname;
+        var search = window.location.search;
+        var hash = window.location.hash;
+
+        // If product page was requested
+        if (pathname.indexOf('/product/') !== -1) {
+          var parts = pathname.split('/product/');
+          var prodId = parts[1] ? parts[1].split('/')[0] : '';
+          if (prodId) {
+            window.location.replace('/?product=' + encodeURIComponent(prodId) + (hash || ''));
+            return;
+          }
+        }
+
+        // If category page was requested
+        if (pathname.indexOf('/category/') !== -1) {
+          var catParts = pathname.split('/category/');
+          var catId = catParts[1] ? catParts[1].split('/')[0] : '';
+          if (catId) {
+            window.location.replace('/?category=' + encodeURIComponent(catId) + (hash || ''));
+            return;
+          }
+        }
+
+        // If shop/cart/checkout/admin was requested
+        if (pathname.indexOf('/shop') !== -1) {
+          window.location.replace('/?tab=shop' + (hash || ''));
+          return;
+        }
+        if (pathname.indexOf('/cart') !== -1) {
+          window.location.replace('/?tab=cart' + (hash || ''));
+          return;
+        }
+        if (pathname.indexOf('/checkout') !== -1) {
+          window.location.replace('/?tab=checkout' + (hash || ''));
+          return;
+        }
+        if (pathname.indexOf('/admin') !== -1) {
+          window.location.replace('/?tab=admin' + (hash || ''));
+          return;
+        }
+
+        // General fallback to root preserving path in redirect parameter
+        window.location.replace('/' + search + hash);
+      })();
+    </script>
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+      }
+      .box {
+        padding: 30px;
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid #334155;
+        border-radius: 16px;
+        max-width: 420px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      }
+      .spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid rgba(232, 6, 69, 0.2);
+        border-top-color: #e80645;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 16px;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      h2 { margin: 0 0 10px; font-size: 1.1rem; }
+      p { margin: 0; font-size: 0.875rem; color: #94a3b8; }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <div class="spinner"></div>
+      <h2>در حال انتقال به صفحه محصول...</h2>
+      <p>لطفاً چند لحظه صبر کنید...</p>
+    </div>
+  </body>
+</html>

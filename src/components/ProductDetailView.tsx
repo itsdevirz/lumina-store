@@ -195,7 +195,8 @@ export const ProductDetailView: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: uId })
       });
-      if (res.ok) {
+      const ct = res.headers.get('content-type') || '';
+      if (res.ok && ct.includes('application/json')) {
         const json = await res.json();
         setIsFavorited(json.favorited);
         setFavoritesCount(json.count);
@@ -463,11 +464,11 @@ export const ProductDetailView: React.FC = () => {
           </span>
         </nav>
 
-        {/* MAIN PRODUCT SHOWCASE STAGE */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 mb-12">
+        {/* TOP SECTION: PRODUCT SHOWCASE (Image + Title, Description, Features & Specs) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 mb-8 items-start">
           
           {/* GALLERY COLUMN (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-3">
+          <div className="lg:col-span-5 flex flex-col gap-3 lg:sticky lg:top-24">
             {/* Main Stage Image (Clean, No-Zoom, High-Fidelity) */}
             <div
               className="relative aspect-square w-full rounded-2xl overflow-hidden bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs select-none group"
@@ -551,285 +552,316 @@ export const ProductDetailView: React.FC = () => {
             )}
           </div>
 
-          {/* PRODUCT SPECS & ACTION CENTER (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col justify-between">
-            <div>
-              {/* Brand & Stock Pill */}
-              <div className="flex items-center justify-between gap-2 mb-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-[#E80645] dark:text-rose-400 tracking-wider uppercase">
-                    {selectedProduct.brand}
-                  </span>
-                  <span className="text-slate-300 dark:text-slate-700">•</span>
-                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                    {selectedProduct.categoryFa}
-                  </span>
-                </div>
-
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>{lang === 'fa' ? 'موجود در انبار لومینا • تحویل اکسپرس' : 'In Stock • Fast Delivery'}</span>
-                </span>
-              </div>
-
-              {/* Title */}
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 leading-tight">
-                {lang === 'fa' ? selectedProduct.nameFa : selectedProduct.name}
-              </h1>
-
-              {/* English Subtitle */}
-              <div className="text-xs font-medium text-slate-400 dir-ltr text-right mb-3">
-                {selectedProduct.name}
-              </div>
-
-              {/* Rating & Review Counter */}
-              <div className="flex items-center gap-3 text-xs mb-3 pb-3 border-b border-slate-200/80 dark:border-slate-800/80">
-                <div className="flex items-center gap-1 text-amber-500">
-                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  <span className="font-black text-slate-900 dark:text-white text-sm tabular-nums">
-                    {selectedProduct.rating}
-                  </span>
-                </div>
-                <span className="text-slate-300 dark:text-slate-700">•</span>
-                <span className="text-slate-500 dark:text-slate-400 tabular-nums">
-                  {lang === 'fa' ? `${selectedProduct.reviewsCount} دیدگاه ثبت‌شده کاربران` : `${selectedProduct.reviewsCount} Verified Reviews`}
+          {/* PRODUCT OVERVIEW: NAME, DESCRIPTION, FEATURES & SPECS (7 cols) */}
+          <div className="lg:col-span-7 flex flex-col justify-start">
+            {/* Brand & Stock Pill */}
+            <div className="flex items-center justify-between gap-2 mb-2.5">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-[#E80645] dark:text-rose-400 tracking-wider uppercase">
+                  {selectedProduct.brand}
                 </span>
                 <span className="text-slate-300 dark:text-slate-700">•</span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold tabular-nums">
-                  {lang === 'fa' ? `${selectedProduct.soldCount}+ سفارش موفق` : `${selectedProduct.soldCount}+ orders`}
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  {selectedProduct.categoryFa}
                 </span>
               </div>
 
-              {/* Real-Time Social Proof & Popularity Strip */}
-              <div className="flex flex-wrap items-center gap-2 mb-5 p-3 rounded-2xl bg-slate-50/90 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 text-xs">
-                {/* Heart / Favorites Count */}
-                <button
-                  type="button"
-                  onClick={handleToggleWishlist}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${
-                    isFavorited
-                      ? 'bg-rose-50 dark:bg-rose-950/50 border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 font-bold'
-                      : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-rose-300'
-                  }`}
-                  title={isFavorited ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}
-                >
-                  <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-current text-rose-600' : 'text-slate-400'}`} />
-                  <span className="tabular-nums font-bold">
-                    {favoritesCount.toLocaleString('fa-IR')}
-                  </span>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                    {lang === 'fa' ? 'نفر پسندیده‌اند' : 'people liked this'}
-                  </span>
-                </button>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{lang === 'fa' ? 'موجود در انبار لومینا • تحویل اکسپرس' : 'In Stock • Fast Delivery'}</span>
+              </span>
+            </div>
 
-                {/* Unique Buyers Count */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
-                  <Users className="w-3.5 h-3.5 text-rose-500" />
-                  <span className="tabular-nums font-bold">
-                    {(socialStats?.uniqueBuyersCount || Math.ceil((selectedProduct.soldCount || 10) * 0.85)).toLocaleString('fa-IR')}+
-                  </span>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                    {lang === 'fa' ? 'خریدار قطعی' : 'verified buyers'}
-                  </span>
-                </div>
+            {/* Title */}
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 leading-tight">
+              {lang === 'fa' ? selectedProduct.nameFa : selectedProduct.name}
+            </h1>
 
-                {/* Popularity Badge */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-900 text-emerald-700 dark:text-emerald-300 font-bold">
-                  <TrendingUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span className="tabular-nums">
-                    {(socialStats?.popularityScore || 92).toLocaleString('fa-IR')}٪
-                  </span>
-                  <span className="text-[11px] font-medium">
-                    {socialStats?.popularityLabelFa || (lang === 'fa' ? 'شاخص محبوبیت' : 'Popularity')}
-                  </span>
-                </div>
+            {/* English Subtitle */}
+            <div className="text-xs font-medium text-slate-400 dir-ltr text-right mb-3">
+              {selectedProduct.name}
+            </div>
 
-                {/* Total Views Count */}
-                {socialStats?.viewsAllTime && (
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-slate-500 dark:text-slate-400 text-[11px] ms-auto">
-                    <Eye className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{socialStats.viewsAllTime.toLocaleString('fa-IR')} بازدید</span>
+            {/* Rating & Review Counter & Social Summary */}
+            <div className="flex flex-wrap items-center gap-3 text-xs mb-4 pb-3 border-b border-slate-200/80 dark:border-slate-800/80">
+              <div className="flex items-center gap-1 text-amber-500">
+                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                <span className="font-black text-slate-900 dark:text-white text-sm tabular-nums">
+                  {selectedProduct.rating}
+                </span>
+              </div>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span className="text-slate-500 dark:text-slate-400 tabular-nums">
+                {lang === 'fa' ? `${selectedProduct.reviewsCount} دیدگاه ثبت‌شده کاربران` : `${selectedProduct.reviewsCount} Verified Reviews`}
+              </span>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-bold tabular-nums">
+                {lang === 'fa' ? `${selectedProduct.soldCount}+ سفارش موفق` : `${selectedProduct.soldCount}+ orders`}
+              </span>
+              <span className="text-slate-300 dark:text-slate-700">•</span>
+              <span className="text-slate-500 dark:text-slate-400">
+                {lang === 'fa' ? `${favoritesCount.toLocaleString('fa-IR')} علاقه‌مند` : `${favoritesCount} favorites`}
+              </span>
+            </div>
+
+            {/* Product Description */}
+            <div className="mb-6">
+              <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#E80645]" />
+                <span>{lang === 'fa' ? 'معرفی و توضیحات کالا' : 'Product Description'}</span>
+              </h2>
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80">
+                {lang === 'fa' ? (selectedProduct.descriptionFa || selectedProduct.description) : selectedProduct.description}
+              </p>
+            </div>
+
+            {/* Key Features & Highlights */}
+            <div className="mb-6">
+              <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <span>{lang === 'fa' ? 'ویژگی‌ها و امکانات کلیدی' : 'Key Features & Capabilities'}</span>
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {(lang === 'fa' && selectedProduct.featuresFa && selectedProduct.featuresFa.length > 0
+                  ? selectedProduct.featuresFa
+                  : selectedProduct.features || [
+                    'طراحی ارگونومیک و استاندارد برای استفاده مداوم روزمره',
+                    'ساخته‌شده از متریال مرغوب با دوام و استحکام تضمین‌شده',
+                    'سازگاری کامل با کلیه اکوسیستم‌های نرم‌افزاری و سخت‌افزاری مدرن',
+                    'دارای ۱۸ ماه گارانتی رسمی و معتبر شرکتی'
+                  ]
+                ).map((feat, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-2.5 p-3 rounded-xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 text-xs text-slate-700 dark:text-slate-200 shadow-2xs"
+                  >
+                    <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <span className="font-medium leading-relaxed">{feat}</span>
                   </div>
-                )}
-              </div>
-
-              {/* Price Area Box */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-[#0E1524] border border-slate-200/80 dark:border-slate-800/80 mb-6">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight">
-                    {formatPrice(effectivePrice, selectedProduct.priceUSD)}
-                  </span>
-
-                  {selectedProduct.originalPrice && selectedProduct.originalPrice > effectivePrice && (
-                    <span className="text-sm sm:text-base text-slate-400 line-through tabular-nums">
-                      {formatPrice(selectedProduct.originalPrice, selectedProduct.originalPriceUSD)}
-                    </span>
-                  )}
-                </div>
-
-                <div className="text-[11px] text-slate-400 mt-1.5 flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>{lang === 'fa' ? 'قیمت نهایی با احتساب کلیه کسورات قانونی و ضمانت اصالت ۱۰۰٪' : 'Final price with all taxes included'}</span>
-                </div>
-              </div>
-
-              {/* Dynamic Variant Selector */}
-              <div className="mb-6">
-                <ProductVariantSelector
-                  product={selectedProduct}
-                  selectedColor={selectedColor}
-                  selectedColorHex={selectedColorHex}
-                  selectedSize={selectedSize}
-                  selectedAttributes={selectedAttributes}
-                  selectedVariant={selectedVariant}
-                  onSelectColor={handleColorChange}
-                  onSelectSize={handleSizeChange}
-                  onSelectAttribute={(attr, val) => {
-                    setSelectedAttributes(prev => ({ ...prev, [attr]: val }));
-                    setValidationError(null);
-                  }}
-                  validationError={validationError}
-                />
-              </div>
-
-              {/* Delivery ETA & Official Seller Box */}
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 mb-6 space-y-2.5 text-xs">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold">
-                    <Award className="w-4 h-4 text-[#E80645] dark:text-rose-400" />
-                    <span>{lang === 'fa' ? 'فروشنده رسمی:' : 'Seller:'}</span>
-                    <span className="text-slate-900 dark:text-white">{lang === 'fa' ? 'فروشگاه مرکزی لومینا' : 'Lumina Official Store'}</span>
-                  </div>
-                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
-                    {lang === 'fa' ? 'رضایت ۹۸٪ خریداران' : '98% Positive'}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800">
-                  <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>
-                    {lang === 'fa'
-                      ? 'ارسال فوری از انبار مرکزی • تحویل امروز در تهران و فردا در شهرستان‌ها'
-                      : 'Express delivery from central warehouse'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Actions & Quantity Stepper */}
-              <div className="space-y-3 mb-6">
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  {/* Quantity Stepper */}
-                  <div className="flex items-center justify-between border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 p-1 w-full sm:w-32 shrink-0">
-                    <button
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      disabled={isOutOfStock}
-                      className="w-9 h-9 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-base cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      -
-                    </button>
-                    <span className="font-bold text-slate-900 dark:text-white text-sm tabular-nums">
-                      {isOutOfStock ? 0 : quantity}
-                    </span>
-                    <button
-                      onClick={() => setQuantity(Math.min(currentStock || 1, quantity + 1))}
-                      disabled={isOutOfStock || quantity >= currentStock}
-                      className="w-9 h-9 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-base cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  {/* Add to Cart Button */}
-                  <button
-                    id="product-add-to-cart-btn"
-                    onClick={handleAddToCart}
-                    disabled={isAdding || isOutOfStock}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold text-sm transition-all select-none ${
-                      isOutOfStock
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 cursor-not-allowed shadow-none'
-                        : 'bg-[#E80645] hover:bg-[#c7053b] text-white shadow-md shadow-rose-900/20 cursor-pointer active:scale-98'
-                    }`}
-                  >
-                    <ShoppingBag className="w-4.5 h-4.5" />
-                    <span>
-                      {isOutOfStock
-                        ? lang === 'fa'
-                          ? 'ناموجود در این ترکیب'
-                          : 'Out of Stock'
-                        : lang === 'fa'
-                        ? 'افزودن به سبد خرید'
-                        : 'Add to Cart'}
-                    </span>
-                  </button>
-
-                  {/* Buy Now Direct Button */}
-                  <button
-                    onClick={handleBuyNow}
-                    disabled={isOutOfStock}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold text-sm transition-all select-none ${
-                      isOutOfStock
-                        ? 'bg-slate-100 dark:bg-slate-800/60 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-800 cursor-not-allowed'
-                        : 'bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 cursor-pointer active:scale-98 shadow-xs'
-                    }`}
-                  >
-                    <CreditCard className="w-4.5 h-4.5" />
-                    <span>{lang === 'fa' ? 'خرید فوری' : 'Buy Now'}</span>
-                  </button>
-                </div>
-
-                {/* Secondary Actions: Wishlist & Share */}
-                <div className="flex items-center gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={handleToggleWishlist}
-                    className={`flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl border transition-colors cursor-pointer ${
-                      isFavorited
-                        ? 'border-rose-200 bg-rose-50 text-[#E80645] dark:bg-rose-950/40 dark:border-rose-900'
-                        : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
-                    <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-current' : ''}`} />
-                    <span>
-                      {isFavorited
-                        ? lang === 'fa'
-                          ? `در لیست علاقه‌مندی‌ها (${favoritesCount.toLocaleString('fa-IR')})`
-                          : `In Wishlist (${favoritesCount})`
-                        : lang === 'fa'
-                        ? `افزودن به علاقه‌مندی‌ها (${favoritesCount.toLocaleString('fa-IR')})`
-                        : `Add to Wishlist (${favoritesCount})`}
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleShare}
-                    className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                  >
-                    <Share2 className="w-3.5 h-3.5" />
-                    <span>{lang === 'fa' ? 'اشتراک‌گذاری' : 'Share'}</span>
-                  </button>
-                </div>
+                ))}
               </div>
             </div>
 
-            {/* Trust Assurance Strip */}
-            <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-slate-200/80 dark:border-slate-800/80 text-center">
-              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80">
-                <ShieldCheck className="w-4 h-4 text-[#E80645] dark:text-rose-400" />
-                <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">{lang === 'fa' ? 'ضمانت ۱۰۰٪ اصالت' : '100% Authentic'}</span>
+            {/* Quick Specs Overview */}
+            {selectedProduct.specs && Object.keys(selectedProduct.specs).length > 0 && (
+              <div className="mb-2">
+                <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                  <Award className="w-4 h-4 text-amber-500" />
+                  <span>{lang === 'fa' ? 'مشخصات برجسته' : 'Key Specifications'}</span>
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  {Object.entries(selectedProduct.specs).slice(0, 4).map(([key, val], idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800"
+                    >
+                      <span className="text-slate-500 dark:text-slate-400 font-medium">{key}:</span>
+                      <span className="font-bold text-slate-900 dark:text-white tabular-nums">{String(val)}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80">
-                <Truck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">{lang === 'fa' ? 'ارسال سریع اکسپرس' : 'Express Delivery'}</span>
-              </div>
-              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80">
-                <RotateCcw className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">{lang === 'fa' ? '۷ روز مهلت بازگشت' : '7-Day Return'}</span>
-              </div>
-            </div>
-
+            )}
           </div>
 
+        </div>
+
+        {/* LOWER SECTION: PURCHASE ACTIONS, PRICING, VARIANTS, TABS & REVIEWS */}
+        <div className="mb-12">
+          {/* Action & Pricing Card */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              
+              {/* Left Side: Pricing & Delivery Info (5 cols) */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[#0E1524] border border-slate-200/80 dark:border-slate-800/80">
+                  <div className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">
+                    {lang === 'fa' ? 'قیمت برای مصرف‌کننده' : 'Product Price'}
+                  </div>
+                  <div className="flex items-baseline gap-3 flex-wrap">
+                    <span className="text-3xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight">
+                      {formatPrice(effectivePrice, selectedProduct.priceUSD)}
+                    </span>
+
+                    {selectedProduct.originalPrice && selectedProduct.originalPrice > effectivePrice && (
+                      <span className="text-base text-slate-400 line-through tabular-nums">
+                        {formatPrice(selectedProduct.originalPrice, selectedProduct.originalPriceUSD)}
+                      </span>
+                    )}
+
+                    {selectedProduct.discountPercent ? (
+                      <span className="px-2.5 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400 text-xs font-bold border border-rose-200/80 dark:border-rose-900/60">
+                        {lang === 'fa' ? `${selectedProduct.discountPercent}٪ تخفیف` : `-${selectedProduct.discountPercent}%`}
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-3 flex items-center gap-1.5 pt-2.5 border-t border-slate-200/60 dark:border-slate-800/60">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <span>{lang === 'fa' ? 'قیمت نهایی با احتساب کلیه کسورات قانونی و ضمانت اصالت ۱۰۰٪' : 'Final price with all taxes included'}</span>
+                  </div>
+                </div>
+
+                {/* Delivery ETA & Official Seller Box */}
+                <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold">
+                      <Award className="w-4 h-4 text-[#E80645] dark:text-rose-400" />
+                      <span>{lang === 'fa' ? 'فروشنده رسمی:' : 'Seller:'}</span>
+                      <span className="text-slate-900 dark:text-white">{lang === 'fa' ? 'فروشگاه مرکزی لومینا' : 'Lumina Official Store'}</span>
+                    </div>
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
+                      {lang === 'fa' ? 'رضایت ۹۸٪' : '98% Positive'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 pt-1 border-t border-slate-200/60 dark:border-slate-800">
+                    <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>
+                      {lang === 'fa'
+                        ? 'ارسال فوری از انبار مرکزی • تحویل امروز در تهران و فردا در سایر شهرها'
+                        : 'Express delivery from central warehouse'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Trust Assurance Mini Badges */}
+                <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                  <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800 flex flex-col items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#E80645]" />
+                    <span>{lang === 'fa' ? 'اصالت ۱۰۰٪' : 'Authentic'}</span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800 flex flex-col items-center gap-1">
+                    <Truck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>{lang === 'fa' ? 'ارسال سریع' : 'Express'}</span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-800 flex flex-col items-center gap-1">
+                    <RotateCcw className="w-3.5 h-3.5 text-amber-600" />
+                    <span>{lang === 'fa' ? '۷ روز بازگشت' : '7-Day Return'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side: Variant Choices, Quantity & Add To Cart Button (7 cols) */}
+              <div className="lg:col-span-7 flex flex-col justify-between h-full space-y-6">
+                {/* Dynamic Variant Selector */}
+                <div>
+                  <ProductVariantSelector
+                    product={selectedProduct}
+                    selectedColor={selectedColor}
+                    selectedColorHex={selectedColorHex}
+                    selectedSize={selectedSize}
+                    selectedAttributes={selectedAttributes}
+                    selectedVariant={selectedVariant}
+                    onSelectColor={handleColorChange}
+                    onSelectSize={handleSizeChange}
+                    onSelectAttribute={(attr, val) => {
+                      setSelectedAttributes(prev => ({ ...prev, [attr]: val }));
+                      setValidationError(null);
+                    }}
+                    validationError={validationError}
+                  />
+                </div>
+
+                {/* Actions & Quantity Stepper */}
+                <div className="space-y-4 pt-4 border-t border-slate-200/80 dark:border-slate-800/80">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    {/* Quantity Stepper */}
+                    <div className="flex items-center justify-between border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 p-1 w-full sm:w-32 shrink-0">
+                      <button
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        disabled={isOutOfStock}
+                        className="w-9 h-9 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-base cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        -
+                      </button>
+                      <span className="font-bold text-slate-900 dark:text-white text-sm tabular-nums">
+                        {isOutOfStock ? 0 : quantity}
+                      </span>
+                      <button
+                        onClick={() => setQuantity(Math.min(currentStock || 1, quantity + 1))}
+                        disabled={isOutOfStock || quantity >= currentStock}
+                        className="w-9 h-9 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-base cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    {/* Add to Cart Button */}
+                    <button
+                      id="product-add-to-cart-btn"
+                      onClick={handleAddToCart}
+                      disabled={isAdding || isOutOfStock}
+                      className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm transition-all select-none ${
+                        isOutOfStock
+                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 cursor-not-allowed shadow-none'
+                          : 'bg-[#E80645] hover:bg-[#c7053b] text-white shadow-md shadow-rose-900/20 cursor-pointer active:scale-98'
+                      }`}
+                    >
+                      <ShoppingBag className="w-5 h-5" />
+                      <span>
+                        {isOutOfStock
+                          ? lang === 'fa'
+                            ? 'ناموجود در این ترکیب'
+                            : 'Out of Stock'
+                          : lang === 'fa'
+                          ? 'افزودن به سبد خرید'
+                          : 'Add to Cart'}
+                      </span>
+                    </button>
+
+                    {/* Buy Now Direct Button */}
+                    <button
+                      onClick={handleBuyNow}
+                      disabled={isOutOfStock}
+                      className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm transition-all select-none ${
+                        isOutOfStock
+                          ? 'bg-slate-100 dark:bg-slate-800/60 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-800 cursor-not-allowed'
+                          : 'bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 cursor-pointer active:scale-98 shadow-xs'
+                      }`}
+                    >
+                      <CreditCard className="w-5 h-5" />
+                      <span>{lang === 'fa' ? 'خرید فوری' : 'Buy Now'}</span>
+                    </button>
+                  </div>
+
+                  {/* Secondary Actions: Wishlist & Share */}
+                  <div className="flex items-center gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={handleToggleWishlist}
+                      className={`flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl border transition-colors cursor-pointer ${
+                        isFavorited
+                          ? 'border-rose-200 bg-rose-50 text-[#E80645] dark:bg-rose-950/40 dark:border-rose-900'
+                          : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-current' : ''}`} />
+                      <span>
+                        {isFavorited
+                          ? lang === 'fa'
+                            ? `در لیست علاقه‌مندی‌ها (${favoritesCount.toLocaleString('fa-IR')})`
+                            : `In Wishlist (${favoritesCount})`
+                          : lang === 'fa'
+                          ? `افزودن به علاقه‌مندی‌ها (${favoritesCount.toLocaleString('fa-IR')})`
+                          : `Add to Wishlist (${favoritesCount})`}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleShare}
+                      className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                    >
+                      <Share2 className="w-3.5 h-3.5" />
+                      <span>{lang === 'fa' ? 'اشتراک‌گذاری' : 'Share'}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
 
         {/* TABBED SPECIFICATIONS & REVIEWS SECTION */}

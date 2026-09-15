@@ -9,7 +9,6 @@ import { ProductSlider } from './components/ProductSlider';
 import { FlashSale } from './components/FlashSale';
 import { PromotionalBanners } from './components/PromotionalBanners';
 import { BestSellers } from './components/BestSellers';
-import { CategorySection } from './components/CategorySection';
 import { TrustSection } from './components/TrustSection';
 import { RecentlyViewed } from './components/RecentlyViewed';
 import { ProductListing } from './components/ProductListing';
@@ -58,7 +57,6 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
             <FestivalBanner />
             <Hero />
             <TrustSection />
-            <CategorySection />
             <FlashSale />
             <SiteBanner />
             <ProductSlider />

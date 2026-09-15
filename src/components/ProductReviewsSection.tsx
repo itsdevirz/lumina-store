@@ -13,10 +13,40 @@ import {
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { ProductReview, ReviewStats } from '../types';
+import { INITIAL_REVIEWS, computeReviewStats } from '../data/reviews';
 
 interface ProductReviewsSectionProps {
   productId: string;
 }
+
+const STORAGE_KEY = 'lumina_custom_reviews';
+
+// Helper to get local stored reviews
+const getLocalReviews = (pId: string): ProductReview[] => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const customList: ProductReview[] = raw ? JSON.parse(raw) : [];
+    const defaults = INITIAL_REVIEWS.filter(r => r.productId === pId);
+    const combined = [...customList.filter(r => r.productId === pId), ...defaults];
+    return combined;
+  } catch {
+    return INITIAL_REVIEWS.filter(r => r.productId === pId);
+  }
+};
+
+const saveLocalReview = (newReview: ProductReview): ProductReview[] => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const current: ProductReview[] = raw ? JSON.parse(raw) : [];
+    // remove existing if same user & product
+    const updated = [newReview, ...current.filter(r => !(r.productId === newReview.productId && r.id === newReview.id))];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    const defaults = INITIAL_REVIEWS.filter(r => r.productId === newReview.productId);
+    return [...updated.filter(r => r.productId === newReview.productId), ...defaults];
+  } catch {
+    return [newReview, ...INITIAL_REVIEWS.filter(r => r.productId === newReview.productId)];
+  }
+};
 
 export const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ productId }) => {
   const {
@@ -56,20 +86,35 @@ export const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ pr
     Array.isArray(order.items) && order.items.some(item => item.productId === productId)
   );
 
-  // Fetch Reviews & Stats
+  // Fetch Reviews & Stats with Server + Static Host Fallback
   const fetchReviews = async () => {
     setIsLoading(true);
     try {
       const res = await fetch(`/api/products/${productId}/reviews`);
-      if (res.ok) {
+      const contentType = res.headers.get('content-type') || '';
+      
+      if (res.ok && contentType.includes('application/json')) {
         const data = await res.json();
-        setReviews(data.reviews || []);
-        if (data.stats) {
-          setStats(data.stats);
-        }
+        const serverReviews: ProductReview[] = data.reviews || [];
+        // Merge with any local user reviews that might exist
+        const localList = getLocalReviews(productId);
+        const userAdded = localList.filter(lr => !serverReviews.some(sr => sr.id === lr.id));
+        const combined = [...userAdded, ...serverReviews];
+        
+        setReviews(combined);
+        setStats(computeReviewStats(combined));
+        return;
       }
-    } catch (err) {
-      console.error('Error fetching reviews:', err);
+      
+      // Fallback for static hosts where API is not routed or returns index.html
+      const fallbackList = getLocalReviews(productId);
+      setReviews(fallbackList);
+      setStats(computeReviewStats(fallbackList));
+    } catch {
+      // Offline or static host fallback
+      const fallbackList = getLocalReviews(productId);
+      setReviews(fallbackList);
+      setStats(computeReviewStats(fallbackList));
     } finally {
       setIsLoading(false);
     }
@@ -115,38 +160,75 @@ export const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ pr
     }
 
     setIsSubmitting(true);
-    try {
-      const res = await fetch(`/api/products/${productId}/reviews`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUser.id,
-          userName: currentUser.name || 'کاربر لومینا',
-          userAvatar: currentUser.avatar,
-          userEmail: currentUser.email,
-          rating,
-          comment
-        })
-      });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        addToast({
-          title: lang === 'fa' ? 'نظر با موفقیت ثبت شد' : 'Review Submitted',
-          description: lang === 'fa' ? 'با تشکر! نظر جدید شما در سامانه ثبت گردید.' : 'Thank you! Your review has been saved.',
-          type: 'success'
+    const newReviewItem: ProductReview = {
+      id: 'rev-' + Date.now(),
+      productId,
+      userId: currentUser.id,
+      userName: currentUser.name || (lang === 'fa' ? 'کاربر لومینا' : 'Lumina User'),
+      userAvatar: currentUser.avatar,
+      userEmail: currentUser.email,
+      rating: Number(rating),
+      comment: comment ? String(comment).trim() : '',
+      status: 'approved',
+      isVerifiedPurchase,
+      createdAt: new Intl.DateTimeFormat('fa-IR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(new Date()),
+      timestamp: Date.now()
+    };
+
+    try {
+      let savedSuccessfully = false;
+
+      // Try calling the backend API first
+      try {
+        const res = await fetch(`/api/products/${productId}/reviews`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: currentUser.id,
+            userName: currentUser.name || 'کاربر لومینا',
+            userAvatar: currentUser.avatar,
+            userEmail: currentUser.email,
+            rating,
+            comment
+          })
         });
-        setComment('');
-        setRating(5);
-        fetchReviews();
-        refetchProducts(); // Sync store rating
-      } else {
-        throw new Error(data.error || 'خطا در ثبت نظر');
+
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await res.json();
+          if (res.ok && data.success) {
+            savedSuccessfully = true;
+          }
+        }
+      } catch (networkErr) {
+        // Backend unavailable (e.g. static hosting on cPanel/Nginx/GitHub Pages)
+        console.warn('API backend not reachable, using local fallback:', networkErr);
       }
+
+      // Always ensure local persistence fallback for static hosting
+      const updatedList = saveLocalReview(newReviewItem);
+      setReviews(updatedList);
+      setStats(computeReviewStats(updatedList));
+
+      addToast({
+        title: lang === 'fa' ? 'نظر با موفقیت ثبت شد' : 'Review Submitted',
+        description: lang === 'fa' ? 'با تشکر! نظر و امتیاز شما با موفقیت ذخیره و نمایش داده شد.' : 'Thank you! Your review has been saved.',
+        type: 'success'
+      });
+      setComment('');
+      setRating(5);
+      refetchProducts(); // Sync store rating
     } catch (err: any) {
       addToast({
         title: lang === 'fa' ? 'خطا در ارسال' : 'Submission Error',
-        description: err.message || (lang === 'fa' ? 'متأسفانه مشکلی رخ داد. دوباره تلاش کنید.' : 'An error occurred.'),
+        description: err?.message || (lang === 'fa' ? 'متأسفانه مشکلی رخ داد. دوباره تلاش کنید.' : 'An error occurred.'),
         type: 'error'
       });
     } finally {
