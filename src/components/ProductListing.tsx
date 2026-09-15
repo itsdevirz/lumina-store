@@ -9,7 +9,11 @@ import {
   Star,
   ChevronRight,
   Filter,
-  Check
+  Check,
+  Eye,
+  ShoppingBag,
+  Zap,
+  ArrowUpDown
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { CATEGORIES } from '../data/products';
@@ -28,6 +32,8 @@ export const ProductListing: React.FC = () => {
     setIsMobileFilterOpen,
     setActiveTab,
     openProductDetails,
+    setQuickViewProduct,
+    addToCart,
     formatPrice
   } = useStore();
 
@@ -35,80 +41,75 @@ export const ProductListing: React.FC = () => {
 
   const handleCategorySelect = (catId: string) => {
     setFilters(prev => ({ ...prev, selectedCategory: catId }));
-    if (typeof window !== 'undefined') {
-      window.history.pushState(
-        { tab: 'shop', category: catId },
-        '',
-        catId !== 'all' ? `/category/${catId}` : '/shop'
-      );
-    }
   };
 
-  // Extract unique brands
+  // Unique brands
   const brands = useMemo(() => {
     return Array.from(new Set(products.map(p => p.brand)));
   }, [products]);
 
   // Filter & sort logic
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
-      // Search query
-      if (filters.searchQuery) {
-        const q = filters.searchQuery.toLowerCase();
-        const matches =
-          product.name.toLowerCase().includes(q) ||
-          product.nameFa.includes(q) ||
-          product.brand.toLowerCase().includes(q) ||
-          product.categoryFa.includes(q);
-        if (!matches) return false;
-      }
+    return products
+      .filter(product => {
+        // Search query
+        if (filters.searchQuery) {
+          const q = filters.searchQuery.toLowerCase();
+          const matches =
+            product.name.toLowerCase().includes(q) ||
+            product.nameFa.includes(q) ||
+            product.brand.toLowerCase().includes(q) ||
+            product.categoryFa.includes(q);
+          if (!matches) return false;
+        }
 
-      // Category
-      if (filters.selectedCategory && filters.selectedCategory !== 'all') {
-        if (product.category !== filters.selectedCategory) return false;
-      }
+        // Category
+        if (filters.selectedCategory && filters.selectedCategory !== 'all') {
+          if (product.category !== filters.selectedCategory) return false;
+        }
 
-      // Brand
-      if (filters.selectedBrand && filters.selectedBrand !== 'all') {
-        if (product.brand !== filters.selectedBrand) return false;
-      }
+        // Brand
+        if (filters.selectedBrand && filters.selectedBrand !== 'all') {
+          if (product.brand !== filters.selectedBrand) return false;
+        }
 
-      // Price
-      if (product.price > filters.maxPrice || product.price < filters.minPrice) {
-        return false;
-      }
+        // Price
+        if (product.price > filters.maxPrice || product.price < filters.minPrice) {
+          return false;
+        }
 
-      // Rating
-      if (filters.minRating > 0 && product.rating < filters.minRating) {
-        return false;
-      }
+        // Rating
+        if (filters.minRating > 0 && product.rating < filters.minRating) {
+          return false;
+        }
 
-      // Stock
-      if (filters.inStockOnly && product.stock <= 0) {
-        return false;
-      }
+        // Stock
+        if (filters.inStockOnly && product.stock <= 0) {
+          return false;
+        }
 
-      // On Sale
-      if (filters.onSaleOnly && !product.discountPercent) {
-        return false;
-      }
+        // On Sale
+        if (filters.onSaleOnly && !product.discountPercent) {
+          return false;
+        }
 
-      return true;
-    }).sort((a, b) => {
-      switch (filters.sortBy) {
-        case 'price-asc':
-          return a.price - b.price;
-        case 'price-desc':
-          return b.price - a.price;
-        case 'rating':
-          return b.rating - a.rating;
-        case 'newest':
-          return b.id.localeCompare(a.id);
-        case 'popular':
-        default:
-          return b.soldCount - a.soldCount;
-      }
-    });
+        return true;
+      })
+      .sort((a, b) => {
+        switch (filters.sortBy) {
+          case 'price-asc':
+            return a.price - b.price;
+          case 'price-desc':
+            return b.price - a.price;
+          case 'rating':
+            return b.rating - a.rating;
+          case 'newest':
+            return b.id.localeCompare(a.id);
+          case 'popular':
+          default:
+            return b.soldCount - a.soldCount;
+        }
+      });
   }, [products, filters]);
 
   const activeFiltersCount = useMemo(() => {
@@ -124,42 +125,42 @@ export const ProductListing: React.FC = () => {
   }, [filters]);
 
   const FilterSidebarContent = (
-    <div className="space-y-5">
-      {/* Header with clear button */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-zinc-800">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-[#E80645] dark:text-rose-400" />
-          <h3 className="font-bold text-slate-900 dark:text-white text-sm">
-            {lang === 'fa' ? 'فیلترهای کالا' : 'Filters'}
+          <Filter className="w-3.5 h-3.5 text-zinc-400" />
+          <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-xs">
+            {lang === 'fa' ? 'فیلترهای مشخصات' : 'Filter Specifications'}
           </h3>
         </div>
         {activeFiltersCount > 0 && (
           <button
             onClick={resetFilters}
-            className="flex items-center gap-1 text-xs text-[#E80645] dark:text-rose-400 hover:underline font-semibold cursor-pointer"
+            className="flex items-center gap-1 text-[11px] font-mono text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
           >
             <RotateCcw className="w-3 h-3" />
-            <span>{lang === 'fa' ? 'پاک‌سازی' : 'Reset'}</span>
+            <span>{lang === 'fa' ? 'بازنشانی' : 'Reset'}</span>
           </button>
         )}
       </div>
 
       {/* Category Filter */}
       <div>
-        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+        <h4 className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-2">
           {lang === 'fa' ? 'دسته‌بندی' : 'Category'}
         </h4>
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           <button
             onClick={() => handleCategorySelect('all')}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
+            className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${
               filters.selectedCategory === 'all'
-                ? 'bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400 font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold'
+                : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
             }`}
           >
-            <span>{lang === 'fa' ? 'همه دسته‌بندی‌ها' : 'All Categories'}</span>
-            <span className="text-[11px] text-slate-400 tabular-nums">{products.length}</span>
+            <span>{lang === 'fa' ? 'همه کالاها' : 'All Products'}</span>
+            <span className="text-[10px] font-mono text-zinc-400">{products.length}</span>
           </button>
 
           {CATEGORIES.map(cat => {
@@ -170,14 +171,14 @@ export const ProductListing: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => handleCategorySelect(cat.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${
                   isSelected
-                    ? 'bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400 font-bold'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                 }`}
               >
                 <span>{lang === 'fa' ? cat.nameFa : cat.name}</span>
-                <span className="text-[11px] text-slate-400 tabular-nums">{count}</span>
+                <span className="text-[10px] font-mono text-zinc-400">{count}</span>
               </button>
             );
           })}
@@ -185,17 +186,17 @@ export const ProductListing: React.FC = () => {
       </div>
 
       {/* Brand Filter */}
-      <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
+      <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
+        <h4 className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-2">
           {lang === 'fa' ? 'برند سازنده' : 'Brand'}
         </h4>
-        <div className="space-y-1 max-h-44 overflow-y-auto pr-1">
+        <div className="space-y-0.5 max-h-36 overflow-y-auto pr-1 no-scrollbar">
           <button
             onClick={() => setFilters(prev => ({ ...prev, selectedBrand: 'all' }))}
-            className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+            className={`w-full flex items-center justify-between px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
               filters.selectedBrand === 'all'
-                ? 'text-[#E80645] dark:text-rose-400 font-bold'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'text-indigo-600 dark:text-indigo-400 font-medium'
+                : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
             }`}
           >
             <span>{lang === 'fa' ? 'همه برندها' : 'All Brands'}</span>
@@ -207,10 +208,10 @@ export const ProductListing: React.FC = () => {
               <button
                 key={b}
                 onClick={() => setFilters(prev => ({ ...prev, selectedBrand: isSelected ? 'all' : b }))}
-                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                className={`w-full flex items-center justify-between px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
                   isSelected
-                    ? 'text-[#E80645] dark:text-rose-400 font-bold bg-rose-50/60 dark:bg-rose-950/40'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'text-indigo-600 dark:text-indigo-400 font-medium'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                 }`}
               >
                 <span>{b}</span>
@@ -222,81 +223,49 @@ export const ProductListing: React.FC = () => {
       </div>
 
       {/* Price Range */}
-      <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
-          {lang === 'fa' ? 'حداکثر بودجه' : 'Budget Range'}
-        </h4>
-        <div className="space-y-2">
-          <input
-            type="range"
-            min={1000000}
-            max={30000000}
-            step={500000}
-            value={filters.maxPrice}
-            onChange={e => setFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) }))}
-            className="w-full accent-[#E80645] cursor-pointer"
-          />
-          <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
-            <span>{formatPrice(1000000, 20)}</span>
-            <span className="font-bold text-[#E80645] dark:text-rose-400 tabular-nums">
-              {formatPrice(filters.maxPrice, Math.round(filters.maxPrice / 50000))}
-            </span>
-          </div>
+      <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
+        <div className="flex items-center justify-between mb-1.5">
+          <h4 className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+            {lang === 'fa' ? 'سقف قیمت' : 'Max Budget'}
+          </h4>
+          <span className="font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+            {formatPrice(filters.maxPrice, Math.round(filters.maxPrice / 50000))}
+          </span>
         </div>
-      </div>
-
-      {/* Rating Filter */}
-      <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
-          {lang === 'fa' ? 'حداقل امتیاز خریداران' : 'Minimum Rating'}
-        </h4>
-        <div className="grid grid-cols-4 gap-1.5">
-          {[0, 4.0, 4.5, 4.8].map(r => (
-            <button
-              key={r}
-              onClick={() => setFilters(prev => ({ ...prev, minRating: r }))}
-              className={`py-1.5 px-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-colors cursor-pointer ${
-                filters.minRating === r
-                  ? 'bg-amber-500 text-white shadow-xs'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-              }`}
-            >
-              {r === 0 ? (
-                <span>{lang === 'fa' ? 'همه' : 'All'}</span>
-              ) : (
-                <>
-                  <Star className="w-3 h-3 fill-current" />
-                  <span>{r}+</span>
-                </>
-              )}
-            </button>
-          ))}
-        </div>
+        <input
+          type="range"
+          min={1000000}
+          max={30000000}
+          step={500000}
+          value={filters.maxPrice}
+          onChange={e => setFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) }))}
+          className="w-full accent-indigo-600 cursor-pointer"
+        />
       </div>
 
       {/* Stock & Sale Toggles */}
-      <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
-        <label className="flex items-center justify-between cursor-pointer select-none">
-          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            {lang === 'fa' ? 'فقط کالاهای موجود در انبار' : 'In Stock Only'}
+      <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800 space-y-2">
+        <label className="flex items-center justify-between cursor-pointer select-none text-xs">
+          <span className="text-zinc-700 dark:text-zinc-300">
+            {lang === 'fa' ? 'فقط کالاهای موجود' : 'In Stock Only'}
           </span>
           <input
             type="checkbox"
             checked={filters.inStockOnly}
             onChange={e => setFilters(prev => ({ ...prev, inStockOnly: e.target.checked }))}
-            className="w-4 h-4 rounded-sm accent-[#E80645] cursor-pointer"
+            className="w-3.5 h-3.5 rounded accent-indigo-600 cursor-pointer"
           />
         </label>
 
-        <label className="flex items-center justify-between cursor-pointer select-none">
-          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            {lang === 'fa' ? 'فقط کالاهای شگفت‌انگیز و تخفیف‌دار' : 'On Sale Only'}
+        <label className="flex items-center justify-between cursor-pointer select-none text-xs">
+          <span className="text-zinc-700 dark:text-zinc-300">
+            {lang === 'fa' ? 'فقط تخفیف‌دار و شگفت‌انگیز' : 'On Sale Only'}
           </span>
           <input
             type="checkbox"
             checked={filters.onSaleOnly}
             onChange={e => setFilters(prev => ({ ...prev, onSaleOnly: e.target.checked }))}
-            className="w-4 h-4 rounded-sm accent-[#E80645] cursor-pointer"
+            className="w-3.5 h-3.5 rounded accent-indigo-600 cursor-pointer"
           />
         </label>
       </div>
@@ -304,35 +273,13 @@ export const ProductListing: React.FC = () => {
   );
 
   return (
-    <div className="py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Breadcrumb Navigation */}
-        <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-6 flex-wrap">
-          <button onClick={() => setActiveTab('home')} className="hover:text-[#E80645] transition-colors cursor-pointer">
-            {lang === 'fa' ? 'خانه' : 'Home'}
-          </button>
-          <ChevronRight className="w-3 h-3 rtl:rotate-180" />
-          <span className="text-slate-800 dark:text-slate-200 font-bold">
-            {lang === 'fa' ? 'کاتالوگ محصولات' : 'Catalog'}
-          </span>
-          {filters.selectedCategory !== 'all' && (
-            <>
-              <ChevronRight className="w-3 h-3 rtl:rotate-180" />
-              <span className="text-[#E80645] dark:text-rose-400 font-bold">
-                {CATEGORIES.find(c => c.id === filters.selectedCategory)?.nameFa || filters.selectedCategory}
-              </span>
-            </>
-          )}
-        </div>
-
-        {/* Top Control Bar (Search, Sort, View Modes, Mobile Filter Trigger) */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5 mb-6 p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
-          {/* Search Input */}
-          <div className="relative w-full md:w-72">
-            <div className="absolute inset-y-0 rtl:right-3 ltr:left-3 flex items-center pointer-events-none text-slate-400">
-              <Search className="w-4 h-4" />
-            </div>
+    <div className="py-5 max-w-7xl mx-auto px-4 sm:px-6">
+      {/* Top Filter & Command Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-4 mb-5 border-b border-zinc-200 dark:border-zinc-800/80">
+        {/* Left: Search Bar with Active Count */}
+        <div className="flex items-center gap-2 flex-1 max-w-md">
+          <div className="relative w-full">
+            <Search className="w-3.5 h-3.5 absolute rtl:right-2.5 ltr:left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
             <input
               type="text"
               value={localSearch}
@@ -340,8 +287,8 @@ export const ProductListing: React.FC = () => {
                 setLocalSearch(e.target.value);
                 setFilters(prev => ({ ...prev, searchQuery: e.target.value }));
               }}
-              placeholder={lang === 'fa' ? 'جستجوی نام یا مشخصات کالا...' : 'Search products...'}
-              className="w-full rtl:pr-9 rtl:pl-7 ltr:pl-9 ltr:pr-7 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-[#E80645] focus:outline-none transition-all placeholder:text-slate-400"
+              placeholder={lang === 'fa' ? 'فیلتر سریع در میان محصولات...' : 'Filter products...'}
+              className="w-full rtl:pr-8 rtl:pl-7 ltr:pl-8 ltr:pr-7 py-1.5 text-xs rounded-md bg-white dark:bg-[#0C0C0E] border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-indigo-500 transition-colors"
             />
             {localSearch && (
               <button
@@ -349,237 +296,316 @@ export const ProductListing: React.FC = () => {
                   setLocalSearch('');
                   setFilters(prev => ({ ...prev, searchQuery: '' }));
                 }}
-                className="absolute inset-y-0 rtl:left-2.5 ltr:right-2.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                className="absolute rtl:left-2 ltr:right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3 h-3" />
               </button>
             )}
           </div>
 
-          {/* Right Controls: Sort & Views */}
-          <div className="flex items-center justify-between sm:justify-end gap-3">
-            {/* Mobile Filter Button */}
-            <button
-              onClick={() => setIsMobileFilterOpen(true)}
-              className="md:hidden flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+          {/* Mobile Filter Button */}
+          <button
+            onClick={() => setIsMobileFilterOpen(true)}
+            className="md:hidden flex items-center gap-1 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-300"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            {activeFiltersCount > 0 && (
+              <span className="font-mono text-[10px] px-1 rounded bg-indigo-600 text-white">
+                {activeFiltersCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Right: Metrics & Sort */}
+        <div className="flex items-center justify-between sm:justify-end gap-3 text-xs">
+          <span className="font-mono text-[11px] text-zinc-400">
+            {filteredProducts.length} {lang === 'fa' ? 'مورد' : 'items'}
+          </span>
+
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] text-zinc-400 font-mono hidden sm:inline">
+              {lang === 'fa' ? 'مرتب‌سازی:' : 'Sort:'}
+            </span>
+            <select
+              value={filters.sortBy}
+              onChange={e => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
+              className="text-xs bg-white dark:bg-[#0C0C0E] text-zinc-800 dark:text-zinc-200 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:border-indigo-500 cursor-pointer font-sans"
             >
-              <SlidersHorizontal className="w-4 h-4 text-[#E80645]" />
-              <span>{lang === 'fa' ? 'فیلترها' : 'Filters'}</span>
-              {activeFiltersCount > 0 && (
-                <span className="w-4.5 h-4.5 rounded-full bg-[#E80645] text-white text-[10px] font-bold flex items-center justify-center tabular-nums">
-                  {activeFiltersCount}
+              <option value="popular">{lang === 'fa' ? 'محبوب‌ترین' : 'Most Popular'}</option>
+              <option value="newest">{lang === 'fa' ? 'جدیدترین' : 'Newest'}</option>
+              <option value="price-asc">{lang === 'fa' ? 'ارزان‌ترین' : 'Price: Low to High'}</option>
+              <option value="price-desc">{lang === 'fa' ? 'گران‌ترین' : 'Price: High to Low'}</option>
+              <option value="rating">{lang === 'fa' ? 'بالاترین امتیاز' : 'Top Rated'}</option>
+            </select>
+          </div>
+
+          {/* View mode toggle */}
+          <div className="flex items-center border border-zinc-200 dark:border-zinc-800 rounded-md p-0.5 bg-zinc-50 dark:bg-zinc-900">
+            <button
+              onClick={() => setViewMode('grid')}
+              title="Grid View"
+              className={`p-1 rounded cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-2xs'
+                  : 'text-zinc-400 hover:text-zinc-600'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              title="Table View"
+              className={`p-1 rounded cursor-pointer ${
+                viewMode === 'list'
+                  ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-2xs'
+                  : 'text-zinc-400 hover:text-zinc-600'
+              }`}
+            >
+              <List className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Grid: Sidebar + Products */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:block md:col-span-1 p-3.5 rounded-lg bg-white dark:bg-[#0C0C0E] border border-zinc-200 dark:border-zinc-800/90 sticky top-20">
+          {FilterSidebarContent}
+        </aside>
+
+        {/* Content Area */}
+        <div className="md:col-span-3">
+          {/* Active Filters Tag Bar */}
+          {activeFiltersCount > 0 && (
+            <div className="flex items-center flex-wrap gap-1.5 mb-3.5 p-2 rounded-md bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 text-xs">
+              <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+                {lang === 'fa' ? 'فیلترها:' : 'Active:'}
+              </span>
+
+              {filters.selectedCategory !== 'all' && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-[11px] font-mono">
+                  {CATEGORIES.find(c => c.id === filters.selectedCategory)?.nameFa || filters.selectedCategory}
+                  <button
+                    onClick={() => setFilters(prev => ({ ...prev, selectedCategory: 'all' }))}
+                    className="hover:text-rose-500"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
                 </span>
               )}
-            </button>
 
-            {/* Sort Selector */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-400 hidden sm:inline">
-                {lang === 'fa' ? 'مرتب‌سازی:' : 'Sort:'}
-              </span>
-              <select
-                value={filters.sortBy}
-                onChange={e => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
-                className="text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-rose-500/20 focus:border-[#E80645] focus:outline-none cursor-pointer"
-              >
-                <option value="popular">{lang === 'fa' ? 'محبوب‌ترین‌ها' : 'Most Popular'}</option>
-                <option value="newest">{lang === 'fa' ? 'جدیدترین‌ها' : 'Newest'}</option>
-                <option value="price-asc">{lang === 'fa' ? 'ارزان‌ترین' : 'Price: Low to High'}</option>
-                <option value="price-desc">{lang === 'fa' ? 'گران‌ترین' : 'Price: High to Low'}</option>
-                <option value="rating">{lang === 'fa' ? 'بالاترین امتیاز' : 'Top Rated'}</option>
-              </select>
-            </div>
-
-            {/* Grid vs List View Switcher */}
-            <div className="hidden sm:flex items-center border border-slate-200 dark:border-slate-800 rounded-xl p-0.5 bg-slate-100 dark:bg-slate-800">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                  viewMode === 'grid'
-                    ? 'bg-white dark:bg-slate-900 text-[#E80645] shadow-2xs font-bold'
-                    : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
-                }`}
-                aria-label="Grid View"
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                  viewMode === 'list'
-                    ? 'bg-white dark:bg-slate-900 text-[#E80645] shadow-2xs font-bold'
-                    : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
-                }`}
-                aria-label="List View"
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content Area: Sidebar + Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
-          {/* Desktop Filter Sidebar */}
-          <aside className="hidden md:block md:col-span-1 p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 sticky top-24 shadow-xs">
-            {FilterSidebarContent}
-          </aside>
-
-          {/* Product Listing Main Area */}
-          <main className="md:col-span-3">
-            {/* Active Filters Summary Bar */}
-            {activeFiltersCount > 0 && (
-              <div className="flex items-center flex-wrap gap-2 mb-4 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 text-xs">
-                <span className="text-slate-400 font-medium">
-                  {lang === 'fa' ? 'فیلترهای فعال:' : 'Active filters:'}
+              {filters.selectedBrand !== 'all' && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-[11px] font-mono">
+                  {filters.selectedBrand}
+                  <button
+                    onClick={() => setFilters(prev => ({ ...prev, selectedBrand: 'all' }))}
+                    className="hover:text-rose-500"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
                 </span>
+              )}
 
-                {filters.selectedCategory !== 'all' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 font-bold border border-rose-200 dark:border-rose-900/40 shadow-2xs">
-                    {CATEGORIES.find(c => c.id === filters.selectedCategory)?.nameFa || filters.selectedCategory}
-                    <button onClick={() => setFilters(prev => ({ ...prev, selectedCategory: 'all' }))} className="cursor-pointer">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </span>
-                )}
-
-                {filters.selectedBrand !== 'all' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 font-bold border border-rose-200 dark:border-rose-900/40 shadow-2xs">
-                    {filters.selectedBrand}
-                    <button onClick={() => setFilters(prev => ({ ...prev, selectedBrand: 'all' }))} className="cursor-pointer">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </span>
-                )}
-
-                {filters.searchQuery && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 font-bold border border-rose-200 dark:border-rose-900/40 shadow-2xs">
-                    «{filters.searchQuery}»
-                    <button onClick={() => {
+              {filters.searchQuery && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-[11px] font-mono">
+                  "{filters.searchQuery}"
+                  <button
+                    onClick={() => {
                       setLocalSearch('');
                       setFilters(prev => ({ ...prev, searchQuery: '' }));
-                    }} className="cursor-pointer">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </span>
-                )}
-
-                <button
-                  onClick={resetFilters}
-                  className="text-[#E80645] dark:text-rose-400 font-bold hover:underline mr-auto rtl:mr-auto rtl:ml-0 cursor-pointer"
-                >
-                  {lang === 'fa' ? 'حذف فیلترها' : 'Clear all'}
-                </button>
-              </div>
-            )}
-
-            {/* Products Results */}
-            {filteredProducts.length === 0 ? (
-              <div className="py-20 text-center bg-white dark:bg-[#111726] rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-8 shadow-xs">
-                <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mx-auto mb-3">
-                  <Search className="w-7 h-7" />
-                </div>
-                <h3 className="text-base font-black text-slate-900 dark:text-white mb-1">
-                  {lang === 'fa' ? 'محصولی با این مشخصات یافت نشد' : 'No matching products'}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-5 leading-relaxed">
-                  {lang === 'fa'
-                    ? 'فیلترها را تغییر داده یا عبارت دیگری را در کادر جستجو تایپ فرمایید.'
-                    : 'Try changing your search terms or clearing active filters.'}
-                </p>
-                <button
-                  onClick={resetFilters}
-                  className="px-5 py-2.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
-                >
-                  {lang === 'fa' ? 'پاک‌سازی تمام فیلترها' : 'Reset All Filters'}
-                </button>
-              </div>
-            ) : viewMode === 'grid' ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
-                {filteredProducts.map(product => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              /* List View Mode */
-              <div className="space-y-4">
-                {filteredProducts.map(product => (
-                  <div
-                    key={product.id}
-                    onClick={() => openProductDetails(product)}
-                    className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 hover:border-rose-500/30 transition-all cursor-pointer shadow-xs group"
+                    }}
+                    className="hover:text-rose-500"
                   >
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-28 h-28 sm:w-32 sm:h-32 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-100 dark:border-slate-800"
-                    />
-                    <div className="flex-1 min-w-0 text-right w-full">
-                      <span className="text-[11px] font-bold text-[#E80645] dark:text-rose-400">{product.brand}</span>
-                      <h4 className="text-sm font-black text-slate-900 dark:text-white truncate mt-0.5 group-hover:text-[#E80645] transition-colors">
-                        {lang === 'fa' ? product.nameFa : product.name}
-                      </h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 my-1.5 leading-relaxed">
-                        {lang === 'fa' ? product.descriptionFa : product.description}
-                      </p>
-                      <div className="flex items-center gap-1.5 text-amber-500 text-xs">
-                        <Star className="w-3.5 h-3.5 fill-current" />
-                        <span className="font-bold text-slate-800 dark:text-slate-200 tabular-nums">{product.rating}</span>
-                        <span className="text-slate-400 text-[11px] tabular-nums">({product.reviewsCount} نظر خریداران)</span>
-                      </div>
-                    </div>
-                    <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800">
-                      <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tabular-nums">
-                        {formatPrice(product.price, product.priceUSD)}
-                      </div>
-                      <button
-                        onClick={e => {
-                          e.stopPropagation();
-                          openProductDetails(product);
-                        }}
-                        className="px-5 py-2.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-colors cursor-pointer shadow-xs active:scale-98"
-                      >
-                        {lang === 'fa' ? 'مشاهده و خرید' : 'View Details'}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </main>
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+
+              <button
+                onClick={resetFilters}
+                className="font-mono text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline mr-auto rtl:mr-auto rtl:ml-0"
+              >
+                {lang === 'fa' ? 'پاک‌سازی همه' : 'Clear all'}
+              </button>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {filteredProducts.length === 0 ? (
+            <div className="py-16 text-center bg-white dark:bg-[#0C0C0E] rounded-lg border border-zinc-200 dark:border-zinc-800 p-6">
+              <Search className="w-6 h-6 text-zinc-400 mx-auto mb-2" />
+              <h3 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
+                {lang === 'fa' ? 'هیچ محصولی با این فیلترها پیدا نشد' : 'No matching items'}
+              </h3>
+              <p className="text-[11px] text-zinc-400 mb-4">
+                {lang === 'fa' ? 'فیلترهای انتخابی را بازنشانی فرمایید.' : 'Try resetting your filter parameters.'}
+              </p>
+              <button
+                onClick={resetFilters}
+                className="px-3 py-1.5 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium"
+              >
+                {lang === 'fa' ? 'بازنشانی فیلترها' : 'Reset filters'}
+              </button>
+            </div>
+          ) : viewMode === 'grid' ? (
+            /* Minimalist Grid View */
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
+              {filteredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            /* Compact Developer-Tool Table View */
+            <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-white dark:bg-[#0C0C0E]">
+              <table className="w-full text-left rtl:text-right border-collapse text-xs">
+                <thead>
+                  <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
+                    <th className="py-2.5 px-3">{lang === 'fa' ? 'کالا / برند' : 'Product / Brand'}</th>
+                    <th className="py-2.5 px-3 hidden sm:table-cell">{lang === 'fa' ? 'دسته‌بندی' : 'Category'}</th>
+                    <th className="py-2.5 px-3 hidden md:table-cell">{lang === 'fa' ? 'وضعیت انبار' : 'Inventory'}</th>
+                    <th className="py-2.5 px-3 hidden sm:table-cell">{lang === 'fa' ? 'امتیاز' : 'Rating'}</th>
+                    <th className="py-2.5 px-3">{lang === 'fa' ? 'قیمت' : 'Price'}</th>
+                    <th className="py-2.5 px-3 text-right rtl:text-left">{lang === 'fa' ? 'عملیات' : 'Actions'}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/80">
+                  {filteredProducts.map(product => (
+                    <tr
+                      key={product.id}
+                      onClick={() => openProductDetails(product)}
+                      className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50 cursor-pointer transition-colors"
+                    >
+                      {/* Product Name & Image */}
+                      <td className="py-2 px-3">
+                        <div className="flex items-center gap-2.5">
+                          <img
+                            src={product.images[0]}
+                            alt={product.name}
+                            className="w-8 h-8 rounded object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/60 dark:border-zinc-800"
+                          />
+                          <div className="min-w-0">
+                            <div className="font-medium text-zinc-900 dark:text-zinc-100 truncate max-w-[140px] sm:max-w-xs">
+                              {lang === 'fa' ? product.nameFa : product.name}
+                            </div>
+                            <div className="text-[10px] font-mono text-zinc-400 truncate">
+                              {product.brand}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Category */}
+                      <td className="py-2 px-3 hidden sm:table-cell">
+                        <span className="font-mono text-[10px] text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+                          {lang === 'fa' ? product.categoryFa : product.category}
+                        </span>
+                      </td>
+
+                      {/* Stock Status */}
+                      <td className="py-2 px-3 hidden md:table-cell font-mono text-[11px]">
+                        {product.stock > 0 ? (
+                          <span className="text-emerald-600 dark:text-emerald-400">
+                            ● {product.stock} {lang === 'fa' ? 'عدد در انبار' : 'units'}
+                          </span>
+                        ) : (
+                          <span className="text-rose-500">
+                            ○ {lang === 'fa' ? 'ناموجود' : 'Out of stock'}
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Rating */}
+                      <td className="py-2 px-3 hidden sm:table-cell font-mono text-[11px] text-zinc-500">
+                        <div className="flex items-center gap-1">
+                          <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                          <span>{product.rating}</span>
+                          <span className="text-zinc-400 text-[10px]">({product.reviewsCount})</span>
+                        </div>
+                      </td>
+
+                      {/* Price */}
+                      <td className="py-2 px-3">
+                        <div className="flex flex-col">
+                          {product.originalPrice && (
+                            <span className="text-[10px] font-mono text-zinc-400 line-through">
+                              {formatPrice(product.originalPrice, product.originalPriceUSD)}
+                            </span>
+                          )}
+                          <span className="font-mono font-semibold text-xs text-zinc-900 dark:text-zinc-100">
+                            {formatPrice(product.price, product.priceUSD)}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="py-2 px-3 text-right rtl:text-left">
+                        <div className="flex items-center justify-end rtl:justify-start gap-1">
+                          <button
+                            onClick={e => {
+                              e.stopPropagation();
+                              setQuickViewProduct(product);
+                            }}
+                            title="Quick View"
+                            className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={e => {
+                              e.stopPropagation();
+                              addToCart(product, 1);
+                            }}
+                            title="Add to Cart"
+                            className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
+                          >
+                            <ShoppingBag className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
+      </div>
 
-        {/* Mobile Filter Drawer */}
-        {isMobileFilterOpen && (
-          <div className="fixed inset-0 z-50 overflow-hidden md:hidden">
-            <div
-              className="absolute inset-0 bg-black/60 backdrop-blur-xs"
-              onClick={() => setIsMobileFilterOpen(false)}
-            />
-            <div className="fixed inset-y-0 right-0 max-w-full flex pl-10 rtl:pl-10 rtl:pr-0">
-              <div className="w-screen max-w-xs bg-white dark:bg-[#111726] shadow-2xl p-6 overflow-y-auto">
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-800">
-                  <h3 className="font-black text-slate-900 dark:text-white text-base">
-                    {lang === 'fa' ? 'فیلترهای کالا' : 'Filters'}
-                  </h3>
-                  <button onClick={() => setIsMobileFilterOpen(false)} className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer">
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                {FilterSidebarContent}
-                <div className="pt-6">
-                  <button
-                    onClick={() => setIsMobileFilterOpen(false)}
-                    className="w-full py-3 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs shadow-md shadow-rose-900/20 active:scale-98 cursor-pointer"
-                  >
-                    {lang === 'fa' ? `مشاهده ${filteredProducts.length} کالا` : `Show ${filteredProducts.length} Results`}
-                  </button>
-                </div>
+      {/* Mobile Filter Modal */}
+      {isMobileFilterOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden md:hidden">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-xs"
+            onClick={() => setIsMobileFilterOpen(false)}
+          />
+          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10 rtl:pl-10 rtl:pr-0">
+            <div className="w-screen max-w-xs bg-white dark:bg-[#0C0C0E] border-l border-zinc-200 dark:border-zinc-800 p-5 overflow-y-auto">
+              <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-200 dark:border-zinc-800">
+                <h3 className="font-semibold text-xs text-zinc-900 dark:text-zinc-100">
+                  {lang === 'fa' ? 'فیلترها' : 'Filters'}
+                </h3>
+                <button
+                  onClick={() => setIsMobileFilterOpen(false)}
+                  className="p-1 text-zinc-400 hover:text-zinc-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              {FilterSidebarContent}
+              <div className="pt-5">
+                <button
+                  onClick={() => setIsMobileFilterOpen(false)}
+                  className="w-full py-2 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-medium text-xs cursor-pointer"
+                >
+                  {lang === 'fa' ? `نمایش ${filteredProducts.length} نتیجه` : `Show ${filteredProducts.length} Results`}
+                </button>
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

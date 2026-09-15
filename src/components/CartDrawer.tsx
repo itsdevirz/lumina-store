@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Trash2, ShoppingBag, ArrowLeft, Tag, Truck, ShieldCheck, Check } from 'lucide-react';
+import { X, Trash2, ShoppingBag, ArrowLeft, ArrowRight, Tag, Truck, ShieldCheck, Check } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 
 export const CartDrawer: React.FC = () => {
@@ -40,10 +40,7 @@ export const CartDrawer: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const freeShippingThreshold = 15000000;
   const currentSubtotal = cart.reduce((acc, i) => acc + i.product.price * i.quantity, 0);
-  const freeShippingLeft = Math.max(0, freeShippingThreshold - currentSubtotal);
-  const freeShippingPercent = Math.min(100, Math.round((currentSubtotal / freeShippingThreshold) * 100));
 
   return (
     <AnimatePresence>
@@ -54,7 +51,7 @@ export const CartDrawer: React.FC = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => setIsCartDrawerOpen(false)}
-          className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+          className="absolute inset-0 bg-black/50 backdrop-blur-xs"
         />
 
         <div className="fixed inset-y-0 right-0 rtl:right-0 ltr:right-auto ltr:left-0 max-w-full flex pl-10 rtl:pl-10 rtl:pr-0 ltr:pr-10 ltr:pl-0">
@@ -62,230 +59,174 @@ export const CartDrawer: React.FC = () => {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 26, stiffness: 240 }}
-            className="w-screen max-w-md bg-white dark:bg-[#090D16] shadow-2xl flex flex-col border-l rtl:border-l-0 rtl:border-r border-slate-200 dark:border-slate-800"
+            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+            className="w-screen max-w-md bg-white dark:bg-[#0C0C0E] shadow-2xl flex flex-col border-l rtl:border-l-0 rtl:border-r border-zinc-200 dark:border-zinc-800"
           >
             {/* Drawer Header */}
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-200/90 dark:border-slate-800/90">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 flex items-center justify-center">
-                  <ShoppingBag className="w-4 h-4" />
-                </div>
-                <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
-                  {lang === 'fa' ? 'سبد خرید شما' : 'Shopping Cart'}
+            <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-zinc-400" />
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-900 dark:text-zinc-100 font-mono">
+                  {lang === 'fa' ? 'سبد خرید' : 'Active Cart'}
                 </h2>
-                <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-2 py-0.5 rounded-full font-bold tabular-nums">
+                <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
                   {cart.reduce((acc, item) => acc + item.quantity, 0)}
                 </span>
               </div>
               <button
                 onClick={() => setIsCartDrawerOpen(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                aria-label="Close"
+                className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Free Shipping Progress Indicator */}
-            {cart.length > 0 && (
-              <div className="p-3.5 bg-rose-50/50 dark:bg-rose-950/20 border-b border-rose-100 dark:border-rose-900/40 text-xs">
-                <div className="flex items-center justify-between mb-1.5 font-medium">
-                  <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200">
-                    <Truck className="w-3.5 h-3.5 text-[#E80645] dark:text-rose-400" />
-                    <span>
-                      {freeShippingLeft === 0
-                        ? (lang === 'fa' ? 'سفارش شما مشمول ارسال رایگان شد! 🎉' : 'You unlocked free shipping! 🎉')
-                        : (lang === 'fa' ? `تنها ${formatPrice(freeShippingLeft)} تا ارسال رایگان` : `${formatPrice(freeShippingLeft)} away from free shipping`)}
-                    </span>
-                  </div>
-                  <span className="font-bold text-[#E80645] dark:text-rose-400 tabular-nums">{freeShippingPercent}%</span>
-                </div>
-                <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-[#E80645] rounded-full transition-all duration-300"
-                    style={{ width: `${freeShippingPercent}%` }}
-                  />
-                </div>
-              </div>
-            )}
-
             {/* Cart Items List */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {cart.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6">
-                  <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-3">
-                    <ShoppingBag className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-base font-bold text-slate-800 dark:text-slate-200 mb-1">
-                    {lang === 'fa' ? 'سبد خرید شما در حال حاضر خالی است' : 'Your cart is empty'}
-                  </h3>
-                  <p className="text-xs text-slate-400 max-w-xs mb-5 leading-relaxed">
-                    {lang === 'fa'
-                      ? 'محصولات جذاب لومینا را بررسی کنید و کالاهای مدنظر خود را به سبد بیفزایید.'
-                      : 'Explore our catalog and add items to your cart.'}
+                <div className="py-16 text-center text-zinc-400">
+                  <ShoppingBag className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                  <p className="text-xs font-medium text-zinc-600 dark:text-zinc-300">
+                    {lang === 'fa' ? 'سبد خرید شما خالی است' : 'Your cart is empty'}
+                  </p>
+                  <p className="text-[11px] text-zinc-400 mt-1">
+                    {lang === 'fa' ? 'محصولات را از کاتالوگ اضافه فرمایید.' : 'Browse the catalog to add artifacts.'}
                   </p>
                   <button
                     onClick={() => {
                       setIsCartDrawerOpen(false);
                       setActiveTab('shop');
                     }}
-                    className="px-5 py-2.5 rounded-xl bg-[#E80645] text-white text-xs font-bold shadow-xs hover:bg-[#c7053b] transition-colors cursor-pointer"
+                    className="mt-4 px-3 py-1.5 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium cursor-pointer"
                   >
-                    {lang === 'fa' ? 'مشاهده کاتالوگ فروشگاه' : 'Start Shopping'}
+                    {lang === 'fa' ? 'مشاهده کاتالوگ' : 'Explore Catalog'}
                   </button>
                 </div>
               ) : (
-                cart.map((item, idx) => (
-                  <div
-                    key={item.variantId ? `${item.product.id}-${item.variantId}-${idx}` : `${item.product.id}-${item.selectedColor || ''}-${item.selectedSize || ''}-${idx}`}
-                    className="flex gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90"
-                  >
-                    <img
-                      src={item.selectedVariant?.image || item.product.images[0]}
-                      alt={item.product.name}
-                      className="w-18 h-18 rounded-xl object-cover bg-white shrink-0"
-                    />
+                cart.map(item => {
+                  const key = `${item.product.id}-${item.selectedColor || ''}-${item.selectedSize || ''}`;
+                  return (
+                    <div
+                      key={key}
+                      className="flex items-start gap-3 p-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-900/30 text-xs"
+                    >
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        className="w-14 h-14 rounded object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200 dark:border-zinc-800"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-1">
+                          <h4 className="font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                            {lang === 'fa' ? item.product.nameFa : item.product.name}
+                          </h4>
+                          <button
+                            onClick={() => removeFromCart(item.product.id, item.selectedColor, item.selectedSize)}
+                            className="text-zinc-400 hover:text-rose-500 cursor-pointer shrink-0"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
 
-                    <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div>
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
-                          {lang === 'fa' ? item.product.nameFa : item.product.name}
-                        </h4>
-
-                        {/* Selected Variant Attributes */}
-                        {(item.selectedColor || item.selectedSize || (item.selectedAttributes && Object.keys(item.selectedAttributes).length > 0)) && (
-                          <div className="flex flex-wrap items-center gap-1 mt-1 text-[10.5px]">
+                        {/* Variant Labels */}
+                        {(item.selectedColor || item.selectedSize) && (
+                          <div className="flex items-center gap-1.5 mt-0.5 text-[10px] font-mono text-zinc-400">
                             {item.selectedColor && (
-                              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                              <span className="flex items-center gap-1">
                                 {item.selectedColorHex && (
-                                  <span className="w-2 h-2 rounded-full border border-black/20 shrink-0" style={{ backgroundColor: item.selectedColorHex }} />
+                                  <span
+                                    className="w-2 h-2 rounded-full border border-zinc-300"
+                                    style={{ backgroundColor: item.selectedColorHex }}
+                                  />
                                 )}
-                                <span>{item.selectedColor}</span>
+                                {item.selectedColor}
                               </span>
                             )}
-                            {item.selectedSize && (
-                              <span className="px-1.5 py-0.5 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
-                                {lang === 'fa' ? `سایز ${item.selectedSize}` : `Size ${item.selectedSize}`}
-                              </span>
-                            )}
-                            {item.selectedAttributes && Object.entries(item.selectedAttributes).map(([k, v]) => (
-                              <span key={k} className="px-1.5 py-0.5 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
-                                {k}: {v}
-                              </span>
-                            ))}
+                            {item.selectedSize && <span>/ {item.selectedSize}</span>}
                           </div>
                         )}
 
-                        <div className="text-xs font-black text-[#E80645] dark:text-rose-400 mt-1 tabular-nums">
-                          {formatPrice((item.selectedVariant?.price ?? item.product.price) * item.quantity, item.product.priceUSD * item.quantity)}
-                        </div>
-                      </div>
+                        <div className="flex items-center justify-between mt-2 pt-1">
+                          {/* Quantity control */}
+                          <div className="flex items-center border border-zinc-200 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800">
+                            <button
+                              onClick={() => updateCartQuantity(item.product.id, item.quantity - 1, item.selectedColor, item.selectedSize)}
+                              className="px-2 py-0.5 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 font-mono"
+                            >
+                              -
+                            </button>
+                            <span className="px-2 py-0.5 font-mono text-[11px] text-zinc-900 dark:text-zinc-100">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() => updateCartQuantity(item.product.id, item.quantity + 1, item.selectedColor, item.selectedSize)}
+                              className="px-2 py-0.5 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 font-mono"
+                            >
+                              +
+                            </button>
+                          </div>
 
-                      {/* Quantity Stepper & Remove */}
-                      <div className="flex items-center justify-between pt-2">
-                        <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900">
-                          <button
-                            onClick={() => updateCartQuantity(idx, -1)}
-                            className="w-6 h-6 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 text-xs rounded-r-md rtl:rounded-r-none rtl:rounded-l-md cursor-pointer"
-                          >
-                            -
-                          </button>
-                          <span className="w-6 text-center text-xs font-bold text-slate-900 dark:text-white tabular-nums">
-                            {item.quantity}
+                          {/* Price */}
+                          <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">
+                            {formatPrice(item.product.price * item.quantity, (item.product.priceUSD || 0) * item.quantity)}
                           </span>
-                          <button
-                            onClick={() => updateCartQuantity(idx, 1)}
-                            className="w-6 h-6 flex items-center justify-center text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 text-xs rounded-l-md rtl:rounded-l-none rtl:rounded-r-md cursor-pointer"
-                          >
-                            +
-                          </button>
                         </div>
-
-                        <button
-                          onClick={() => removeFromCart(idx)}
-                          className="p-1 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
-                          title="حذف از سبد"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
 
-            {/* Drawer Footer: Coupon & Checkout Summary */}
+            {/* Footer Summary & Checkout */}
             {cart.length > 0 && (
-              <div className="p-4 sm:p-5 border-t border-slate-200/90 dark:border-slate-800/90 bg-white dark:bg-[#090D16] space-y-3">
-                {/* Coupon Code Input */}
-                <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                  <div className="relative flex-1">
-                    <input
-                      type="text"
-                      value={couponCode}
-                      onChange={e => setCouponCode(e.target.value.toUpperCase())}
-                      placeholder={lang === 'fa' ? 'کد تخفیف (مثال: LUMINA20)' : 'Coupon code...'}
-                      className="w-full pl-3 pr-8 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#E80645] focus:outline-none uppercase"
-                    />
-                    <Tag className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-3" />
-                  </div>
+              <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 space-y-3 bg-zinc-50/50 dark:bg-zinc-900/30">
+                {/* Coupon input */}
+                <form onSubmit={handleApplyCoupon} className="flex gap-1.5">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={e => setCouponCode(e.target.value.toUpperCase())}
+                    placeholder={lang === 'fa' ? 'کد تخفیف (مثلاً LUMINA10)...' : 'Promo code...'}
+                    className="flex-1 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0C0C0E] text-xs font-mono uppercase focus:outline-none focus:border-indigo-500"
+                  />
                   <button
                     type="submit"
-                    disabled={isApplying || !couponCode.trim()}
-                    className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-800 text-white text-xs font-bold hover:bg-slate-800 disabled:opacity-50 transition-colors cursor-pointer"
+                    disabled={isApplying}
+                    className="px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs font-mono font-medium hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer disabled:opacity-50"
                   >
-                    {isApplying ? '...' : (lang === 'fa' ? 'اعمال' : 'Apply')}
+                    {isApplying ? '...' : lang === 'fa' ? 'اعمال' : 'Apply'}
                   </button>
                 </form>
 
-                {/* Applied Coupon Tag */}
                 {appliedCoupon && (
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
-                    <span>کد «{appliedCoupon.code}» اعمال شد ({appliedCoupon.percent}٪ تخفیف)</span>
-                    <button onClick={removeCoupon} className="text-rose-600 hover:underline cursor-pointer">
-                      {lang === 'fa' ? 'حذف' : 'Remove'}
+                  <div className="flex items-center justify-between text-xs font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded">
+                    <span>COUPON: {appliedCoupon.code} (-{appliedCoupon.discountPercent}%)</span>
+                    <button onClick={removeCoupon} className="text-zinc-400 hover:text-rose-500">
+                      <X className="w-3 h-3" />
                     </button>
                   </div>
                 )}
 
-                {/* Pricing Summary */}
-                <div className="space-y-1.5 text-xs">
-                  <div className="flex justify-between text-slate-500 dark:text-slate-400">
-                    <span>{lang === 'fa' ? 'جمع اقلام سفارش' : 'Subtotal'}</span>
-                    <span className="tabular-nums font-semibold">{formatPrice(cartTotal.subtotal, cartTotal.subtotalUSD)}</span>
+                {/* Subtotal / Total */}
+                <div className="space-y-1 pt-1 border-t border-zinc-200 dark:border-zinc-800 text-xs">
+                  <div className="flex justify-between text-zinc-400 font-mono text-[11px]">
+                    <span>{lang === 'fa' ? 'جمع اقلام:' : 'Subtotal:'}</span>
+                    <span>{formatPrice(currentSubtotal, Math.round(currentSubtotal / 50000))}</span>
                   </div>
-
-                  {cartTotal.discount > 0 && (
-                    <div className="flex justify-between text-[#E80645] dark:text-rose-400 font-bold">
-                      <span>{lang === 'fa' ? 'سود شما از خرید' : 'Discount'}</span>
-                      <span className="tabular-nums">-{formatPrice(cartTotal.discount, cartTotal.discountUSD)}</span>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between text-slate-500 dark:text-slate-400">
-                    <span>{lang === 'fa' ? 'هزینه ارسال' : 'Shipping'}</span>
-                    <span className="tabular-nums font-semibold">
-                      {cartTotal.shipping === 0
-                        ? (lang === 'fa' ? 'رایگان' : 'Free')
-                        : formatPrice(cartTotal.shipping, cartTotal.shippingUSD)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-slate-900 dark:text-white font-black text-sm pt-2 border-t border-slate-200 dark:border-slate-800">
-                    <span>{lang === 'fa' ? 'مبلغ نهایی پرداخت' : 'Total'}</span>
-                    <span className="tabular-nums text-[#E80645] dark:text-rose-400">{formatPrice(cartTotal.total, cartTotal.totalUSD)}</span>
+                  <div className="flex justify-between font-mono font-semibold text-sm text-zinc-900 dark:text-zinc-100 pt-1">
+                    <span>{lang === 'fa' ? 'مبلغ نهایی:' : 'Total:'}</span>
+                    <span>{formatPrice(cartTotal, Math.round(cartTotal / 50000))}</span>
                   </div>
                 </div>
 
-                {/* Proceed to Checkout Button */}
+                {/* Checkout CTA */}
                 <button
                   onClick={handleProceedToCheckout}
-                  className="w-full py-3 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-900/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                  className="w-full py-2.5 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                 >
-                  <span>{lang === 'fa' ? 'ادامه ثبت سفارش و پرداخت' : 'Proceed to Checkout'}</span>
-                  <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
+                  <span>{lang === 'fa' ? 'تکمیل سفارش و پرداخت' : 'Proceed to Checkout'}</span>
+                  <span className="font-mono text-[11px]">→</span>
                 </button>
               </div>
             )}

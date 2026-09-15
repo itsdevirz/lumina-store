@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StoreProvider, useStore } from './context/StoreContext';
-import { Navbar } from './components/Navbar';
+import { AppShell } from './components/layout/AppShell';
 import { Hero } from './components/Hero';
-import { SiteBanner } from './components/SiteBanner';
 import { FestivalBanner } from './components/FestivalBanner';
 import { FestivalPage } from './components/FestivalPage';
 import { ProductSlider } from './components/ProductSlider';
@@ -18,12 +17,10 @@ import { CheckoutView } from './components/CheckoutView';
 import { UserDashboard } from './components/UserDashboard';
 import { WishlistView } from './components/WishlistView';
 import { QuickViewModal } from './components/QuickViewModal';
-import { MobileBottomNav } from './components/MobileBottomNav';
 import { Footer } from './components/Footer';
 import { ToastContainer } from './components/ToastContainer';
 import { AuthModal } from './components/AuthModal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { ShieldAlert, Globe } from 'lucide-react';
 import { DynamicSEO } from './components/DynamicSEO';
 import { SeoInspectorModal } from './components/SeoInspectorModal';
 import { SupportChatWidget } from './components/SupportChatWidget';
@@ -42,21 +39,21 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
   }, [activeTab, selectedProduct]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBFBFC] dark:bg-[#0E1117] text-slate-800 dark:text-slate-100 transition-colors duration-200">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-[#09090B] text-zinc-900 dark:text-zinc-100 transition-colors duration-150">
       {/* Dynamic SEO Meta Tags Engine */}
       <DynamicSEO isAdmin={false} />
 
-      {/* Top Navbar */}
-      <Navbar onGoToAdmin={onGoToAdmin} />
-
-      {/* Dynamic View rendering */}
-      <main className="flex-1 pb-16 sm:pb-0">
+      {/* Linear + Vercel inspired modern AppShell */}
+      <AppShell
+        onGoToAdmin={onGoToAdmin}
+        onOpenSeoInspector={() => setIsSeoModalOpen(true)}
+      >
+        {/* Dynamic View rendering */}
         {activeTab === 'home' && (
           <>
             <FestivalBanner />
             <Hero />
             <FlashSale />
-            <SiteBanner />
             <ProductSlider />
             <PromotionalBanners />
             <BestSellers />
@@ -77,38 +74,13 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
         {activeTab === 'account' && <UserDashboard />}
 
         {activeTab === 'wishlist' && <WishlistView />}
-      </main>
 
-      {/* Floating Badges for Admin & Dynamic SEO Preview (Right Side) */}
-      <div className="fixed bottom-6 right-6 z-40 hidden lg:flex flex-col gap-2">
-        <button
-          onClick={() => setIsSeoModalOpen(true)}
-          title="بررسی زنده تگ‌های سئو، Canonical و متادیتا"
-          className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-emerald-950/90 hover:bg-emerald-900 text-emerald-100 border border-emerald-700/50 shadow-xl backdrop-blur-xs text-xs font-bold transition-all hover:scale-105 active:scale-95 group cursor-pointer"
-        >
-          <Globe className="w-4 h-4 text-emerald-400 group-hover:rotate-12 transition-transform" />
-          <span>آنالیز زنده سئو (SEO)</span>
-        </button>
+        {/* Developer-Tool Minimal Footer */}
+        <Footer onGoToAdmin={onGoToAdmin} onOpenSeoInspector={() => setIsSeoModalOpen(true)} />
+      </AppShell>
 
-        <button
-          onClick={onGoToAdmin}
-          title="ورود به داشبورد مدیریت فروشگاه (/admin)"
-          className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-indigo-900/90 hover:bg-indigo-800 text-indigo-100 border border-indigo-700/50 shadow-xl backdrop-blur-xs text-xs font-bold transition-all hover:scale-105 active:scale-95 group cursor-pointer"
-        >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <ShieldAlert className="w-4 h-4 text-indigo-300 group-hover:text-white" />
-          <span>پنل مدیریت</span>
-        </button>
-      </div>
-
-      {/* Floating AI Support Chat Widget (Left Side) */}
+      {/* Floating AI Support Chat Widget */}
       <SupportChatWidget />
-
-      {/* Global Footer */}
-      <Footer onGoToAdmin={onGoToAdmin} onOpenSeoInspector={() => setIsSeoModalOpen(true)} />
-
-      {/* Mobile Floating Bottom Bar */}
-      <MobileBottomNav onGoToAdmin={onGoToAdmin} />
 
       {/* Modals, Drawers & Overlays */}
       <CartDrawer />

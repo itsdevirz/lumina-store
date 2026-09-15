@@ -1,30 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-display: 'Lalezar', 'Vazirmatn', cursive, sans-serif;
+  --font-sans: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: 'Alexandria', 'Vazirmatn', system-ui, sans-serif;
   --font-modern: 'Alexandria', 'Vazirmatn', sans-serif;
   --font-readex: 'Readex Pro', 'Vazirmatn', sans-serif;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Persian Typography Scale & Specialized Utility Classes */
+/* Persian & Latin Typography Scale - Linear & Vercel Developer Aesthetic */
 .font-sans, .font-vazir {
   font-family: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
 .font-display, .font-lalezar {
-  font-family: 'Lalezar', 'Vazirmatn', cursive, sans-serif;
-  letter-spacing: 0;
+  font-family: 'Alexandria', 'Vazirmatn', sans-serif;
+  letter-spacing: -0.02em;
 }
 
 .font-modern, .font-alexandria {
   font-family: 'Alexandria', 'Vazirmatn', sans-serif;
 }
 
-.font-readex {
-  font-family: 'Readex Pro', 'Vazirmatn', sans-serif;
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 @layer base {
@@ -32,62 +33,66 @@
     --font-sans: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color-scheme: light;
     
-    /* Centralized Design System Tokens - Reference Inspired (Modern Premium E-Commerce) */
-    --bg-main: #F9FAFB;
+    /* Linear + Vercel Modern Monochrome Theme Tokens */
+    --bg-main: #FFFFFF;
+    --bg-subtle: #FAFAFA;
     --surface: #FFFFFF;
-    --surface-secondary: #F3F4F6;
-    --surface-tertiary: #E5E7EB;
+    --surface-hover: #F4F4F5;
+    --surface-secondary: #F4F4F5;
+    --surface-tertiary: #E4E4E7;
     
-    --text-primary: #111827;
-    --text-secondary: #4B5563;
-    --text-muted: #6B7280;
+    --text-primary: #09090B;
+    --text-secondary: #52525B;
+    --text-muted: #71717A;
     
-    --border: #E5E7EB;
-    --border-subtle: #F3F4F6;
+    --border: #E4E4E7;
+    --border-subtle: #F4F4F5;
+    --border-strong: #D4D4D8;
     
-    /* Reference Digital Ruby/Crimson Primary (#E80645) */
-    --primary: #E80645;
-    --primary-hover: #C9053B;
-    --primary-light: #FEF0F4;
-    --primary-dark: #B3002A;
-    --primary-gradient: linear-gradient(135deg, #B3002A 0%, #E80645 100%);
+    /* Strong Linear Violet / Indigo Accent */
+    --primary: #5E6AD2;
+    --primary-hover: #4E5AC0;
+    --primary-light: #EEF0FD;
+    --primary-dark: #3F49A6;
     
-    /* Digital Accent & Semantics */
-    --accent-digital: #1672DD;
-    --success: #3AA04B;
-    --warning: #F68617;
-    --danger: #E80645;
+    --accent-digital: #0284C7;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
     
+    --radius-xs: 4px;
     --radius-sm: 6px;
     --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    --radius-lg: 10px;
+    --radius-xl: 12px;
   }
 
   .dark {
     color-scheme: dark;
-    --bg-main: #0B0F19;
-    --surface: #111827;
-    --surface-secondary: #1F2937;
-    --surface-tertiary: #374151;
+    --bg-main: #09090B;
+    --bg-subtle: #0C0C0E;
+    --surface: #0C0C0E;
+    --surface-hover: #18181B;
+    --surface-secondary: #121215;
+    --surface-tertiary: #18181B;
     
-    --text-primary: #F9FAFB;
-    --text-secondary: #D1D5DB;
-    --text-muted: #9CA3AF;
+    --text-primary: #FAFAFA;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
     
-    --border: #1F2937;
-    --border-subtle: #161F30;
+    --border: #27272A;
+    --border-subtle: #18181B;
+    --border-strong: #3F3F46;
     
-    --primary: #F43F5E;
-    --primary-hover: #FB7185;
-    --primary-light: rgba(244, 63, 94, 0.15);
-    --primary-dark: #E11D48;
-    --primary-gradient: linear-gradient(135deg, #E11D48 0%, #F43F5E 100%);
+    --primary: #5E6AD2;
+    --primary-hover: #6E7AE0;
+    --primary-light: rgba(94, 106, 210, 0.15);
+    --primary-dark: #4E5AC0;
     
-    --accent-digital: #3B82F6;
+    --accent-digital: #38BDF8;
     --success: #10B981;
-    --warning: #F59E0B;
-    --danger: #F43F5E;
+    --warning: #FBBF24;
+    --danger: #F87171;
   }
 
   * {
@@ -105,10 +110,10 @@
     color: var(--text-primary);
     overflow-x: hidden;
     scroll-behavior: smooth;
-    line-height: 1.6;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
   }
 }
 
@@ -173,90 +178,89 @@
 }
 
 /* ==========================================================================
-   LUMINA NEXT GENERATION DESIGN SYSTEM UTILITIES
+   LINEAR + VERCEL INSPIRED DESIGN SYSTEM UTILITIES
    ========================================================================== */
 
-/* Modern Architectural Product Card */
-.lumina-card {
+/* Minimal Precision Card */
+.lumina-card, .linear-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg, 12px);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  border-radius: var(--radius-lg, 10px);
+  box-shadow: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.lumina-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(232, 6, 69, 0.28);
-  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.06);
+.lumina-card:hover, .linear-card:hover {
+  border-color: var(--border-strong);
+  background-color: var(--surface-hover);
 }
 
-.dark .lumina-card {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
-}
-
-.dark .lumina-card:hover {
-  border-color: rgba(244, 63, 94, 0.32);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
+.dark .lumina-card:hover, .dark .linear-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 /* Primary Action Buttons */
-.lumina-btn-primary {
+.lumina-btn-primary, .linear-btn-primary {
   background: var(--primary);
   color: #FFFFFF;
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 0.45rem 0.9rem;
   border-radius: var(--radius-md, 8px);
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.15s ease;
 }
-.lumina-btn-primary:hover {
+.lumina-btn-primary:hover, .linear-btn-primary:hover {
   background: var(--primary-hover);
-  box-shadow: 0 4px 14px -2px rgba(232, 6, 69, 0.35);
 }
-.lumina-btn-primary:active {
-  transform: scale(0.97);
+.lumina-btn-primary:active, .linear-btn-primary:active {
+  transform: scale(0.98);
 }
 
-/* Secondary Button */
-.lumina-btn-secondary {
+/* Secondary / Ghost Buttons */
+.lumina-btn-secondary, .linear-btn-secondary {
   background: var(--surface-secondary);
   border: 1px solid var(--border);
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  padding: 0.45rem 0.85rem;
   border-radius: var(--radius-md, 8px);
   transition: all 0.15s ease;
 }
-.lumina-btn-secondary:hover {
+.lumina-btn-secondary:hover, .linear-btn-secondary:hover {
   background: var(--surface-tertiary);
+  border-color: var(--border-strong);
 }
-.lumina-btn-secondary:active {
-  transform: scale(0.97);
+.lumina-btn-secondary:active, .linear-btn-secondary:active {
+  transform: scale(0.98);
 }
 
-/* Input Fields */
-.lumina-input {
+/* Minimal Input Fields */
+.lumina-input, .linear-input {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md, 8px);
   color: var(--text-primary);
+  font-size: 0.8125rem;
   transition: all 0.15s ease;
 }
-.lumina-input:focus {
+.lumina-input:focus, .linear-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(232, 6, 69, 0.14);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
 /* Legacy alias mappings so existing components remain backwards-compatible during transition */
 .liquid-glass-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  border-radius: var(--radius-lg, 10px);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 .liquid-glass-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(37, 99, 235, 0.25);
-  box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08);
+  border-color: var(--border-strong);
 }
 .liquid-glass-btn {
   background: var(--surface-secondary);

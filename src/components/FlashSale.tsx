@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Flame, Clock, ArrowLeft, Zap, Sparkles } from 'lucide-react';
+import { Flame, Clock, ArrowLeft, ArrowRight, Zap } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from './ProductCard';
 
@@ -33,109 +33,61 @@ export const FlashSale: React.FC = () => {
 
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
-  return (
-    <section id="flash-sale-section" className="py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Flash Sale Header Strip */}
-        <div className="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#E80645] via-[#D0053E] to-[#B30435] text-white shadow-md shadow-rose-900/10 mb-4 sm:mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 border border-rose-600/30">
-          
-          {/* Title & Tag */}
-          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-start">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 text-white flex items-center justify-center shrink-0 backdrop-blur-xs">
-                <Flame className="w-5 h-5 text-white animate-bounce" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-rose-100 uppercase tracking-wider font-modern">
-                  <Sparkles className="w-3 h-3" />
-                  <span>{lang === 'fa' ? 'پیشنهاد روز' : 'Daily Deal'}</span>
-                </div>
-                <h2 className="text-base sm:text-lg lg:text-xl font-normal text-white font-display">
-                  {lang === 'fa' ? 'پیشنهادهای شگفت‌انگیز لومینا' : 'Lumina Flash Sale'}
-                </h2>
-              </div>
-            </div>
+  const handleViewAll = () => {
+    setFilters(prev => ({ ...prev, onSaleOnly: true, selectedCategory: 'all' }));
+    setActiveTab('shop');
+  };
 
-            {/* Mobile View All Button */}
-            <button
-              onClick={() => {
-                setFilters(prev => ({ ...prev, onSaleOnly: true, selectedCategory: 'all' }));
-                setActiveTab('shop');
-              }}
-              className="sm:hidden flex items-center gap-1 text-[11px] font-bold text-white/90 hover:text-white font-modern"
-            >
-              <span>{lang === 'fa' ? 'همه' : 'All'}</span>
-              <ArrowLeft className="w-3 h-3 rtl:rotate-0 ltr:rotate-180" />
-            </button>
+  return (
+    <section id="flash-sale-section" className="py-6 border-b border-zinc-200 dark:border-zinc-800/80">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Minimal Drop Header Strip */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-5 border-b border-zinc-200/80 dark:border-zinc-800/80">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-mono text-[11px] font-medium">
+              <Zap className="w-3 h-3 fill-current" />
+              <span>FLASH DROPS</span>
+            </div>
+            <h2 className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              {lang === 'fa' ? 'پیشنهادهای شگفت‌انگیز لومینا' : 'Limited Inventory Drops'}
+            </h2>
           </div>
 
-          {/* Countdown Clock & Desktop CTA */}
-          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3">
-            <div className="flex items-center gap-1.5 sm:gap-2 bg-black/25 px-3 py-1.5 rounded-xl border border-white/20 text-xs backdrop-blur-xs font-modern">
-              <Clock className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-              <span className="text-[10px] sm:text-xs text-white/90 font-medium">
-                {lang === 'fa' ? 'زمان باقی‌مانده:' : 'Ends In:'}
-              </span>
-              <div className="flex items-center gap-1 font-mono text-xs font-black" style={{ direction: 'ltr' }}>
-                <span className="bg-white text-slate-900 px-1.5 py-0.5 rounded text-[11px] shadow-xs font-bold font-modern">
+          {/* Monospace Countdown Clock & View All */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5 font-mono text-xs text-zinc-600 dark:text-zinc-400">
+              <Clock className="w-3.5 h-3.5 text-zinc-400" />
+              <span className="text-[11px] text-zinc-400">{lang === 'fa' ? 'فرصت باقی‌مانده:' : 'Time Left:'}</span>
+              <div className="flex items-center gap-1 font-mono font-bold text-zinc-900 dark:text-zinc-100">
+                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
                   {formatNumber(timeLeft.hours)}
                 </span>
-                <span className="text-white font-bold">:</span>
-                <span className="bg-white text-slate-900 px-1.5 py-0.5 rounded text-[11px] shadow-xs font-bold font-modern">
+                <span>:</span>
+                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
                   {formatNumber(timeLeft.minutes)}
                 </span>
-                <span className="text-white font-bold">:</span>
-                <span className="bg-white text-slate-900 px-1.5 py-0.5 rounded text-[11px] shadow-xs font-bold font-modern">
+                <span>:</span>
+                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-rose-500">
                   {formatNumber(timeLeft.seconds)}
                 </span>
               </div>
             </div>
 
             <button
-              onClick={() => {
-                setFilters(prev => ({ ...prev, onSaleOnly: true, selectedCategory: 'all' }));
-                setActiveTab('shop');
-              }}
-              className="hidden sm:flex items-center gap-1 text-xs font-bold text-white hover:text-white/80 transition-colors cursor-pointer bg-white/15 px-3 py-1.5 rounded-xl hover:bg-white/25 font-modern"
+              onClick={handleViewAll}
+              className="flex items-center gap-1 text-xs font-mono text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors cursor-pointer"
             >
-              <span>{lang === 'fa' ? 'مشاهده همه تخفیف‌ها' : 'View All Deals'}</span>
-              <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
+              <span>{lang === 'fa' ? 'مشاهده همه' : 'View All'}</span>
+              <span className="text-[10px] text-zinc-400">→</span>
             </button>
           </div>
         </div>
 
-        {/* Product Cards Grid: 2 columns on mobile, 4 on desktop */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
-          {flashProducts.map(product => {
-            const soldPercent = Math.min(100, Math.round((product.soldCount / (product.soldCount + product.stock)) * 100));
-
-            return (
-              <div key={product.id} className="flex flex-col h-full">
-                <ProductCard product={product} />
-
-                {/* Stock Progress Bar */}
-                <div className="mt-1.5 px-1">
-                  <div className="flex items-center justify-between text-[10px] mb-1 font-medium">
-                    <span className="text-slate-400 dark:text-slate-500 tabular-nums">
-                      {lang === 'fa'
-                        ? `${product.stock} عدد در انبار`
-                        : `${product.stock} in stock`}
-                    </span>
-                    <span className="text-rose-500 font-bold tabular-nums">
-                      {soldPercent}٪
-                    </span>
-                  </div>
-                  <div className="h-1 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-rose-500 rounded-full transition-all duration-300"
-                      style={{ width: `${soldPercent}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        {/* High Density Products Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
+          {flashProducts.slice(0, 4).map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </div>
     </section>
