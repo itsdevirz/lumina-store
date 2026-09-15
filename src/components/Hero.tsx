@@ -3,16 +3,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   ArrowLeft,
   ArrowRight,
-  ShieldCheck,
   Zap,
-  Truck,
-  RotateCcw,
-  CreditCard,
   Sparkles,
   Star,
   ChevronLeft,
-  ChevronRight,
-  Clock
+  ChevronRight
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 
@@ -185,7 +180,7 @@ export const Hero: React.FC = () => {
                     hidden: { opacity: 0, y: 14 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
                   }}
-                  className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white mb-1.5 sm:mb-2 leading-snug"
+                  className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white mb-1.5 sm:mb-2 leading-snug font-modern"
                 >
                   {currentSlide.title}
                 </motion.h1>
@@ -218,15 +213,15 @@ export const Hero: React.FC = () => {
                         setActiveTab('shop');
                       }
                     }}
-                    className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-rose-950/20 transition-all active:scale-95 cursor-pointer"
+                    className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-rose-950/20 transition-all active:scale-95 cursor-pointer font-modern"
                   >
                     <span>{lang === 'fa' ? 'مشاهده و خرید محصول' : 'View Product'}</span>
                     <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
                   </button>
 
                   <div className="flex items-baseline gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
-                    <span className="text-[11px] text-slate-400 font-medium">{lang === 'fa' ? 'قیمت ویژه:' : 'Price:'}</span>
-                    <span className="text-xs sm:text-sm font-black text-white tabular-nums">
+                    <span className="text-[11px] text-slate-400 font-medium font-modern">{lang === 'fa' ? 'قیمت ویژه:' : 'Price:'}</span>
+                    <span className="text-xs sm:text-sm font-black text-white tabular-nums font-modern">
                       {formatPrice(currentSlide.price, currentSlide.priceUSD)}
                     </span>
                   </div>
@@ -253,16 +248,16 @@ export const Hero: React.FC = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
               <div className="relative z-10 text-right">
-                <span className="px-2 py-0.5 rounded-md bg-[#E80645] text-white text-[9.5px] sm:text-[10px] font-bold mb-1 inline-block">
+                <span className="px-2 py-0.5 rounded-md bg-[#E80645] text-white text-[9.5px] sm:text-[10px] font-bold mb-1 inline-block font-modern">
                   {lang === 'fa' ? 'صدای های-فای' : 'Hi-Fi Audio'}
                 </span>
-                <h3 className="text-xs sm:text-sm lg:text-base font-black mb-0.5 line-clamp-1">
+                <h3 className="text-xs sm:text-sm lg:text-base font-black mb-0.5 line-clamp-1 font-modern">
                   {lang === 'fa' ? 'هدفون‌های حرفه‌ای استودیو' : 'Studio Headphones'}
                 </h3>
                 <p className="text-[10px] sm:text-[11px] text-slate-300 mb-2 line-clamp-1 hidden sm:block">
                   {lang === 'fa' ? 'اسپیکرها و تجهیزات مانیتورینگ' : 'Professional audio gear with warranty'}
                 </p>
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-rose-400 group-hover:text-rose-300">
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-rose-400 group-hover:text-rose-300 font-modern">
                   <span>{lang === 'fa' ? 'مشاهده کالکشن' : 'Explore'}</span>
                   <ArrowLeft className="w-3 h-3 rtl:rotate-0 ltr:rotate-180" />
                 </div>
@@ -284,97 +279,22 @@ export const Hero: React.FC = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
               <div className="relative z-10 text-right">
-                <span className="px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[9.5px] sm:text-[10px] font-bold mb-1 inline-block">
+                <span className="px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[9.5px] sm:text-[10px] font-bold mb-1 inline-block font-modern">
                   {lang === 'fa' ? 'میز کار ارگونومیک' : 'Ergonomic'}
                 </span>
-                <h3 className="text-xs sm:text-sm lg:text-base font-black mb-0.5 line-clamp-1">
+                <h3 className="text-xs sm:text-sm lg:text-base font-black mb-0.5 line-clamp-1 font-modern">
                   {lang === 'fa' ? 'فضای کار مینیمال و آرام' : 'Minimalist Workspace'}
                 </h3>
                 <p className="text-[10px] sm:text-[11px] text-slate-300 mb-2 line-clamp-1 hidden sm:block">
                   {lang === 'fa' ? 'پایه‌ها، دسک‌پد چرم و کیبوردها' : 'Elevate your daily productivity'}
                 </p>
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-emerald-400 group-hover:text-emerald-300">
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-emerald-400 group-hover:text-emerald-300 font-modern">
                   <span>{lang === 'fa' ? 'مشاهده محصولات' : 'View Gear'}</span>
                   <ArrowLeft className="w-3 h-3 rtl:rotate-0 ltr:rotate-180" />
                 </div>
               </div>
             </div>
 
-          </div>
-
-        </div>
-
-        {/* BOTTOM: Store Value Proposition / Trust Features Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
-          
-          <div className="flex items-center gap-2.5 p-1">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400 flex items-center justify-center shrink-0">
-              <Truck className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                {lang === 'fa' ? 'ارسال سریع و اکسپرس' : 'Express Delivery'}
-              </div>
-              <div className="text-[10px] text-slate-400 truncate">
-                {lang === 'fa' ? 'تحویل سریع سراسر کشور' : 'Nationwide fast shipping'}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5 p-1">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                {lang === 'fa' ? 'ضمانت اصالت ۱۰۰٪' : '100% Authentic'}
-              </div>
-              <div className="text-[10px] text-slate-400 truncate">
-                {lang === 'fa' ? 'تضمین اصالت کالاها' : 'Direct verified makers'}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5 p-1">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-              <RotateCcw className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                {lang === 'fa' ? '۷ روز مهلت تست' : '7-Day Return'}
-              </div>
-              <div className="text-[10px] text-slate-400 truncate">
-                {lang === 'fa' ? 'بازگشت بدون قید و شرط' : 'Hassle-free refunds'}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5 p-1">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-              <CreditCard className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                {lang === 'fa' ? 'پرداخت امن شاپرک' : 'Secure Payment'}
-              </div>
-              <div className="text-[10px] text-slate-400 truncate">
-                {lang === 'fa' ? 'درگاه‌های معتبر بانکی' : 'Encrypted transactions'}
-              </div>
-            </div>
-          </div>
-
-          <div className="col-span-2 sm:col-span-1 flex items-center gap-2.5 p-1">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
-              <Clock className="w-4 h-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                {lang === 'fa' ? 'پشتیبانی ۲۴ ساعته' : '24/7 Support'}
-              </div>
-              <div className="text-[10px] text-slate-400 truncate">
-                {lang === 'fa' ? 'پاسخگویی آنلاین و سریع' : 'Always here to assist'}
-              </div>
-            </div>
           </div>
 
         </div>

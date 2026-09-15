@@ -260,12 +260,12 @@ export const SiteBanner: React.FC = () => {
                 }}
                 className="flex flex-wrap items-center gap-2 mb-2 sm:mb-2.5"
               >
-                <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-tight shadow-xs ${slide.badgeColor}`}>
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-tight shadow-xs ${slide.badgeColor} font-modern`}>
                   <Sparkles className="w-3 h-3" />
                   <span>{lang === 'fa' ? slide.badge.fa : slide.badge.en}</span>
                 </span>
 
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-[10px] sm:text-[11px] font-bold border border-white/15">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 sm:py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-[10px] sm:text-[11px] font-bold border border-white/15 font-modern">
                   <Flame className="w-3 h-3 text-amber-400" />
                   <span>{lang === 'fa' ? slide.highlight.fa : slide.highlight.en}</span>
                 </span>
@@ -278,7 +278,7 @@ export const SiteBanner: React.FC = () => {
                     hidden: { opacity: 0, y: 14 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
                   }}
-                  className="text-base sm:text-xl lg:text-2xl font-black leading-snug sm:leading-tight tracking-tight text-white mb-1.5 line-clamp-2"
+                  className="text-base sm:text-xl lg:text-2xl font-black leading-snug sm:leading-tight tracking-tight text-white mb-1.5 line-clamp-2 font-modern"
                 >
                   {lang === 'fa' ? slide.title.fa : slide.title.en}
                 </motion.h2>

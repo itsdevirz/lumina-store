@@ -1251,24 +1251,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                     </div>
                   </button>
 
-                  {/* فستیوال شگفت‌انگیز */}
-                  {activeFestival && (
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
+                  {/* پیشنهادهای شگفت‌انگیز */}
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      if (activeFestival?.isActive) {
                         openFestivalPage(activeFestival);
-                      }}
-                      className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-50/80 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 transition-colors cursor-pointer border border-amber-200/60 dark:border-amber-900/40"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Flame className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                        <span>{lang === 'fa' ? activeFestival.nameFa : activeFestival.name}</span>
-                      </div>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500 text-white font-black">
-                        ویژه
+                      } else {
+                        setActiveTab('home');
+                        setTimeout(() => {
+                          const el = document.getElementById('flash-sale-section');
+                          el?.scrollIntoView({ behavior: 'smooth' });
+                        }, 100);
+                      }
+                    }}
+                    className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-50/80 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 transition-colors cursor-pointer border border-amber-200/60 dark:border-amber-900/40"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Flame className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 animate-pulse" />
+                      <span className="truncate font-modern font-bold">
+                        {lang === 'fa' ? 'پیشنهادهای شگفت‌انگیز' : 'Incredible Offers'}
                       </span>
-                    </button>
-                  )}
+                    </div>
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500 text-white font-black shrink-0 font-modern">
+                      {lang === 'fa' ? 'ویژه' : 'Special'}
+                    </span>
+                  </button>
                 </div>
 
                 {/* 3. دسته‌بندی‌های کالا (Categories Accordion) */}

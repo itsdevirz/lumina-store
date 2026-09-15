@@ -102,7 +102,8 @@ export const ProductDetailView: React.FC = () => {
           setSelectedAttributes(firstInStockVariant.attributes);
         }
       } else {
-        const initialColorObj = selectedProduct.colors?.[0];
+        const inStockColor = selectedProduct.colors?.find(c => isColorAvailable(selectedProduct, c.name, null));
+        const initialColorObj = inStockColor || selectedProduct.colors?.[0];
         const initialColorName = initialColorObj?.name || selectedProduct.variants?.find(v => v.colorName)?.colorName;
         if (initialColorName) {
           setSelectedColor(initialColorName);
@@ -112,7 +113,9 @@ export const ProductDetailView: React.FC = () => {
           setSelectedColorHex(null);
         }
 
-        const initialSize = selectedProduct.sizes?.[0] || selectedProduct.variants?.find(v => v.size)?.size;
+        const initialSize = selectedProduct.sizes?.find(s => isSizeAvailable(selectedProduct, s, initialColorName)) ||
+          selectedProduct.sizes?.[0] ||
+          selectedProduct.variants?.find(v => v.size)?.size;
         setSelectedSize(initialSize || null);
       }
 
@@ -251,6 +254,11 @@ export const ProductDetailView: React.FC = () => {
   const isOutOfStock = currentStock <= 0;
 
   const handleColorChange = (colorName: string, colorHex: string, colorImage?: string) => {
+    // Prevent selecting out-of-stock color variant
+    if (!isColorAvailable(selectedProduct, colorName, selectedSize)) {
+      return;
+    }
+
     setSelectedColor(colorName);
     setSelectedColorHex(colorHex);
     setValidationError(null);
@@ -573,7 +581,7 @@ export const ProductDetailView: React.FC = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 leading-tight font-modern">
               {lang === 'fa' ? selectedProduct.nameFa : selectedProduct.name}
             </h1>
 

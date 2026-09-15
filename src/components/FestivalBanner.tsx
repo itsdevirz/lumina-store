@@ -72,7 +72,7 @@ export const FestivalBanner: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-start w-full md:w-auto">
             <div className="flex items-center gap-2 shrink-0">
               <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${theme.badgeBg} border ${theme.badgeBorder} ${theme.badgeText} font-black text-[11px] shadow-2xs`}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${theme.badgeBg} border ${theme.badgeBorder} ${theme.badgeText} font-black text-[11px] shadow-2xs font-modern`}
               >
                 <Flame className={`w-3.5 h-3.5 ${theme.badgeIcon} animate-pulse`} />
                 <span>
@@ -83,7 +83,7 @@ export const FestivalBanner: React.FC = () => {
 
               {activeFestival.discountPercent && (
                 <span
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${theme.discountPillBg} ${theme.discountPillText} font-black text-[11px] border ${theme.discountPillBorder}`}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${theme.discountPillBg} ${theme.discountPillText} font-black text-[11px] border ${theme.discountPillBorder} font-modern`}
                 >
                   <Percent className="w-3 h-3" />
                   <span>
@@ -97,7 +97,7 @@ export const FestivalBanner: React.FC = () => {
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <h2
-                className={`text-sm sm:text-base font-black ${theme.titleText} tracking-tight`}
+                className={`text-base sm:text-lg font-normal ${theme.titleText} font-display`}
               >
                 {lang === 'fa'
                   ? activeFestival.title

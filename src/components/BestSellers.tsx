@@ -33,10 +33,10 @@ export const BestSellers: React.FC = () => {
               <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <span className="text-[10px] sm:text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block">
+              <span className="text-[10px] sm:text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block font-modern">
                 {lang === 'fa' ? 'محبوب‌ترین انتخاب‌ها' : 'Customer Favorites'}
               </span>
-              <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-white tracking-tight font-modern">
                 {lang === 'fa' ? 'پرفروش‌ترین‌های لومینا' : 'Top Best Sellers'}
               </h2>
             </div>
@@ -48,7 +48,7 @@ export const BestSellers: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer font-modern ${
                   selectedCategory === cat.id
                     ? 'bg-[#E80645] text-white shadow-xs'
                     : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'

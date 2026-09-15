@@ -150,12 +150,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
         {/* Dynamic Discount & Flash Sale Badges (pinned on image so card height never varies) */}
         <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10 flex flex-col gap-1 items-end pointer-events-none">
           {product.discountPercent && (
-            <span className="px-1.5 sm:px-2 py-0.5 rounded-md bg-[#E80645] text-white text-[9px] sm:text-[10px] font-black tracking-tight shadow-xs tabular-nums">
+            <span className="px-1.5 sm:px-2 py-0.5 rounded-md bg-[#E80645] text-white text-[9px] sm:text-[10px] font-black tracking-tight shadow-xs tabular-nums font-modern">
               {lang === 'fa' ? `${product.discountPercent}٪-` : `-${product.discountPercent}%`}
             </span>
           )}
           {product.isFlashSale && (
-            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[8px] sm:text-[9px] font-black tracking-tight shadow-xs">
+            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[8px] sm:text-[9px] font-black tracking-tight shadow-xs font-modern">
               <Zap className="w-2.5 h-2.5 fill-current" />
               <span>{lang === 'fa' ? 'شگفت‌انگیز' : 'Flash'}</span>
             </span>
@@ -240,7 +240,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
           </div>
 
           {/* Title (Standardized 2-line height for 100% consistent card alignment) */}
-          <h3 className="text-[10.5px] sm:text-xs font-bold text-slate-900 dark:text-white line-clamp-2 h-7 sm:h-8 leading-snug transition-colors mb-1.5 group-hover:text-[#E80645] dark:group-hover:text-rose-400">
+          <h3 className="text-[10.5px] sm:text-xs font-bold text-slate-900 dark:text-white line-clamp-2 h-7 sm:h-8 leading-snug transition-colors mb-1.5 group-hover:text-[#E80645] dark:group-hover:text-rose-400 font-modern">
             {lang === 'fa' ? product.nameFa : product.name}
           </h3>
 
@@ -280,7 +280,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
                 -
               </span>
             )}
-            <div className="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white tabular-nums tracking-tight leading-tight">
+            <div className="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white tabular-nums tracking-tight leading-tight font-modern">
               {formatPrice(product.price, product.priceUSD)}
             </div>
           </div>

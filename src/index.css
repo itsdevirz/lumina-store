@@ -1,6 +1,31 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Lalezar', 'Vazirmatn', cursive, sans-serif;
+  --font-modern: 'Alexandria', 'Vazirmatn', sans-serif;
+  --font-readex: 'Readex Pro', 'Vazirmatn', sans-serif;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Persian Typography Scale & Specialized Utility Classes */
+.font-sans, .font-vazir {
+  font-family: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+.font-display, .font-lalezar {
+  font-family: 'Lalezar', 'Vazirmatn', cursive, sans-serif;
+  letter-spacing: 0;
+}
+
+.font-modern, .font-alexandria {
+  font-family: 'Alexandria', 'Vazirmatn', sans-serif;
+}
+
+.font-readex {
+  font-family: 'Readex Pro', 'Vazirmatn', sans-serif;
+}
 
 @layer base {
   :root {

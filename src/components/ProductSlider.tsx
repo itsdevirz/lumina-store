@@ -136,13 +136,13 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 text-[#E80645] dark:text-rose-400 text-[11px] sm:text-xs font-bold border border-rose-200/50 dark:border-rose-900/40">
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 text-[#E80645] dark:text-rose-400 text-[11px] sm:text-xs font-bold border border-rose-200/50 dark:border-rose-900/40 font-modern">
               <Flame className="w-3.5 h-3.5" />
               <span>{lang === 'fa' ? 'پیشنهادهای ویژه و پرفروش' : 'Featured & Trending'}</span>
             </span>
           </div>
 
-          <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight font-modern">
             {lang === 'fa' ? heading.fa : heading.en}
           </h2>
 

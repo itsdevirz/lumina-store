@@ -293,13 +293,13 @@ export const FestivalPage: React.FC = () => {
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="space-y-4 max-w-2xl">
               <div className="flex items-center gap-2.5 flex-wrap">
-                <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full ${theme.badgeBg} border ${theme.badgeBorder} ${theme.badgeText} font-black text-xs shadow-xs animate-pulse`}>
+                <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full ${theme.badgeBg} border ${theme.badgeBorder} ${theme.badgeText} font-black text-xs shadow-xs animate-pulse font-modern`}>
                   <Flame className={`w-4 h-4 ${theme.badgeIcon}`} />
                   <span>{currentFest.badgeText || (lang === 'fa' ? 'جشنواره طلایی تخفیف' : 'Golden Festival')}</span>
                 </span>
 
                 {currentFest.discountPercent && (
-                  <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full ${theme.discountPillBg} ${theme.discountPillText} font-bold text-xs border ${theme.discountPillBorder}`}>
+                  <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full ${theme.discountPillBg} ${theme.discountPillText} font-bold text-xs border ${theme.discountPillBorder} font-modern`}>
                     <Percent className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                     <span>{lang === 'fa' ? `تخفیف تا ${currentFest.discountPercent}٪` : `Up to ${currentFest.discountPercent}% OFF`}</span>
                   </span>
@@ -307,7 +307,7 @@ export const FestivalPage: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-black ${theme.titleText} tracking-tight leading-tight`}>
+                <h1 className={`text-2xl sm:text-4xl lg:text-5xl font-normal ${theme.titleText} font-display leading-tight`}>
                   {lang === 'fa' ? currentFest.title : (currentFest.titleEn || currentFest.title)}
                 </h1>
 

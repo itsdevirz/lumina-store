@@ -145,23 +145,34 @@ export const ProductVariantSelector: React.FC<ProductVariantSelectorProps> = (pr
                 <motion.button
                   key={c.id || c.name}
                   type="button"
-                  whileTap={{ scale: 0.96 }}
-                  onClick={() => onColorChange(c.name, c.hex, c.image)}
-                  className={`group relative flex items-center gap-2.5 min-h-[44px] px-3.5 py-2 rounded-xl border transition-all cursor-pointer select-none ${
-                    isSelected
-                      ? 'bg-white dark:bg-slate-900 border-indigo-600 dark:border-indigo-500 shadow-sm ring-2 ring-indigo-500/25'
-                      : inStock
-                      ? 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-                      : 'bg-slate-100/70 dark:bg-slate-800/40 border-dashed border-slate-300 dark:border-slate-700 opacity-60'
+                  whileTap={inStock ? { scale: 0.96 } : undefined}
+                  disabled={!inStock}
+                  onClick={(e) => {
+                    if (!inStock) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      return;
+                    }
+                    onColorChange(c.name, c.hex, c.image);
+                  }}
+                  className={`group relative flex items-center gap-2.5 min-h-[44px] px-3.5 py-2 rounded-xl border transition-all select-none ${
+                    !inStock
+                      ? 'bg-slate-100/80 dark:bg-slate-850/40 border-slate-200 dark:border-slate-800 opacity-45 cursor-not-allowed shadow-none'
+                      : isSelected
+                      ? 'bg-white dark:bg-slate-900 border-indigo-600 dark:border-indigo-500 shadow-sm ring-2 ring-indigo-500/25 cursor-pointer'
+                      : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer'
                   }`}
-                  title={`${c.name} ${!inStock ? (lang === 'fa' ? '(ناموجود در این سایز)' : '(Out of stock)') : ''}`}
+                  aria-disabled={!inStock}
+                  title={`${c.name} ${!inStock ? (lang === 'fa' ? '(ناموجود)' : '(Out of stock)') : ''}`}
                 >
                   {/* Swatch Circle */}
                   <span
-                    className="w-5 h-5 rounded-full border border-black/15 dark:border-white/20 flex items-center justify-center shrink-0 shadow-2xs relative"
+                    className={`w-5 h-5 rounded-full border border-black/15 dark:border-white/20 flex items-center justify-center shrink-0 shadow-2xs relative ${
+                      !inStock ? 'opacity-40' : ''
+                    }`}
                     style={{ backgroundColor: c.hex }}
                   >
-                    {isSelected && (
+                    {isSelected && inStock && (
                       <Check
                         className={`w-3.5 h-3.5 stroke-[3.5] ${
                           // Choose contrast checkmark based on hex brightness estimation
@@ -171,7 +182,7 @@ export const ProductVariantSelector: React.FC<ProductVariantSelectorProps> = (pr
                         }`}
                       />
                     )}
-                    {!inStock && !isSelected && (
+                    {!inStock && (
                       <span className="w-full h-0.5 bg-rose-500 rotate-45 absolute" />
                     )}
                   </span>
@@ -179,11 +190,11 @@ export const ProductVariantSelector: React.FC<ProductVariantSelectorProps> = (pr
                   {/* Label */}
                   <span
                     className={`text-xs font-bold ${
-                      isSelected
+                      !inStock
+                        ? 'text-slate-400 dark:text-slate-500 line-through'
+                        : isSelected
                         ? 'text-slate-950 dark:text-white'
-                        : inStock
-                        ? 'text-slate-700 dark:text-slate-300'
-                        : 'text-slate-400 dark:text-slate-500 line-through'
+                        : 'text-slate-700 dark:text-slate-300'
                     }`}
                   >
                     {c.name}
@@ -191,7 +202,7 @@ export const ProductVariantSelector: React.FC<ProductVariantSelectorProps> = (pr
 
                   {/* Out of stock strike indicator */}
                   {!inStock && (
-                    <span className="text-[10px] text-rose-500 font-bold bg-rose-50 dark:bg-rose-950/60 px-1.5 py-0.5 rounded-md">
+                    <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold bg-rose-50 dark:bg-rose-950/60 px-1.5 py-0.5 rounded-md border border-rose-200/60 dark:border-rose-900/50">
                       {lang === 'fa' ? 'ناموجود' : 'Out'}
                     </span>
                   )}

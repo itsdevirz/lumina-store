@@ -20,11 +20,11 @@ export const PromotionalBanners: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
 
             <div className="relative z-10 text-right">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E80645]/90 text-white text-[11px] font-bold mb-2 shadow-xs">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E80645]/90 text-white text-[11px] font-bold mb-2 shadow-xs font-modern">
                 <Sparkles className="w-3 h-3" />
                 <span>{lang === 'fa' ? 'کالکشن ویژه' : 'Special Collection'}</span>
               </span>
-              <h3 className="text-base sm:text-xl font-black mb-1.5 leading-tight">
+              <h3 className="text-base sm:text-xl font-black mb-1.5 leading-tight font-modern">
                 {lang === 'fa' ? 'تجهیزات صوتی استودیویی های-فای' : 'Studio-Grade Acoustic Sound'}
               </h3>
               <p className="text-slate-300 text-xs sm:text-sm max-w-sm mb-3 leading-relaxed font-normal">
@@ -41,7 +41,7 @@ export const PromotionalBanners: React.FC = () => {
                   setActiveTab('shop');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs font-modern"
               >
                 <span>{lang === 'fa' ? 'مشاهده محصولات صوتی' : 'Shop Audio Gear'}</span>
                 <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
@@ -59,11 +59,11 @@ export const PromotionalBanners: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
 
             <div className="relative z-10 text-right">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-600/90 text-white text-[11px] font-bold mb-2 shadow-xs">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-600/90 text-white text-[11px] font-bold mb-2 shadow-xs font-modern">
                 <Compass className="w-3 h-3" />
                 <span>{lang === 'fa' ? 'میز کار ارگونومیک' : 'Productivity Setup'}</span>
               </span>
-              <h3 className="text-base sm:text-xl font-black mb-1.5 leading-tight">
+              <h3 className="text-base sm:text-xl font-black mb-1.5 leading-tight font-modern">
                 {lang === 'fa' ? 'چیدمان مینیمال و ارگونومیک محیط کار' : 'Minimalist Desk Setups'}
               </h3>
               <p className="text-slate-300 text-xs sm:text-sm max-w-sm mb-3 leading-relaxed font-normal">
@@ -80,7 +80,7 @@ export const PromotionalBanners: React.FC = () => {
                   setActiveTab('shop');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs font-modern"
               >
                 <span>{lang === 'fa' ? 'مشاهده تجهیزات میز کار' : 'Shop Desk Essentials'}</span>
                 <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />

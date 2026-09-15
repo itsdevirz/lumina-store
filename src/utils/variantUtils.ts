@@ -166,7 +166,18 @@ export const isColorAvailable = (
   colorName: string,
   selectedSize?: string | null
 ): boolean => {
+  // Check explicit color definition in product.colors
+  const colorObj = product.colors?.find(c => c.name === colorName || c.id === colorName);
+  if (colorObj) {
+    if (colorObj.active === false) return false;
+    if (typeof colorObj.stock === 'number' && colorObj.stock <= 0) return false;
+  }
+
+  // If no variants defined, fall back to colorObj.stock or product.stock
   if (!product.variants || product.variants.length === 0) {
+    if (colorObj && typeof colorObj.stock === 'number') {
+      return colorObj.stock > 0;
+    }
     return (product.stock ?? 0) > 0;
   }
 
@@ -174,9 +185,27 @@ export const isColorAvailable = (
     const matched = product.variants.find(
       v => v.active && v.colorName === colorName && v.size === selectedSize
     );
-    return matched ? matched.stock > 0 : false;
+    if (matched) {
+      return matched.stock > 0;
+    }
+
+    // If variants with sizes exist, this color does not have the selected size
+    const hasSizeVariants = product.variants.some(v => Boolean(v.size));
+    if (hasSizeVariants) {
+      return false;
+    }
   }
 
-  // If no size selected yet, check if ANY active variant with this color has stock
-  return product.variants.some(v => v.active && v.colorName === colorName && v.stock > 0);
+  // If no size selected or variants do not use sizes, check if ANY active variant with this color has stock > 0
+  const colorVariants = product.variants.filter(v => v.active && v.colorName === colorName);
+  if (colorVariants.length > 0) {
+    return colorVariants.some(v => v.stock > 0);
+  }
+
+  // Fallback to colorObj stock if variants didn't define this color specifically
+  if (colorObj && typeof colorObj.stock === 'number') {
+    return colorObj.stock > 0;
+  }
+
+  return (product.stock ?? 0) > 0;
 };
