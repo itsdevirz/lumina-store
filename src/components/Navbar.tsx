@@ -28,7 +28,9 @@ import {
   Briefcase,
   Home,
   MapPin,
-  Check
+  Check,
+  Package,
+  ShieldAlert
 } from 'lucide-react';
 
 import { useStore } from '../context/StoreContext';
@@ -68,6 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
     openLoginModal,
     logout,
     userProfile,
+    userOrders,
     activeFestival,
     openFestivalPage
   } = useStore();
@@ -121,6 +124,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Lock body scroll when mobile menu drawer is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -342,10 +357,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
               className="flex items-center gap-2 shrink-0 select-none group cursor-pointer focus:outline-none"
               title="Lumina"
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-[#E80645] to-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20 group-hover:scale-105 transition-transform">
                 <Sparkles className="w-4.5 h-4.5" />
               </div>
-              <span className="text-2xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors font-mono">
+              <span className="text-2xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight group-hover:text-[#E80645] dark:group-hover:text-rose-400 transition-colors font-mono">
                 Lumina
               </span>
             </button>
@@ -357,7 +372,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                   setIsSearchOpen(true);
                   setTimeout(() => searchInputRef.current?.focus(), 40);
                 }}
-                className="w-full flex items-center bg-[#F0F0F1] dark:bg-slate-800/90 rounded-xl px-3.5 py-2.5 transition-all text-slate-800 dark:text-slate-200 focus-within:bg-white dark:focus-within:bg-slate-900 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:border-blue-500"
+                className="w-full flex items-center bg-[#F0F0F1] dark:bg-slate-800/90 rounded-xl px-3.5 py-2.5 transition-all text-slate-800 dark:text-slate-200 focus-within:bg-white dark:focus-within:bg-slate-900 focus-within:ring-2 focus-within:ring-rose-500/30 focus-within:border-[#E80645]"
               >
                 <Search className="w-5 h-5 text-slate-400 shrink-0 rtl:ml-2.5 ltr:mr-2.5" />
                 <input
@@ -415,7 +430,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                               className="w-10 h-10 rounded-lg object-cover bg-slate-100 dark:bg-slate-800 shrink-0"
                             />
                             <div className="flex-1 min-w-0">
-                              <div className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              <div className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-[#E80645] dark:group-hover:text-rose-400 transition-colors">
                                 {lang === 'fa' ? p.nameFa : p.name}
                               </div>
                               <div className="text-[10px] text-slate-400 truncate">
@@ -429,7 +444,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                         ))}
                         <button
                           onClick={() => handleSearchSubmit(searchTerm)}
-                          className="w-full text-center py-2 mt-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                          className="w-full text-center py-2 mt-1 rounded-xl bg-[#E80645] hover:bg-[#D0053E] text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
                         >
                           {lang === 'fa'
                             ? `مشاهده تمام نتایج (${matchingProducts.length} کالا)`
@@ -506,7 +521,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                   >
                     <div className="font-bold text-slate-800 dark:text-slate-100 pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                       <span>{lang === 'fa' ? 'پیام‌ها و اعلان‌ها' : 'Notifications'}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-bold">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400 font-bold">
                         ۲ جدید
                       </span>
                     </div>
@@ -619,7 +634,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
             >
               <ShoppingCart className="w-5 h-5" />
               {totalCartCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 rounded-full bg-blue-600 text-white text-[10px] font-black flex items-center justify-center tabular-nums shadow-xs">
+                <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 rounded-full bg-[#E80645] text-white text-[10px] font-black flex items-center justify-center tabular-nums shadow-xs">
                   {totalCartCount}
                 </span>
               )}
@@ -1003,7 +1018,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                             </h4>
                             <div className="flex items-center justify-between text-[11px] text-slate-500 mt-0.5">
                               <span className="truncate">{p.brand}</span>
-                              <span className="font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+                              <span className="font-bold text-[#E80645] dark:text-rose-400 tabular-nums">
                                 {formatPrice(p.price, p.priceUSD)}
                               </span>
                             </div>
@@ -1023,7 +1038,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
                         setActiveTab('shop');
                         setIsMobileSearchOpen(false);
                       }}
-                      className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold"
+                      className="px-4 py-2 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-colors cursor-pointer"
                     >
                       {lang === 'fa' ? 'مشاهده تمام محصولات' : 'View All Products'}
                     </button>
@@ -1039,130 +1054,379 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
         )}
       </AnimatePresence>
 
-      {/* 4. MOBILE MENU DRAWER */}
+      {/* 4. MOBILE SLIDING SIDE DRAWER (Off-canvas sidebar from side of screen) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white dark:bg-[#090D16] border-b border-slate-200 dark:border-slate-800 px-4 py-4 space-y-4 shadow-xl overflow-hidden max-h-[85vh] overflow-y-auto"
-          >
-            {/* Mobile Search */}
-            <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute rtl:right-3 ltr:left-3 top-3" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    handleSearchSubmit(searchTerm);
-                    setIsMobileMenuOpen(false);
-                  }
-                }}
-                placeholder={lang === 'fa' ? 'جستجو در لومینا...' : 'Search in Lumina...'}
-                className="w-full rtl:pr-9 rtl:pl-4 ltr:pl-9 ltr:pr-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none"
-              />
-            </div>
+          <div className="fixed inset-0 z-50 lg:hidden flex">
+            {/* Backdrop Blur Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
+            />
 
-            {/* Mobile Categories Accordion */}
-            <div>
-              <div className="text-[11px] font-bold text-slate-400 mb-2">
-                {lang === 'fa' ? 'دسته‌بندی‌های کالا' : 'Categories'}
-              </div>
-              <div className="space-y-1">
-                {megaMenuItems.map(item => {
-                  const isExpanded = mobileExpandedCat === item.id;
-                  return (
-                    <div
-                      key={item.id}
-                      className="border border-slate-100 dark:border-slate-800/80 rounded-xl overflow-hidden bg-slate-50/50 dark:bg-slate-900/40"
-                    >
-                      <button
-                        onClick={() => setMobileExpandedCat(isExpanded ? null : item.id)}
-                        className="w-full p-2.5 flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200 text-right cursor-pointer"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-blue-600 dark:text-blue-400">
-                            {getCategoryIcon(item.iconName)}
-                          </span>
-                          <span>{item.nameFa}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-normal px-1.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-slate-800 text-slate-500">
-                            {item.productCount}
-                          </span>
-                          <ChevronDown
-                            className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                              isExpanded ? 'rotate-180' : ''
-                            }`}
-                          />
-                        </div>
-                      </button>
-
-                      {isExpanded && (
-                        <div className="px-3 pb-3 pt-1 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-[#0B111E] space-y-3">
-                          <button
-                            onClick={() => handleAllCategoryClick(item.id)}
-                            className="w-full text-right text-[11px] font-black text-sky-600 dark:text-sky-400 py-1"
-                          >
-                            {item.allProductsLabelFa} ({item.productCount} کالا) &gt;
-                          </button>
-                          <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 dark:text-slate-400">
-                            {item.columns.flatMap(c => c.items.slice(0, 3)).map((sub, i) => (
-                              <button
-                                key={i}
-                                onClick={() => handleMegaMenuAction(sub, item.id)}
-                                className="text-right py-1 hover:text-[#EF394E] truncate flex items-center justify-between gap-1"
-                              >
-                                <span className="truncate">• {sub.label}</span>
-                                {sub.badge && (
-                                  <span className="text-[9px] px-1 py-0.2 rounded bg-rose-50 dark:bg-rose-950/50 text-[#EF394E] font-bold shrink-0">
-                                    {sub.badge}
-                                  </span>
-                                )}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Mobile Address selector */}
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                setIsAddressModalOpen(true);
-              }}
-              className="w-full p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-between text-xs font-bold cursor-pointer"
+            {/* Sliding Drawer Panel (Slides in from side: right in RTL, left in LTR) */}
+            <motion.div
+              initial={{ x: lang === 'fa' ? '100%' : '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: lang === 'fa' ? '100%' : '-100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+              className="relative w-[85%] max-w-[340px] h-full bg-white dark:bg-[#0B111E] text-slate-800 dark:text-slate-100 shadow-2xl z-10 flex flex-col justify-between overflow-hidden"
             >
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-amber-600" />
-                <span>{selectedCity}</span>
-              </div>
-              <span className="text-[10px] text-amber-600">تغییر</span>
-            </button>
+              {/* Top Drawer Header: Brand & Close Button */}
+              <div className="p-4 border-b border-slate-100 dark:border-slate-800/90 flex items-center justify-between bg-slate-50/70 dark:bg-slate-900/50">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#E80645] to-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20">
+                    <Sparkles className="w-4.5 h-4.5" />
+                  </div>
+                  <div>
+                    <span className="text-lg font-black tracking-tight font-mono text-slate-900 dark:text-white">
+                      Lumina
+                    </span>
+                    <span className="block text-[10px] text-slate-400 font-medium">
+                      {lang === 'fa' ? 'فروشگاه آنلاین محصولات هوشمند' : 'Premium Smart Shop'}
+                    </span>
+                  </div>
+                </div>
 
-            {/* Mobile Tools */}
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-500 font-bold">پوسته:</span>
-                <ThemeToggle />
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                  aria-label="بستن منو"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
-              <button
-                onClick={() => setLang(lang === 'fa' ? 'en' : 'fa')}
-                className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 cursor-pointer"
-              >
-                <Globe className="w-3.5 h-3.5 text-blue-500" />
-                <span>{lang === 'fa' ? 'English (EN)' : 'فارسی (FA)'}</span>
-              </button>
-            </div>
-          </motion.div>
+
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+                {/* 1. User Profile / Authentication Header Card */}
+                {isAuthenticated ? (
+                  <div className="p-3 rounded-2xl bg-gradient-to-br from-rose-50/70 via-slate-50 to-rose-50/30 dark:from-rose-950/20 dark:via-slate-900/40 dark:to-slate-900 border border-rose-100/80 dark:border-rose-900/30">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={userProfile.avatar}
+                        alt={userProfile.name}
+                        className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#E80645]/30 shadow-xs shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">
+                            {userProfile.name}
+                          </h4>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-rose-500 text-white font-bold shrink-0">
+                            {userProfile.role === 'vip' ? 'VIP' : 'کاربر'}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                          {userProfile.phone || userProfile.email}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-slate-50 to-rose-50/40 dark:from-slate-900/80 dark:to-rose-950/20 border border-slate-200/80 dark:border-slate-800 text-center space-y-2">
+                    <div className="w-10 h-10 rounded-xl bg-rose-500/10 dark:bg-rose-500/20 text-[#E80645] flex items-center justify-center mx-auto">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <h4 className="text-xs font-extrabold text-slate-900 dark:text-white">
+                      {lang === 'fa' ? 'حساب کاربری لومینا' : 'Lumina Account'}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {lang === 'fa'
+                        ? 'برای پیگیری سفارشات و دسترسی کامل وارد شوید'
+                        : 'Sign in to track orders and manage favorites'}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        openLoginModal();
+                      }}
+                      className="w-full py-2 px-3 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                    >
+                      <LogIn className="w-3.5 h-3.5" />
+                      <span>{lang === 'fa' ? 'ورود / ثبت‌نام' : 'Login / Register'}</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* 2. Quick Key Navigation Links (پنل کاربری، سفارشات، علاقه‌مندی‌ها، سبد خرید) */}
+                <div className="space-y-1 pt-1">
+                  <div className="text-[11px] font-bold text-slate-400 px-1 mb-1.5">
+                    {lang === 'fa' ? 'دسترسی سریع' : 'Quick Access'}
+                  </div>
+
+                  {/* پنل کاربری */}
+                  <button
+                    onClick={() => {
+                      setActiveTab('account');
+                      setIsMobileMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                      activeTab === 'account'
+                        ? 'bg-rose-50 dark:bg-rose-950/40 text-[#E80645] dark:text-rose-400'
+                        : 'hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <User className="w-4 h-4 text-[#E80645]" />
+                      <span>{lang === 'fa' ? 'پنل کاربری' : 'User Profile'}</span>
+                    </div>
+                    <ChevronLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180" />
+                  </button>
+
+                  {/* سفارشات */}
+                  <button
+                    onClick={() => {
+                      setActiveTab('account');
+                      setIsMobileMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Package className="w-4 h-4 text-indigo-500" />
+                      <span>{lang === 'fa' ? 'سفارش‌های من' : 'My Orders'}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {userOrders.length > 0 && (
+                        <span className="px-1.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold tabular-nums">
+                          {userOrders.length}
+                        </span>
+                      )}
+                      <ChevronLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180" />
+                    </div>
+                  </button>
+
+                  {/* علاقه‌مندی‌ها */}
+                  <button
+                    onClick={() => {
+                      setActiveTab('wishlist');
+                      setIsMobileMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                      activeTab === 'wishlist'
+                        ? 'bg-rose-50 dark:bg-rose-950/40 text-[#E80645] dark:text-rose-400'
+                        : 'hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Heart className="w-4 h-4 text-rose-500" />
+                      <span>{lang === 'fa' ? 'لیست علاقه‌مندی‌ها' : 'Wishlist'}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {wishlist.length > 0 && (
+                        <span className="px-1.5 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-[10px] font-bold tabular-nums">
+                          {wishlist.length}
+                        </span>
+                      )}
+                      <ChevronLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180" />
+                    </div>
+                  </button>
+
+                  {/* سبد خرید */}
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsCartDrawerOpen(true);
+                    }}
+                    className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <ShoppingCart className="w-4 h-4 text-emerald-500" />
+                      <span>{lang === 'fa' ? 'سبد خرید' : 'Shopping Cart'}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {cart.length > 0 && (
+                        <span className="px-1.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold tabular-nums">
+                          {cart.reduce((a, b) => a + b.quantity, 0)}
+                        </span>
+                      )}
+                      <ChevronLeft className="w-4 h-4 text-slate-400 rtl:rotate-0 ltr:rotate-180" />
+                    </div>
+                  </button>
+
+                  {/* فستیوال شگفت‌انگیز */}
+                  {activeFestival && (
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        openFestivalPage(activeFestival);
+                      }}
+                      className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-amber-50/80 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 transition-colors cursor-pointer border border-amber-200/60 dark:border-amber-900/40"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Flame className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                        <span>{lang === 'fa' ? activeFestival.nameFa : activeFestival.name}</span>
+                      </div>
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500 text-white font-black">
+                        ویژه
+                      </span>
+                    </button>
+                  )}
+                </div>
+
+                {/* 3. دسته‌بندی‌های کالا (Categories Accordion) */}
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                  <div className="flex items-center justify-between px-1 mb-2">
+                    <span className="text-[11px] font-bold text-slate-400">
+                      {lang === 'fa' ? 'دسته‌بندی‌های کالا' : 'Categories'}
+                    </span>
+                    <button
+                      onClick={() => {
+                        setFilters(prev => ({ ...prev, selectedCategory: 'all' }));
+                        setActiveTab('shop');
+                        setIsMobileMenuOpen(false);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="text-[10px] font-bold text-[#E80645] hover:underline cursor-pointer"
+                    >
+                      {lang === 'fa' ? 'همه کالاها' : 'View All'}
+                    </button>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    {megaMenuItems.map(item => {
+                      const isExpanded = mobileExpandedCat === item.id;
+                      return (
+                        <div
+                          key={item.id}
+                          className="border border-slate-100 dark:border-slate-800/80 rounded-xl overflow-hidden bg-slate-50/60 dark:bg-slate-900/40"
+                        >
+                          <button
+                            onClick={() => setMobileExpandedCat(isExpanded ? null : item.id)}
+                            className="w-full p-2.5 flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200 text-right cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-[#E80645] dark:text-rose-400">
+                                {getCategoryIcon(item.iconName)}
+                              </span>
+                              <span>{item.nameFa}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-normal px-1.5 py-0.5 rounded-full bg-slate-200/60 dark:bg-slate-800 text-slate-500 tabular-nums">
+                                {item.productCount}
+                              </span>
+                              <ChevronDown
+                                className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                                  isExpanded ? 'rotate-180' : ''
+                                }`}
+                              />
+                            </div>
+                          </button>
+
+                          {isExpanded && (
+                            <div className="px-3 pb-3 pt-1 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-[#0B111E] space-y-2.5">
+                              <button
+                                onClick={() => {
+                                  handleAllCategoryClick(item.id);
+                                  setIsMobileMenuOpen(false);
+                                }}
+                                className="w-full text-right text-[11px] font-black text-[#E80645] dark:text-rose-400 py-1 flex items-center justify-between"
+                              >
+                                <span>{item.allProductsLabelFa} ({item.productCount} کالا)</span>
+                                <ChevronLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
+                              </button>
+                              <div className="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600 dark:text-slate-400">
+                                {item.columns.flatMap(c => c.items.slice(0, 4)).map((sub, i) => (
+                                  <button
+                                    key={i}
+                                    onClick={() => {
+                                      handleMegaMenuAction(sub, item.id);
+                                      setIsMobileMenuOpen(false);
+                                    }}
+                                    className="text-right py-1 hover:text-[#E80645] truncate flex items-center justify-between gap-1"
+                                  >
+                                    <span className="truncate">• {sub.label}</span>
+                                    {sub.badge && (
+                                      <span className="text-[9px] px-1 rounded bg-rose-50 dark:bg-rose-950/50 text-[#E80645] font-bold shrink-0">
+                                        {sub.badge}
+                                      </span>
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 4. انتخاب شهر و آدرس */}
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsAddressModalOpen(true);
+                  }}
+                  className="w-full p-2.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-between text-xs font-bold cursor-pointer border border-amber-200/50 dark:border-amber-900/30"
+                >
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-amber-600" />
+                    <span className="truncate">{selectedCity}</span>
+                  </div>
+                  <span className="text-[10px] text-amber-600 dark:text-amber-400 underline shrink-0">
+                    تغییر
+                  </span>
+                </button>
+
+                {/* 5. پنل مدیریت (برای دسترسی مدیر) */}
+                {onGoToAdmin && (
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      onGoToAdmin();
+                    }}
+                    className="w-full p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 flex items-center justify-between text-xs font-bold cursor-pointer border border-indigo-200/50 dark:border-indigo-900/30"
+                  >
+                    <div className="flex items-center gap-2">
+                      <ShieldAlert className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                      <span>پنل مدیریت فروشگاه</span>
+                    </div>
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500 text-white font-bold">
+                      Admin
+                    </span>
+                  </button>
+                )}
+              </div>
+
+              {/* Bottom Footer Section: Theme Toggle, Language & Logout */}
+              <div className="p-3.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-slate-500 font-bold">حالت شب/روز:</span>
+                    <ThemeToggle />
+                  </div>
+                  <button
+                    onClick={() => setLang(lang === 'fa' ? 'en' : 'fa')}
+                    className="px-2.5 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <Globe className="w-3.5 h-3.5 text-[#E80645]" />
+                    <span>{lang === 'fa' ? 'EN' : 'فا'}</span>
+                  </button>
+                </div>
+
+                {isAuthenticated && (
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-rose-200/60 dark:border-rose-900/40"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>{lang === 'fa' ? 'خروج از حساب کاربری' : 'Sign Out'}</span>
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </header>

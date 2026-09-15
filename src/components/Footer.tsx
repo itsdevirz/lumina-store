@@ -52,7 +52,7 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
         {/* Value Proposition Strip */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-6 pb-8 sm:pb-10 border-b border-slate-800/80">
           <div className="flex items-center gap-2.5 sm:gap-3.5">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center shrink-0">
               <Truck className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
@@ -114,11 +114,11 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
           {/* Brand Info (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black shadow-md shadow-blue-600/30">
+              <div className="w-9 h-9 rounded-xl bg-[#E80645] flex items-center justify-center text-white font-black shadow-md shadow-rose-600/30">
                 <Sparkles className="w-4.5 h-4.5" />
               </div>
               <span className="text-xl font-black text-white tracking-tight">
-                {lang === 'fa' ? 'فروشگاه پریمیوم لومینا' : 'Lumina Store'}
+                {lang === 'fa' ? 'فروشگاه تخصصی لومینا' : 'Lumina Store'}
               </span>
             </div>
 
@@ -130,24 +130,24 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
 
             <div className="space-y-1.5 text-xs text-slate-400">
               <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-blue-400" />
+                <Phone className="w-3.5 h-3.5 text-[#E80645]" />
                 <span className="dir-ltr font-mono font-bold">۰۲۱-۸۸۹۹۰۰۲۲</span>
                 <span className="text-[11px] text-slate-500">({lang === 'fa' ? 'شنبه تا پنج‌شنبه ۹ الی ۲۱' : 'Mon-Sat 9AM-9PM'})</span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-blue-400" />
+                <MapPin className="w-3.5 h-3.5 text-[#E80645]" />
                 <span>{lang === 'fa' ? 'تهران، خیابان ولیعصر، برج تجارت الکترونیک، طبقه ۸' : 'Tehran, Valiasr St, Tech Tower, Floor 8'}</span>
               </div>
             </div>
 
             <div className="flex items-center gap-2 pt-2">
-              <a href="#" aria-label="Instagram" className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors">
+              <a href="#" aria-label="Instagram" className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-[#E80645] hover:text-white flex items-center justify-center transition-colors">
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href="#" aria-label="Twitter" className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors">
+              <a href="#" aria-label="Twitter" className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-[#E80645] hover:text-white flex items-center justify-center transition-colors">
                 <Twitter className="w-4 h-4" />
               </a>
-              <a href="#" aria-label="Linkedin" className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-blue-600 hover:text-white flex items-center justify-center transition-colors">
+              <a href="#" aria-label="Linkedin" className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-[#E80645] hover:text-white flex items-center justify-center transition-colors">
                 <Linkedin className="w-4 h-4" />
               </a>
             </div>
@@ -280,11 +280,11 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
                 value={newsletterEmail}
                 onChange={e => setNewsletterEmail(e.target.value)}
                 placeholder={lang === 'fa' ? 'ایمیل شما (مثال: user@gmail.com)' : 'Email address...'}
-                className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-[#E80645]"
               />
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-md shadow-blue-600/20 active:scale-98"
+                className="w-full py-2.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-colors cursor-pointer shadow-md shadow-rose-900/20 active:scale-98"
               >
                 {lang === 'fa' ? 'دریافت کد تخفیف ۱۰٪' : 'Claim 10% Discount'}
               </button>

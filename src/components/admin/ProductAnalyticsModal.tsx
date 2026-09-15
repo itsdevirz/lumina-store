@@ -402,7 +402,7 @@ export const ProductAnalyticsModal: React.FC<ProductAnalyticsModalProps> = ({
                 <div className="p-4 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-800 space-y-2">
                   <div className="flex items-center justify-between text-slate-500">
                     <span className="text-xs font-bold">{lang === 'fa' ? 'تعداد کل بازدیدها' : 'Total Views'}</span>
-                    <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-[#E80645] flex items-center justify-center">
                       <Eye className="w-4 h-4" />
                     </div>
                   </div>
@@ -528,7 +528,7 @@ export const ProductAnalyticsModal: React.FC<ProductAnalyticsModalProps> = ({
                   {/* Progress Bar */}
                   <div className="w-full h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mb-3">
                     <div
-                      className="h-full bg-gradient-to-r from-indigo-500 to-blue-600 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-rose-500 to-[#E80645] rounded-full transition-all duration-500"
                       style={{ width: `${Math.min(100, Math.max(5, data.shareOfStore.percentage))}%` }}
                     />
                   </div>
@@ -575,7 +575,7 @@ export const ProductAnalyticsModal: React.FC<ProductAnalyticsModalProps> = ({
 
                     <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800">
                       <span className="text-[10px] text-slate-400 block mb-0.5">{lang === 'fa' ? 'بازدید' : 'Views'}</span>
-                      <span className="font-black text-blue-600 dark:text-blue-400">
+                      <span className="font-black text-rose-600 dark:text-rose-400">
                         {formatNumber(data.categoryBenchmark.viewsPercentile)}٪
                       </span>
                       <span className="text-[9px] text-slate-400 block mt-0.5">{lang === 'fa' ? 'برتر' : 'top'}</span>

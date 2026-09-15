@@ -128,7 +128,7 @@ export const ProductListing: React.FC = () => {
       {/* Header with clear button */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <Filter className="w-4 h-4 text-[#E80645] dark:text-rose-400" />
           <h3 className="font-bold text-slate-900 dark:text-white text-sm">
             {lang === 'fa' ? 'فیلترهای کالا' : 'Filters'}
           </h3>
@@ -136,7 +136,7 @@ export const ProductListing: React.FC = () => {
         {activeFiltersCount > 0 && (
           <button
             onClick={resetFilters}
-            className="flex items-center gap-1 text-xs text-rose-600 dark:text-rose-400 hover:underline font-semibold cursor-pointer"
+            className="flex items-center gap-1 text-xs text-[#E80645] dark:text-rose-400 hover:underline font-semibold cursor-pointer"
           >
             <RotateCcw className="w-3 h-3" />
             <span>{lang === 'fa' ? 'پاک‌سازی' : 'Reset'}</span>
@@ -154,7 +154,7 @@ export const ProductListing: React.FC = () => {
             onClick={() => handleCategorySelect('all')}
             className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
               filters.selectedCategory === 'all'
-                ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-bold'
+                ? 'bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400 font-bold'
                 : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
@@ -172,7 +172,7 @@ export const ProductListing: React.FC = () => {
                 onClick={() => handleCategorySelect(cat.id)}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
                   isSelected
-                    ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-bold'
+                    ? 'bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400 font-bold'
                     : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
@@ -194,7 +194,7 @@ export const ProductListing: React.FC = () => {
             onClick={() => setFilters(prev => ({ ...prev, selectedBrand: 'all' }))}
             className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
               filters.selectedBrand === 'all'
-                ? 'text-blue-600 dark:text-blue-400 font-bold'
+                ? 'text-[#E80645] dark:text-rose-400 font-bold'
                 : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
@@ -209,7 +209,7 @@ export const ProductListing: React.FC = () => {
                 onClick={() => setFilters(prev => ({ ...prev, selectedBrand: isSelected ? 'all' : b }))}
                 className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                   isSelected
-                    ? 'text-blue-600 dark:text-blue-400 font-bold bg-blue-50/50 dark:bg-blue-950/40'
+                    ? 'text-[#E80645] dark:text-rose-400 font-bold bg-rose-50/60 dark:bg-rose-950/40'
                     : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
@@ -234,11 +234,11 @@ export const ProductListing: React.FC = () => {
             step={500000}
             value={filters.maxPrice}
             onChange={e => setFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) }))}
-            className="w-full accent-blue-600 cursor-pointer"
+            className="w-full accent-[#E80645] cursor-pointer"
           />
           <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
             <span>{formatPrice(1000000, 20)}</span>
-            <span className="font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+            <span className="font-bold text-[#E80645] dark:text-rose-400 tabular-nums">
               {formatPrice(filters.maxPrice, Math.round(filters.maxPrice / 50000))}
             </span>
           </div>
@@ -284,7 +284,7 @@ export const ProductListing: React.FC = () => {
             type="checkbox"
             checked={filters.inStockOnly}
             onChange={e => setFilters(prev => ({ ...prev, inStockOnly: e.target.checked }))}
-            className="w-4 h-4 rounded-sm text-blue-600 focus:ring-blue-500 border-slate-300 cursor-pointer"
+            className="w-4 h-4 rounded-sm accent-[#E80645] cursor-pointer"
           />
         </label>
 
@@ -296,7 +296,7 @@ export const ProductListing: React.FC = () => {
             type="checkbox"
             checked={filters.onSaleOnly}
             onChange={e => setFilters(prev => ({ ...prev, onSaleOnly: e.target.checked }))}
-            className="w-4 h-4 rounded-sm text-blue-600 focus:ring-blue-500 border-slate-300 cursor-pointer"
+            className="w-4 h-4 rounded-sm accent-[#E80645] cursor-pointer"
           />
         </label>
       </div>
@@ -309,7 +309,7 @@ export const ProductListing: React.FC = () => {
         
         {/* Breadcrumb Navigation */}
         <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-6 flex-wrap">
-          <button onClick={() => setActiveTab('home')} className="hover:text-blue-600 transition-colors cursor-pointer">
+          <button onClick={() => setActiveTab('home')} className="hover:text-[#E80645] transition-colors cursor-pointer">
             {lang === 'fa' ? 'خانه' : 'Home'}
           </button>
           <ChevronRight className="w-3 h-3 rtl:rotate-180" />
@@ -319,7 +319,7 @@ export const ProductListing: React.FC = () => {
           {filters.selectedCategory !== 'all' && (
             <>
               <ChevronRight className="w-3 h-3 rtl:rotate-180" />
-              <span className="text-blue-600 dark:text-blue-400 font-bold">
+              <span className="text-[#E80645] dark:text-rose-400 font-bold">
                 {CATEGORIES.find(c => c.id === filters.selectedCategory)?.nameFa || filters.selectedCategory}
               </span>
             </>
@@ -327,7 +327,7 @@ export const ProductListing: React.FC = () => {
         </div>
 
         {/* Top Control Bar (Search, Sort, View Modes, Mobile Filter Trigger) */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5 mb-6 p-3 sm:p-4 rounded-3xl bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 shadow-sm">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5 mb-6 p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
           {/* Search Input */}
           <div className="relative w-full md:w-72">
             <div className="absolute inset-y-0 rtl:right-3 ltr:left-3 flex items-center pointer-events-none text-slate-400">
@@ -341,7 +341,7 @@ export const ProductListing: React.FC = () => {
                 setFilters(prev => ({ ...prev, searchQuery: e.target.value }));
               }}
               placeholder={lang === 'fa' ? 'جستجوی نام یا مشخصات کالا...' : 'Search products...'}
-              className="w-full rtl:pr-9 rtl:pl-7 ltr:pl-9 ltr:pr-7 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-all placeholder:text-slate-400"
+              className="w-full rtl:pr-9 rtl:pl-7 ltr:pl-9 ltr:pr-7 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:border-[#E80645] focus:outline-none transition-all placeholder:text-slate-400"
             />
             {localSearch && (
               <button
@@ -363,10 +363,10 @@ export const ProductListing: React.FC = () => {
               onClick={() => setIsMobileFilterOpen(true)}
               className="md:hidden flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
             >
-              <SlidersHorizontal className="w-4 h-4 text-blue-600" />
+              <SlidersHorizontal className="w-4 h-4 text-[#E80645]" />
               <span>{lang === 'fa' ? 'فیلترها' : 'Filters'}</span>
               {activeFiltersCount > 0 && (
-                <span className="w-4.5 h-4.5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center tabular-nums">
+                <span className="w-4.5 h-4.5 rounded-full bg-[#E80645] text-white text-[10px] font-bold flex items-center justify-center tabular-nums">
                   {activeFiltersCount}
                 </span>
               )}
@@ -380,7 +380,7 @@ export const ProductListing: React.FC = () => {
               <select
                 value={filters.sortBy}
                 onChange={e => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
-                className="text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
+                className="text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-rose-500/20 focus:border-[#E80645] focus:outline-none cursor-pointer"
               >
                 <option value="popular">{lang === 'fa' ? 'محبوب‌ترین‌ها' : 'Most Popular'}</option>
                 <option value="newest">{lang === 'fa' ? 'جدیدترین‌ها' : 'Newest'}</option>
@@ -396,7 +396,7 @@ export const ProductListing: React.FC = () => {
                 onClick={() => setViewMode('grid')}
                 className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                   viewMode === 'grid'
-                    ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs'
+                    ? 'bg-white dark:bg-slate-900 text-[#E80645] shadow-2xs font-bold'
                     : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
                 }`}
                 aria-label="Grid View"
@@ -407,7 +407,7 @@ export const ProductListing: React.FC = () => {
                 onClick={() => setViewMode('list')}
                 className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                   viewMode === 'list'
-                    ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs'
+                    ? 'bg-white dark:bg-slate-900 text-[#E80645] shadow-2xs font-bold'
                     : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
                 }`}
                 aria-label="List View"
@@ -421,7 +421,7 @@ export const ProductListing: React.FC = () => {
         {/* Main Content Area: Sidebar + Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
           {/* Desktop Filter Sidebar */}
-          <aside className="hidden md:block md:col-span-1 p-5 rounded-3xl bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 sticky top-24 shadow-sm">
+          <aside className="hidden md:block md:col-span-1 p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 sticky top-24 shadow-xs">
             {FilterSidebarContent}
           </aside>
 
@@ -435,7 +435,7 @@ export const ProductListing: React.FC = () => {
                 </span>
 
                 {filters.selectedCategory !== 'all' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold border border-slate-200 dark:border-slate-700 shadow-xs">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 font-bold border border-rose-200 dark:border-rose-900/40 shadow-2xs">
                     {CATEGORIES.find(c => c.id === filters.selectedCategory)?.nameFa || filters.selectedCategory}
                     <button onClick={() => setFilters(prev => ({ ...prev, selectedCategory: 'all' }))} className="cursor-pointer">
                       <X className="w-3.5 h-3.5" />
@@ -444,7 +444,7 @@ export const ProductListing: React.FC = () => {
                 )}
 
                 {filters.selectedBrand !== 'all' && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold border border-slate-200 dark:border-slate-700 shadow-xs">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 font-bold border border-rose-200 dark:border-rose-900/40 shadow-2xs">
                     {filters.selectedBrand}
                     <button onClick={() => setFilters(prev => ({ ...prev, selectedBrand: 'all' }))} className="cursor-pointer">
                       <X className="w-3.5 h-3.5" />
@@ -453,7 +453,7 @@ export const ProductListing: React.FC = () => {
                 )}
 
                 {filters.searchQuery && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold border border-slate-200 dark:border-slate-700 shadow-xs">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 font-bold border border-rose-200 dark:border-rose-900/40 shadow-2xs">
                     «{filters.searchQuery}»
                     <button onClick={() => {
                       setLocalSearch('');
@@ -466,7 +466,7 @@ export const ProductListing: React.FC = () => {
 
                 <button
                   onClick={resetFilters}
-                  className="text-rose-600 dark:text-rose-400 font-bold hover:underline mr-auto rtl:mr-auto rtl:ml-0 cursor-pointer"
+                  className="text-[#E80645] dark:text-rose-400 font-bold hover:underline mr-auto rtl:mr-auto rtl:ml-0 cursor-pointer"
                 >
                   {lang === 'fa' ? 'حذف فیلترها' : 'Clear all'}
                 </button>
@@ -475,7 +475,7 @@ export const ProductListing: React.FC = () => {
 
             {/* Products Results */}
             {filteredProducts.length === 0 ? (
-              <div className="py-20 text-center bg-white dark:bg-[#0F172A] rounded-3xl border border-slate-200/90 dark:border-slate-800/90 p-8 shadow-sm">
+              <div className="py-20 text-center bg-white dark:bg-[#111726] rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-8 shadow-xs">
                 <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mx-auto mb-3">
                   <Search className="w-7 h-7" />
                 </div>
@@ -489,13 +489,13 @@ export const ProductListing: React.FC = () => {
                 </p>
                 <button
                   onClick={resetFilters}
-                  className="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors cursor-pointer shadow-sm"
+                  className="px-5 py-2.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
                 >
                   {lang === 'fa' ? 'پاک‌سازی تمام فیلترها' : 'Reset All Filters'}
                 </button>
               </div>
             ) : viewMode === 'grid' ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4 lg:gap-5">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
                 {filteredProducts.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -507,16 +507,16 @@ export const ProductListing: React.FC = () => {
                   <div
                     key={product.id}
                     onClick={() => openProductDetails(product)}
-                    className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-3xl bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 hover:border-blue-500/40 transition-all cursor-pointer shadow-sm group"
+                    className="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 hover:border-rose-500/30 transition-all cursor-pointer shadow-xs group"
                   >
                     <img
                       src={product.images[0]}
                       alt={product.name}
-                      className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl object-cover bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-100 dark:border-slate-800 group-hover:scale-[1.02] transition-transform"
+                      className="w-28 h-28 sm:w-32 sm:h-32 rounded-xl object-cover bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-100 dark:border-slate-800"
                     />
                     <div className="flex-1 min-w-0 text-right w-full">
-                      <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400">{product.brand}</span>
-                      <h4 className="text-sm font-black text-slate-900 dark:text-white truncate mt-0.5">
+                      <span className="text-[11px] font-bold text-[#E80645] dark:text-rose-400">{product.brand}</span>
+                      <h4 className="text-sm font-black text-slate-900 dark:text-white truncate mt-0.5 group-hover:text-[#E80645] transition-colors">
                         {lang === 'fa' ? product.nameFa : product.name}
                       </h4>
                       <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 my-1.5 leading-relaxed">
@@ -537,7 +537,7 @@ export const ProductListing: React.FC = () => {
                           e.stopPropagation();
                           openProductDetails(product);
                         }}
-                        className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-sm active:scale-98"
+                        className="px-5 py-2.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-colors cursor-pointer shadow-xs active:scale-98"
                       >
                         {lang === 'fa' ? 'مشاهده و خرید' : 'View Details'}
                       </button>
@@ -557,7 +557,7 @@ export const ProductListing: React.FC = () => {
               onClick={() => setIsMobileFilterOpen(false)}
             />
             <div className="fixed inset-y-0 right-0 max-w-full flex pl-10 rtl:pl-10 rtl:pr-0">
-              <div className="w-screen max-w-xs bg-white dark:bg-[#0F172A] shadow-2xl p-6 overflow-y-auto">
+              <div className="w-screen max-w-xs bg-white dark:bg-[#111726] shadow-2xl p-6 overflow-y-auto">
                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-800">
                   <h3 className="font-black text-slate-900 dark:text-white text-base">
                     {lang === 'fa' ? 'فیلترهای کالا' : 'Filters'}
@@ -570,7 +570,7 @@ export const ProductListing: React.FC = () => {
                 <div className="pt-6">
                   <button
                     onClick={() => setIsMobileFilterOpen(false)}
-                    className="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-xs shadow-md shadow-blue-600/20 active:scale-98 cursor-pointer"
+                    className="w-full py-3 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs shadow-md shadow-rose-900/20 active:scale-98 cursor-pointer"
                   >
                     {lang === 'fa' ? `مشاهده ${filteredProducts.length} کالا` : `Show ${filteredProducts.length} Results`}
                   </button>

@@ -68,7 +68,7 @@ export const CartDrawer: React.FC = () => {
             {/* Drawer Header */}
             <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-200/90 dark:border-slate-800/90">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 flex items-center justify-center">
                   <ShoppingBag className="w-4 h-4" />
                 </div>
                 <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
@@ -89,21 +89,21 @@ export const CartDrawer: React.FC = () => {
 
             {/* Free Shipping Progress Indicator */}
             {cart.length > 0 && (
-              <div className="p-3.5 bg-blue-50/50 dark:bg-blue-950/30 border-b border-blue-100 dark:border-blue-900/40 text-xs">
+              <div className="p-3.5 bg-rose-50/50 dark:bg-rose-950/20 border-b border-rose-100 dark:border-rose-900/40 text-xs">
                 <div className="flex items-center justify-between mb-1.5 font-medium">
                   <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200">
-                    <Truck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                    <Truck className="w-3.5 h-3.5 text-[#E80645] dark:text-rose-400" />
                     <span>
                       {freeShippingLeft === 0
                         ? (lang === 'fa' ? 'سفارش شما مشمول ارسال رایگان شد! 🎉' : 'You unlocked free shipping! 🎉')
                         : (lang === 'fa' ? `تنها ${formatPrice(freeShippingLeft)} تا ارسال رایگان` : `${formatPrice(freeShippingLeft)} away from free shipping`)}
                     </span>
                   </div>
-                  <span className="font-bold text-blue-600 dark:text-blue-400 tabular-nums">{freeShippingPercent}%</span>
+                  <span className="font-bold text-[#E80645] dark:text-rose-400 tabular-nums">{freeShippingPercent}%</span>
                 </div>
                 <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-blue-600 rounded-full transition-all duration-300"
+                    className="h-full bg-[#E80645] rounded-full transition-all duration-300"
                     style={{ width: `${freeShippingPercent}%` }}
                   />
                 </div>
@@ -130,7 +130,7 @@ export const CartDrawer: React.FC = () => {
                       setIsCartDrawerOpen(false);
                       setActiveTab('shop');
                     }}
-                    className="px-5 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-sm hover:bg-blue-700 transition-colors cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-[#E80645] text-white text-xs font-bold shadow-xs hover:bg-[#c7053b] transition-colors cursor-pointer"
                   >
                     {lang === 'fa' ? 'مشاهده کاتالوگ فروشگاه' : 'Start Shopping'}
                   </button>
@@ -177,7 +177,7 @@ export const CartDrawer: React.FC = () => {
                           </div>
                         )}
 
-                        <div className="text-xs font-black text-blue-600 dark:text-blue-400 mt-1 tabular-nums">
+                        <div className="text-xs font-black text-[#E80645] dark:text-rose-400 mt-1 tabular-nums">
                           {formatPrice((item.selectedVariant?.price ?? item.product.price) * item.quantity, item.product.priceUSD * item.quantity)}
                         </div>
                       </div>
@@ -227,7 +227,7 @@ export const CartDrawer: React.FC = () => {
                       value={couponCode}
                       onChange={e => setCouponCode(e.target.value.toUpperCase())}
                       placeholder={lang === 'fa' ? 'کد تخفیف (مثال: LUMINA20)' : 'Coupon code...'}
-                      className="w-full pl-3 pr-8 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none uppercase"
+                      className="w-full pl-3 pr-8 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#E80645] focus:outline-none uppercase"
                     />
                     <Tag className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-3" />
                   </div>
@@ -258,7 +258,7 @@ export const CartDrawer: React.FC = () => {
                   </div>
 
                   {cartTotal.discount > 0 && (
-                    <div className="flex justify-between text-rose-600 dark:text-rose-400 font-bold">
+                    <div className="flex justify-between text-[#E80645] dark:text-rose-400 font-bold">
                       <span>{lang === 'fa' ? 'سود شما از خرید' : 'Discount'}</span>
                       <span className="tabular-nums">-{formatPrice(cartTotal.discount, cartTotal.discountUSD)}</span>
                     </div>
@@ -275,14 +275,14 @@ export const CartDrawer: React.FC = () => {
 
                   <div className="flex justify-between text-slate-900 dark:text-white font-black text-sm pt-2 border-t border-slate-200 dark:border-slate-800">
                     <span>{lang === 'fa' ? 'مبلغ نهایی پرداخت' : 'Total'}</span>
-                    <span className="tabular-nums text-blue-600 dark:text-blue-400">{formatPrice(cartTotal.total, cartTotal.totalUSD)}</span>
+                    <span className="tabular-nums text-[#E80645] dark:text-rose-400">{formatPrice(cartTotal.total, cartTotal.totalUSD)}</span>
                   </div>
                 </div>
 
                 {/* Proceed to Checkout Button */}
                 <button
                   onClick={handleProceedToCheckout}
-                  className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                  className="w-full py-3 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-900/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                 >
                   <span>{lang === 'fa' ? 'ادامه ثبت سفارش و پرداخت' : 'Proceed to Checkout'}</span>
                   <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />

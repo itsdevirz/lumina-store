@@ -15,7 +15,6 @@ import {
   Share2,
   Zap,
   CheckCircle2,
-  ZoomIn,
   Sparkles,
   MapPin,
   Clock,
@@ -77,12 +76,6 @@ export const ProductDetailView: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
   const [validationError, setValidationError] = useState<string | null>(null);
-
-  // Smooth hover zoom
-  const [isZooming, setIsZooming] = useState(false);
-  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
-  const [zoomLevel, setZoomLevel] = useState<number>(2.4);
-  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize variant choices
   useEffect(() => {
@@ -298,14 +291,6 @@ export const ProductDetailView: React.FC = () => {
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!imageContainerRef.current) return;
-    const rect = imageContainerRef.current.getBoundingClientRect();
-    const x = Math.min(Math.max(((e.clientX - rect.left) / rect.width) * 100, 0), 100);
-    const y = Math.min(Math.max(((e.clientY - rect.top) / rect.height) * 100, 0), 100);
-    setZoomPos({ x, y });
-  };
-
   const inWishlist = isInWishlist(selectedProduct.id);
 
   const validateVariantSelection = (): boolean => {
@@ -448,7 +433,7 @@ export const ProductDetailView: React.FC = () => {
         <nav className="flex items-center gap-1.5 text-xs text-slate-400 mb-6 flex-wrap">
           <button
             onClick={() => setActiveTab('home')}
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+            className="hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
           >
             {lang === 'fa' ? 'صفحه اصلی' : 'Home'}
           </button>
@@ -458,7 +443,7 @@ export const ProductDetailView: React.FC = () => {
               setFilters(prev => ({ ...prev, selectedCategory: 'all' }));
               setActiveTab('shop');
             }}
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+            className="hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
           >
             {lang === 'fa' ? 'فروشگاه' : 'Shop'}
           </button>
@@ -468,7 +453,7 @@ export const ProductDetailView: React.FC = () => {
               setFilters(prev => ({ ...prev, selectedCategory: selectedProduct.category }));
               setActiveTab('shop');
             }}
-            className="hover:text-blue-600 dark:hover:text-blue-400 font-medium text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+            className="hover:text-[#E80645] dark:hover:text-rose-400 font-medium text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
           >
             {lang === 'fa' ? selectedProduct.categoryFa : selectedProduct.category}
           </button>
@@ -483,13 +468,9 @@ export const ProductDetailView: React.FC = () => {
           
           {/* GALLERY COLUMN (5 cols) */}
           <div className="lg:col-span-5 flex flex-col gap-3">
-            {/* Main Stage with Zoom */}
+            {/* Main Stage Image (Clean, No-Zoom, High-Fidelity) */}
             <div
-              ref={imageContainerRef}
-              onMouseEnter={() => setIsZooming(true)}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={() => setIsZooming(false)}
-              className="relative aspect-square w-full rounded-3xl overflow-hidden bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 shadow-sm cursor-crosshair select-none group"
+              className="relative aspect-square w-full rounded-2xl overflow-hidden bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs select-none group"
             >
               <AnimatePresence mode="wait">
                 <motion.img
@@ -500,14 +481,7 @@ export const ProductDetailView: React.FC = () => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0.9 }}
                   transition={{ duration: 0.2 }}
-                  style={{
-                    transformOrigin: isZooming ? `${zoomPos.x}% ${zoomPos.y}%` : 'center center',
-                    transform: isZooming ? `scale(${zoomLevel})` : 'scale(1)',
-                    transition: isZooming
-                      ? 'transform 0.1s ease-out, transform-origin 0.05s ease-out'
-                      : 'transform 0.3s ease-out'
-                  }}
-                  className="w-full h-full object-cover object-center pointer-events-none will-change-transform"
+                  className="w-full h-full object-cover object-center pointer-events-none"
                 />
               </AnimatePresence>
 
@@ -540,33 +514,19 @@ export const ProductDetailView: React.FC = () => {
               {/* Top Bar on Image: Discount Badge & Fullscreen */}
               <div className="absolute top-3 inset-x-3 flex items-center justify-between pointer-events-none z-20">
                 {selectedProduct.discountPercent ? (
-                  <span className="px-3 py-1 rounded-xl bg-rose-600 text-white text-xs font-black shadow-sm pointer-events-auto">
+                  <span className="px-3 py-1 rounded-xl bg-[#E80645] text-white text-xs font-black shadow-xs pointer-events-auto">
                     {lang === 'fa' ? `${selectedProduct.discountPercent}٪ تخفیف ویژه` : `-${selectedProduct.discountPercent}%`}
                   </span>
                 ) : <div />}
 
                 <div className="flex items-center gap-1.5 pointer-events-auto">
                   <button
-                    onClick={() => setZoomLevel(prev => (prev === 2.4 ? 3.2 : 2.4))}
-                    className="px-2 py-1 rounded-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[11px] font-mono font-bold text-slate-700 dark:text-slate-200 shadow-sm hover:bg-white"
-                  >
-                    {zoomLevel}x
-                  </button>
-                  <button
                     onClick={() => setIsFullscreenImage(true)}
-                    className="p-1.5 rounded-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-700 dark:text-slate-200 shadow-sm hover:bg-white"
+                    className="p-1.5 rounded-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-700 dark:text-slate-200 shadow-sm hover:bg-white cursor-pointer"
                     title={lang === 'fa' ? 'تمام‌صفحه' : 'Fullscreen'}
                   >
                     <Maximize2 className="w-4 h-4" />
                   </button>
-                </div>
-              </div>
-
-              {/* Bottom hint badge */}
-              <div className="absolute bottom-3 right-3 pointer-events-none z-20">
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-[11px] font-medium shadow-sm">
-                  <ZoomIn className="w-3 h-3 text-blue-400" />
-                  <span>{lang === 'fa' ? 'برای بزرگ‌نمایی موس را حرکت دهید' : 'Hover to zoom'}</span>
                 </div>
               </div>
             </div>
@@ -578,9 +538,9 @@ export const ProductDetailView: React.FC = () => {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`relative w-16 h-16 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border-2 shrink-0 transition-all cursor-pointer ${
+                    className={`relative w-16 h-16 rounded-xl overflow-hidden bg-white dark:bg-slate-900 border-2 shrink-0 transition-all cursor-pointer ${
                       activeImageIndex === idx
-                        ? 'border-blue-600 shadow-sm scale-102'
+                        ? 'border-[#E80645] shadow-xs scale-102'
                         : 'border-slate-200 dark:border-slate-800 opacity-60 hover:opacity-100'
                     }`}
                   >
@@ -597,7 +557,7 @@ export const ProductDetailView: React.FC = () => {
               {/* Brand & Stock Pill */}
               <div className="flex items-center justify-between gap-2 mb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400 tracking-wider uppercase">
+                  <span className="text-xs font-bold text-[#E80645] dark:text-rose-400 tracking-wider uppercase">
                     {selectedProduct.brand}
                   </span>
                   <span className="text-slate-300 dark:text-slate-700">•</span>
@@ -664,7 +624,7 @@ export const ProductDetailView: React.FC = () => {
 
                 {/* Unique Buyers Count */}
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
-                  <Users className="w-3.5 h-3.5 text-blue-500" />
+                  <Users className="w-3.5 h-3.5 text-rose-500" />
                   <span className="tabular-nums font-bold">
                     {(socialStats?.uniqueBuyersCount || Math.ceil((selectedProduct.soldCount || 10) * 0.85)).toLocaleString('fa-IR')}+
                   </span>
@@ -694,7 +654,7 @@ export const ProductDetailView: React.FC = () => {
               </div>
 
               {/* Price Area Box */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-[#0C111C] border border-slate-200/90 dark:border-slate-800/90 mb-6">
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-[#0E1524] border border-slate-200/80 dark:border-slate-800/80 mb-6">
                 <div className="flex items-baseline gap-3">
                   <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight">
                     {formatPrice(effectivePrice, selectedProduct.priceUSD)}
@@ -733,10 +693,10 @@ export const ProductDetailView: React.FC = () => {
               </div>
 
               {/* Delivery ETA & Official Seller Box */}
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 mb-6 space-y-2.5 text-xs">
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 mb-6 space-y-2.5 text-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold">
-                    <Award className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <Award className="w-4 h-4 text-[#E80645] dark:text-rose-400" />
                     <span>{lang === 'fa' ? 'فروشنده رسمی:' : 'Seller:'}</span>
                     <span className="text-slate-900 dark:text-white">{lang === 'fa' ? 'فروشگاه مرکزی لومینا' : 'Lumina Official Store'}</span>
                   </div>
@@ -787,7 +747,7 @@ export const ProductDetailView: React.FC = () => {
                     className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold text-sm transition-all select-none ${
                       isOutOfStock
                         ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 cursor-not-allowed shadow-none'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/20 cursor-pointer active:scale-98'
+                        : 'bg-[#E80645] hover:bg-[#c7053b] text-white shadow-md shadow-rose-900/20 cursor-pointer active:scale-98'
                     }`}
                   >
                     <ShoppingBag className="w-4.5 h-4.5" />
@@ -809,7 +769,7 @@ export const ProductDetailView: React.FC = () => {
                     className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold text-sm transition-all select-none ${
                       isOutOfStock
                         ? 'bg-slate-100 dark:bg-slate-800/60 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-800 cursor-not-allowed'
-                        : 'bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 cursor-pointer active:scale-98 shadow-sm'
+                        : 'bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 cursor-pointer active:scale-98 shadow-xs'
                     }`}
                   >
                     <CreditCard className="w-4.5 h-4.5" />
@@ -824,7 +784,7 @@ export const ProductDetailView: React.FC = () => {
                     onClick={handleToggleWishlist}
                     className={`flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl border transition-colors cursor-pointer ${
                       isFavorited
-                        ? 'border-rose-200 bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:border-rose-900'
+                        ? 'border-rose-200 bg-rose-50 text-[#E80645] dark:bg-rose-950/40 dark:border-rose-900'
                         : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
@@ -854,15 +814,15 @@ export const ProductDetailView: React.FC = () => {
 
             {/* Trust Assurance Strip */}
             <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-slate-200/80 dark:border-slate-800/80 text-center">
-              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200/80 dark:border-slate-800">
-                <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80">
+                <ShieldCheck className="w-4 h-4 text-[#E80645] dark:text-rose-400" />
                 <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">{lang === 'fa' ? 'ضمانت ۱۰۰٪ اصالت' : '100% Authentic'}</span>
               </div>
-              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200/80 dark:border-slate-800">
+              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80">
                 <Truck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">{lang === 'fa' ? 'ارسال سریع اکسپرس' : 'Express Delivery'}</span>
               </div>
-              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200/80 dark:border-slate-800">
+              <div className="flex flex-col items-center gap-1 p-2.5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80">
                 <RotateCcw className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">{lang === 'fa' ? '۷ روز مهلت بازگشت' : '7-Day Return'}</span>
               </div>
@@ -873,7 +833,7 @@ export const ProductDetailView: React.FC = () => {
         </div>
 
         {/* TABBED SPECIFICATIONS & REVIEWS SECTION */}
-        <div className="bg-white dark:bg-[#0F172A] rounded-3xl border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-8 mb-12 shadow-sm">
+        <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-8 mb-12 shadow-xs">
           
           {/* Tabs Navigation Strip */}
           <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6 overflow-x-auto scrollbar-none">
@@ -881,7 +841,7 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('specs')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTabNav === 'specs'
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-[#E80645] text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
@@ -892,7 +852,7 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('features')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTabNav === 'features'
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-[#E80645] text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
@@ -903,7 +863,7 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('reviews')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTabNav === 'reviews'
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-[#E80645] text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
@@ -914,7 +874,7 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('analytics')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer inline-flex items-center gap-1.5 ${
                 activeTabNav === 'analytics'
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-[#E80645] text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
@@ -926,7 +886,7 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('shipping')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTabNav === 'shipping'
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-[#E80645] text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
@@ -981,7 +941,7 @@ export const ProductDetailView: React.FC = () => {
                     <span className="text-xs font-bold text-rose-700 dark:text-rose-300">
                       {lang === 'fa' ? 'علاقه‌مندی خریداران' : 'Wishlist Fans'}
                     </span>
-                    <Heart className="w-4 h-4 text-rose-500 fill-rose-500/20" />
+                    <Heart className="w-4 h-4 text-[#E80645] fill-[#E80645]/20" />
                   </div>
                   <div className="text-2xl font-black text-rose-900 dark:text-rose-100 tabular-nums mb-1">
                     {favoritesCount.toLocaleString('fa-IR')}
@@ -992,14 +952,14 @@ export const ProductDetailView: React.FC = () => {
                 </div>
 
                 {/* Stat 2: Verified Buyers */}
-                <div className="p-4 rounded-2xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/60 flex flex-col justify-between">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-blue-700 dark:text-blue-300">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                       {lang === 'fa' ? 'خریداران واقعی' : 'Verified Buyers'}
                     </span>
-                    <Users className="w-4 h-4 text-blue-500" />
+                    <Users className="w-4 h-4 text-slate-500" />
                   </div>
-                  <div className="text-2xl font-black text-blue-900 dark:text-blue-100 tabular-nums mb-1">
+                  <div className="text-2xl font-black text-slate-900 dark:text-white tabular-nums mb-1">
                     {(socialStats?.uniqueBuyersCount || Math.ceil((selectedProduct.soldCount || 10) * 0.85)).toLocaleString('fa-IR')}+
                   </div>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1050,7 +1010,7 @@ export const ProductDetailView: React.FC = () => {
 
               {/* Real Data Integrity Note */}
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 text-xs flex items-start gap-3">
-                <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                <ShieldCheck className="w-4 h-4 text-[#E80645] dark:text-rose-400 shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <h4 className="font-bold text-slate-900 dark:text-white">
                     {lang === 'fa' ? 'تضمین اصالت داده‌ها و عدم دستکاری آمار' : 'Real-time Verified Data Guarantee'}
@@ -1068,7 +1028,7 @@ export const ProductDetailView: React.FC = () => {
           {/* Shipping Guidelines */}
           {activeTabNav === 'shipping' && (
             <div className="space-y-3.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-              <div className="p-3 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/60 text-blue-900 dark:text-blue-300 font-bold">
+              <div className="p-3.5 rounded-xl bg-rose-50/60 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-900/60 text-[#E80645] dark:text-rose-300 font-bold">
                 {lang === 'fa' ? 'کلیه سفارش‌های بالای ۱۰ میلیون تومان به رایگان ارسال می‌شوند.' : 'Free shipping for orders above 10M Tomans.'}
               </div>
               <p>
@@ -1089,7 +1049,7 @@ export const ProductDetailView: React.FC = () => {
           <div className="border-t border-slate-200/80 dark:border-slate-800/80 pt-10">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block mb-0.5">
+                <span className="text-xs font-bold text-[#E80645] dark:text-rose-400 uppercase tracking-wider block mb-0.5">
                   {lang === 'fa' ? 'پیشنهاد متناسب' : 'You May Also Like'}
                 </span>
                 <h3 className="text-xl font-black text-slate-900 dark:text-white">
@@ -1098,7 +1058,7 @@ export const ProductDetailView: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
               {relatedProducts.map(prod => (
                 <ProductCard key={prod.id} product={prod} />
               ))}

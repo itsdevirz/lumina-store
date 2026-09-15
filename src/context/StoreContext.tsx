@@ -239,6 +239,8 @@ interface StoreContextType {
   userProfile: UserProfile;
   formatPrice: (priceToman: number, priceUSD?: number) => string;
   openProductDetails: (product: Product) => void;
+  recentlyViewed: Product[];
+  clearRecentlyViewed: () => void;
   refetchProducts: () => Promise<void>;
   festivals: Festival[];
   activeFestival: Festival | null;
@@ -543,6 +545,21 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const saved = localStorage.getItem('lumina_wishlist');
     return saved ? JSON.parse(saved) : ['lum-01', 'lum-03'];
   });
+
+  // Recently Viewed state
+  const [recentlyViewedIds, setRecentlyViewedIds] = useState<string[]>(() => {
+    const saved = localStorage.getItem('lumina_recently_viewed');
+    return saved ? JSON.parse(saved) : ['lum-01', 'lum-02', 'lum-04', 'lum-06'];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('lumina_recently_viewed', JSON.stringify(recentlyViewedIds));
+  }, [recentlyViewedIds]);
+
+  const clearRecentlyViewed = () => {
+    setRecentlyViewedIds([]);
+    localStorage.removeItem('lumina_recently_viewed');
+  };
 
   // Dynamic coupons state
   const [couponsList, setCouponsList] = useState<StoreCoupon[]>(DEFAULT_COUPONS);
@@ -1589,9 +1606,16 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     return `${priceToman.toLocaleString('en-US')} Toman`;
   };
 
+  const recentlyViewed = useMemo(() => {
+    return recentlyViewedIds
+      .map(id => productsList.find(p => p.id === id))
+      .filter((p): p is Product => Boolean(p));
+  }, [recentlyViewedIds, productsList]);
+
   const openProductDetails = (product: Product) => {
     setSelectedProduct(product);
     setActiveTabState('product-detail');
+    setRecentlyViewedIds(prev => [product.id, ...prev.filter(id => id !== product.id)].slice(0, 10));
     if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/admin')) {
       window.history.pushState({ productId: product.id }, '', `/product/${product.id}`);
     }
@@ -1681,6 +1705,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         userProfile,
         formatPrice,
         openProductDetails,
+        recentlyViewed,
+        clearRecentlyViewed,
         festivals,
         activeFestival,
         selectedFestival,

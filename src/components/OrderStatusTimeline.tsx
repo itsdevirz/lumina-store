@@ -200,10 +200,10 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
               order.status === 'delivered'
                 ? 'bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950/60'
                 : order.status === 'shipped'
-                ? 'bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-950/60 animate-pulse'
+                ? 'bg-[#E80645] ring-4 ring-rose-100 dark:ring-rose-950/60 animate-pulse'
                 : order.status === 'processing'
                 ? 'bg-amber-500 ring-4 ring-amber-100 dark:ring-amber-950/60 animate-pulse'
-                : 'bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-950/60'
+                : 'bg-[#E80645] ring-4 ring-rose-100 dark:ring-rose-950/60'
             }`}
           />
           <div>
@@ -216,10 +216,10 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                   order.status === 'delivered'
                     ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
                     : order.status === 'shipped'
-                    ? 'bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800'
+                    ? 'bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 border border-rose-200 dark:border-rose-900/50'
                     : order.status === 'processing'
                     ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800'
-                    : 'bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800'
+                    : 'bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 border border-rose-200 dark:border-rose-900/50'
                 }`}
               >
                 {displayStatus}
@@ -246,8 +246,8 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
             )}
 
             {order.statusAdminNote && (
-              <div className="mt-2 p-2.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/50 text-[11px] text-blue-900 dark:text-blue-200 flex items-start gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+              <div className="mt-2 p-2.5 rounded-xl bg-rose-50/70 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900/50 text-[11px] text-rose-950 dark:text-rose-200 flex items-start gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#E80645] dark:text-rose-400 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold">{lang === 'fa' ? 'یادداشت ادمین: ' : 'Admin note: '}</span>
                   <span>{order.statusAdminNote}</span>
@@ -270,7 +270,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
               type="button"
               onClick={() => handleCopyTracking(order.trackingCode || '')}
               title={lang === 'fa' ? 'کپی کد رهگیری' : 'Copy Tracking Code'}
-              className="p-1 rounded-lg text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+              className="p-1 rounded-lg text-slate-400 hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
             >
               {copiedCode ? (
                 <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -290,7 +290,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="h-full bg-blue-600 rounded-full"
+            className="h-full bg-[#E80645] rounded-full"
           />
         </div>
 
@@ -314,7 +314,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                       isCompleted
                         ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
                         : isCurrent
-                        ? 'bg-blue-600 text-white ring-4 ring-blue-100 dark:ring-blue-950/80 shadow-lg shadow-blue-600/30'
+                        ? 'bg-[#E80645] text-white ring-4 ring-rose-100 dark:ring-rose-950/80 shadow-md shadow-rose-900/20'
                         : 'bg-slate-100 dark:bg-slate-800/90 text-slate-400 border border-slate-200 dark:border-slate-700'
                     }`}
                   >
@@ -329,7 +329,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                   <span
                     className={`sm:hidden absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center ${
                       isCompleted || isCurrent
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-[#E80645] text-white'
                         : 'bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
                     }`}
                   >
@@ -343,7 +343,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                     <p
                       className={`text-xs font-bold leading-tight ${
                         isCurrent
-                          ? 'text-blue-600 dark:text-blue-400'
+                          ? 'text-[#E80645] dark:text-rose-400'
                           : isCompleted
                           ? 'text-slate-900 dark:text-white'
                           : 'text-slate-400 dark:text-slate-500'
@@ -352,7 +352,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                       {lang === 'fa' ? step.titleFa : step.titleEn}
                     </p>
                     {isCurrent && (
-                      <span className="inline-flex sm:hidden text-[10px] font-bold px-1.5 py-0.2 rounded-sm bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400">
+                      <span className="inline-flex sm:hidden text-[10px] font-bold px-1.5 py-0.2 rounded-sm bg-rose-50 dark:bg-rose-950 text-[#E80645] dark:text-rose-400">
                         {lang === 'fa' ? 'مرحله فعلی' : 'Current'}
                       </span>
                     )}
@@ -381,10 +381,10 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between py-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between py-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-2">
-            <FileText className="w-3.5 h-3.5 text-blue-500" />
+            <FileText className="w-3.5 h-3.5 text-[#E80645]" />
             <span>
               {isExpanded
                 ? (lang === 'fa' ? 'بستن ریزگزارش و جزئیات رویدادها' : 'Hide Detailed Event Log')
@@ -420,7 +420,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                           className={`absolute -right-[23px] rtl:-right-[23px] ltr:-left-[23px] top-1 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${
                             isPassed
                               ? isCurrent
-                                ? 'bg-blue-600 ring-2 ring-blue-200 dark:ring-blue-900 animate-pulse'
+                                ? 'bg-[#E80645] ring-2 ring-rose-200 dark:ring-rose-900 animate-pulse'
                                 : 'bg-emerald-500'
                               : 'bg-slate-300 dark:bg-slate-600'
                           }`}

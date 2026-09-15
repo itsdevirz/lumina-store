@@ -38,7 +38,7 @@ export const CartPage: React.FC = () => {
   if (cart.length === 0) {
     return (
       <div className="py-20 max-w-7xl mx-auto px-4 text-center">
-        <div className="w-20 h-20 rounded-3xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-5 shadow-sm">
+        <div className="w-20 h-20 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 flex items-center justify-center mx-auto mb-5 shadow-xs">
           <ShoppingBag className="w-10 h-10" />
         </div>
         <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
@@ -51,7 +51,7 @@ export const CartPage: React.FC = () => {
         </p>
         <button
           onClick={() => setActiveTab('shop')}
-          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-600/25 transition-all active:scale-95 cursor-pointer"
+          className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-sm shadow-md shadow-rose-900/20 transition-all active:scale-95 cursor-pointer"
         >
           <span>{lang === 'fa' ? 'مشاهده کاتالوگ فروشگاه' : 'Explore Catalog'}</span>
           <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
@@ -72,7 +72,7 @@ export const CartPage: React.FC = () => {
         {/* Page Heading */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block mb-1">
+            <span className="text-xs font-bold text-[#E80645] dark:text-rose-400 uppercase tracking-wider block mb-1">
               {lang === 'fa' ? 'مدیریت خرید' : 'Checkout Flow'}
             </span>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -82,7 +82,7 @@ export const CartPage: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('shop')}
-            className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-[#E80645] dark:hover:text-rose-400 transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <span>{lang === 'fa' ? 'ادامه خرید از فروشگاه' : 'Continue Shopping'}</span>
             <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
@@ -95,12 +95,12 @@ export const CartPage: React.FC = () => {
           <div className="lg:col-span-8 space-y-4">
             
             {/* Free Shipping Tracker Bar */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40">
+            <div className="p-4 sm:p-5 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40">
               <div className="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 mb-2">
                 <div className="flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+                  <Truck className="w-4 h-4 text-[#E80645] dark:text-rose-400 shrink-0" />
                   {remainingForFreeShipping === 0 ? (
-                    <span className="font-bold text-blue-600 dark:text-blue-400">
+                    <span className="font-bold text-[#E80645] dark:text-rose-400">
                       {lang === 'fa' ? 'تبریک! سفارش شما مشمول ارسال اکسپرس رایگان است 🎉' : 'Your order qualifies for FREE Express Shipping 🎉'}
                     </span>
                   ) : (
@@ -111,11 +111,11 @@ export const CartPage: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <span className="font-bold text-blue-600 dark:text-blue-400 tabular-nums">{freeShippingProgress}%</span>
+                <span className="font-bold text-[#E80645] dark:text-rose-400 tabular-nums">{freeShippingProgress}%</span>
               </div>
               <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all duration-300"
+                  className="h-full bg-[#E80645] rounded-full transition-all duration-300"
                   style={{ width: `${freeShippingProgress}%` }}
                 />
               </div>
@@ -126,7 +126,7 @@ export const CartPage: React.FC = () => {
               {cart.map((item, idx) => (
                 <div
                   key={item.variantId ? `${item.product.id}-${item.variantId}-${idx}` : `${item.product.id}-${item.selectedColor || ''}-${item.selectedSize || ''}-${idx}`}
-                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 shadow-sm"
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs"
                 >
                   <div className="flex items-center gap-4 min-w-0 flex-1">
                     <img
@@ -136,7 +136,7 @@ export const CartPage: React.FC = () => {
                     />
 
                     <div className="min-w-0 flex-1">
-                      <div className="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-0.5">
+                      <div className="text-[11px] font-bold text-[#E80645] dark:text-rose-400 uppercase tracking-wider mb-0.5">
                         {item.product.brand}
                       </div>
                       <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
@@ -165,7 +165,7 @@ export const CartPage: React.FC = () => {
                         ))}
                       </div>
 
-                      <div className="text-xs font-black text-blue-600 dark:text-blue-400 mt-2 sm:hidden tabular-nums">
+                      <div className="text-xs font-black text-[#E80645] dark:text-rose-400 mt-2 sm:hidden tabular-nums">
                         {formatPrice((item.selectedVariant?.price ?? item.product.price) * item.quantity, item.product.priceUSD * item.quantity)}
                       </div>
                     </div>
@@ -205,7 +205,7 @@ export const CartPage: React.FC = () => {
                     {/* Delete button */}
                     <button
                       onClick={() => removeFromCart(idx)}
-                      className="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+                      className="p-2 text-slate-400 hover:text-[#E80645] dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                       title={lang === 'fa' ? 'حذف کالا' : 'Remove item'}
                     >
                       <Trash2 className="w-4 h-4" />
@@ -220,7 +220,7 @@ export const CartPage: React.FC = () => {
           {/* SUMMARY SIDEBAR (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             
-            <div className="p-6 rounded-3xl bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 shadow-sm sticky top-24 space-y-4">
+            <div className="p-6 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs sticky top-24 space-y-4">
               <h2 className="text-base font-black text-slate-900 dark:text-white pb-3 border-b border-slate-100 dark:border-slate-800">
                 {lang === 'fa' ? 'خلاصه فاکتور سفارش' : 'Order Summary'}
               </h2>
@@ -265,7 +265,7 @@ export const CartPage: React.FC = () => {
                 </div>
 
                 {cartTotal.discount > 0 && (
-                  <div className="flex justify-between text-rose-600 dark:text-rose-400 font-bold">
+                  <div className="flex justify-between text-[#E80645] dark:text-rose-400 font-bold">
                     <span>{lang === 'fa' ? 'تخفیف اعمال‌شده' : 'Discount'}</span>
                     <span className="tabular-nums">-{formatPrice(cartTotal.discount, cartTotal.discountUSD)}</span>
                   </div>
@@ -282,7 +282,7 @@ export const CartPage: React.FC = () => {
 
                 <div className="flex justify-between text-slate-900 dark:text-white font-black text-sm pt-3 border-t border-slate-200 dark:border-slate-800">
                   <span>{lang === 'fa' ? 'مبلغ قابل پرداخت' : 'Total Amount'}</span>
-                  <span className="tabular-nums text-blue-600 dark:text-blue-400 text-base">
+                  <span className="tabular-nums text-[#E80645] dark:text-rose-400 text-base">
                     {formatPrice(cartTotal.total, cartTotal.totalUSD)}
                   </span>
                 </div>
@@ -294,7 +294,7 @@ export const CartPage: React.FC = () => {
                   setActiveTab('checkout');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                className="w-full py-3.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-sm shadow-md shadow-rose-900/20 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
               >
                 <span>{lang === 'fa' ? 'ثبت سفارش و ادامه خرید' : 'Proceed to Checkout'}</span>
                 <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />

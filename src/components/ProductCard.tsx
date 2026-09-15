@@ -122,17 +122,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
   return (
     <div
       onClick={() => openProductDetails(product)}
-      className="group relative flex flex-col lumina-card rounded-2xl p-2.5 sm:p-3.5 bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-500/30 hover:shadow-md cursor-pointer select-none"
+      className="group relative flex flex-col justify-between h-full w-full lumina-card rounded-2xl p-2 sm:p-2.5 lg:p-3 bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-rose-500/30 hover:shadow-md cursor-pointer select-none"
     >
       {/* Ranking Badge (for Best Sellers) */}
       {rankingBadge && (
-        <div className="absolute top-2.5 left-2.5 z-20 flex items-center justify-center w-6 h-6 rounded-lg bg-slate-900/90 text-white dark:bg-white dark:text-slate-900 text-[10px] font-black shadow-xs">
+        <div className="absolute top-2 left-2 z-20 flex items-center justify-center w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-lg bg-slate-900/90 text-white dark:bg-white dark:text-slate-900 text-[9px] sm:text-[10px] font-black shadow-xs">
           #{rankingBadge}
         </div>
       )}
 
-      {/* Image Container */}
-      <div className="relative aspect-[4/3.2] w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800/50 mb-2.5">
+      {/* Image Container - Square Aspect Ratio for 100% uniformity */}
+      <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800/50 mb-2 sm:mb-2.5 shrink-0">
         <AnimatePresence mode="wait">
           <motion.img
             key={currentImgIndex}
@@ -143,15 +143,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
             exit={{ opacity: 0.9 }}
             transition={{ duration: 0.18 }}
             loading="lazy"
-            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-103"
+            className="w-full h-full object-cover object-center"
           />
         </AnimatePresence>
 
-        {/* Dynamic Discount Badge */}
-        <div className="absolute top-2 right-2 z-10 flex flex-col gap-1 items-end pointer-events-none">
+        {/* Dynamic Discount & Flash Sale Badges (pinned on image so card height never varies) */}
+        <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10 flex flex-col gap-1 items-end pointer-events-none">
           {product.discountPercent && (
-            <span className="px-1.5 sm:px-2 py-0.5 rounded-md bg-rose-600 text-white text-[9.5px] sm:text-[10px] font-black tracking-tight shadow-xs tabular-nums">
+            <span className="px-1.5 sm:px-2 py-0.5 rounded-md bg-[#E80645] text-white text-[9px] sm:text-[10px] font-black tracking-tight shadow-xs tabular-nums">
               {lang === 'fa' ? `${product.discountPercent}٪-` : `-${product.discountPercent}%`}
+            </span>
+          )}
+          {product.isFlashSale && (
+            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[8px] sm:text-[9px] font-black tracking-tight shadow-xs">
+              <Zap className="w-2.5 h-2.5 fill-current" />
+              <span>{lang === 'fa' ? 'شگفت‌انگیز' : 'Flash'}</span>
             </span>
           )}
         </div>
@@ -160,10 +166,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
         <button
           onClick={handleToggleWishlist}
           aria-label={inWishlist ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}
-          className={`absolute top-2 left-2 z-10 p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all duration-200 cursor-pointer ${
+          className={`absolute top-1.5 left-1.5 sm:top-2 sm:left-2 z-10 p-1.5 rounded-lg sm:rounded-xl transition-all duration-200 cursor-pointer ${
             inWishlist
-              ? 'bg-rose-500 text-white shadow-xs scale-105'
-              : 'bg-white/90 dark:bg-slate-900/90 text-slate-400 hover:text-rose-500 shadow-2xs'
+              ? 'bg-[#E80645] text-white shadow-xs scale-105'
+              : 'bg-white/90 dark:bg-slate-900/90 text-slate-400 hover:text-[#E80645] shadow-2xs'
           }`}
         >
           <Heart className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${inWishlist ? 'fill-current' : ''}`} />
@@ -175,14 +181,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
             <button
               onClick={handlePrevImage}
               aria-label="Previous image"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 z-10 p-1 rounded-full bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer"
+              className="absolute right-1 top-1/2 -translate-y-1/2 z-10 p-1 rounded-full bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer"
             >
               <ChevronRight className="w-3 h-3" />
             </button>
             <button
               onClick={handleNextImage}
               aria-label="Next image"
-              className="absolute left-1.5 top-1/2 -translate-y-1/2 z-10 p-1 rounded-full bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer"
+              className="absolute left-1 top-1/2 -translate-y-1/2 z-10 p-1 rounded-full bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 shadow-xs hover:scale-110 active:scale-95 transition-all cursor-pointer"
             >
               <ChevronLeft className="w-3 h-3" />
             </button>
@@ -199,7 +205,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
                 aria-label={`Show image ${idx + 1}`}
                 className={`h-1 rounded-full transition-all duration-200 cursor-pointer ${
                   currentImgIndex === idx
-                    ? 'w-3.5 bg-white shadow-xs'
+                    ? 'w-3 bg-white shadow-xs'
                     : 'w-1 bg-white/60 hover:bg-white'
                 }`}
               />
@@ -210,73 +216,71 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
         {/* Quick View Button */}
         <button
           onClick={handleQuickView}
-          className="absolute inset-x-2.5 bottom-2 py-1.5 px-2.5 rounded-lg bg-slate-900/90 dark:bg-white/90 text-white dark:text-slate-900 text-[10px] font-bold shadow-xs opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0 hidden sm:flex items-center justify-center gap-1.5"
+          className="absolute inset-x-2 bottom-1.5 py-1 px-2 rounded-lg bg-slate-900/90 dark:bg-white/90 text-white dark:text-slate-900 text-[9.5px] font-bold shadow-xs opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0 hidden sm:flex items-center justify-center gap-1"
         >
-          <Eye className="w-3 h-3 text-blue-500" />
+          <Eye className="w-3 h-3 text-[#E80645]" />
           <span>{lang === 'fa' ? 'پیش‌نمایش سریع' : 'Quick Preview'}</span>
         </button>
       </div>
 
-      {/* Product Content Details */}
-      <div className="flex flex-col flex-1">
-        {/* Flash Sale Tag */}
-        {product.isFlashSale && (
-          <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-bold self-start mb-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-900/40">
-            <Zap className="w-2.5 h-2.5 fill-current" />
-            <span>{lang === 'fa' ? 'شگفت‌انگیز' : 'Flash Deal'}</span>
-          </div>
-        )}
-
-        {/* Brand & Rating Row */}
-        <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-          <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate max-w-[80px] sm:max-w-[120px]">
-            {product.brand}
-          </span>
-          <div className="flex items-center gap-1 text-amber-500 bg-amber-50 dark:bg-amber-950/40 px-1 sm:px-1.5 py-0.5 rounded-md border border-amber-200/40 dark:border-amber-900/40">
-            <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current text-amber-500" />
-            <span className="font-extrabold text-slate-800 dark:text-slate-200 text-[10px] sm:text-[11px] tabular-nums">
-              {product.rating}
+      {/* Product Content Details (Strictly uniform vertical layout) */}
+      <div className="flex flex-col flex-1 justify-between">
+        <div>
+          {/* Brand & Rating Row */}
+          <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
+            <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 dark:text-slate-400 uppercase tracking-wider truncate max-w-[70px] sm:max-w-[100px]">
+              {product.brand}
             </span>
-          </div>
-        </div>
-
-        {/* Title (2 lines clamp with fixed height for perfect alignment) */}
-        <h3 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white line-clamp-2 min-h-[2rem] sm:min-h-[2.3rem] leading-snug transition-colors mb-1.5 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-          {lang === 'fa' ? product.nameFa : product.name}
-        </h3>
-
-        {/* Color Palette Indicators & Delivery Tag */}
-        <div className="flex items-center justify-between gap-1 mb-2">
-          <div className="flex items-center gap-1">
-            <div className="flex items-center -space-x-1 rtl:space-x-reverse">
-              {colorDots.slice(0, 3).map((c, i) => (
-                <span
-                  key={i}
-                  className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-white dark:border-slate-800 shadow-2xs"
-                  style={{ backgroundColor: c }}
-                />
-              ))}
+            <div className="flex items-center gap-0.5 sm:gap-1 text-amber-500 bg-amber-50 dark:bg-amber-950/40 px-1 sm:px-1.5 py-0.5 rounded-md border border-amber-200/40 dark:border-amber-900/40 shrink-0">
+              <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current text-amber-500" />
+              <span className="font-extrabold text-slate-800 dark:text-slate-200 text-[9px] sm:text-[10px] tabular-nums">
+                {product.rating}
+              </span>
             </div>
-            <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium hidden sm:inline">
-              {lang === 'fa' ? `${colorDots.length} رنگ` : `${colorDots.length} colors`}
-            </span>
           </div>
 
-          <div className="flex items-center gap-1 text-[9px] sm:text-[10px] font-medium text-blue-600 dark:text-blue-400">
-            <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-blue-500 animate-pulse" />
-            <span>{lang === 'fa' ? 'ارسال سریع' : 'Fast Delivery'}</span>
+          {/* Title (Standardized 2-line height for 100% consistent card alignment) */}
+          <h3 className="text-[10.5px] sm:text-xs font-bold text-slate-900 dark:text-white line-clamp-2 h-7 sm:h-8 leading-snug transition-colors mb-1.5 group-hover:text-[#E80645] dark:group-hover:text-rose-400">
+            {lang === 'fa' ? product.nameFa : product.name}
+          </h3>
+
+          {/* Color Palette Indicators & Delivery Tag */}
+          <div className="flex items-center justify-between gap-1 mb-2 h-4 sm:h-5">
+            <div className="flex items-center gap-1">
+              <div className="flex items-center -space-x-1 rtl:space-x-reverse">
+                {colorDots.slice(0, 3).map((c, i) => (
+                  <span
+                    key={i}
+                    className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-white dark:border-slate-800 shadow-2xs"
+                    style={{ backgroundColor: c }}
+                  />
+                ))}
+              </div>
+              <span className="text-[8px] sm:text-[9px] text-slate-400 font-medium hidden xs:inline sm:inline">
+                {lang === 'fa' ? `${colorDots.length} رنگ` : `${colorDots.length} colors`}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1 text-[8px] sm:text-[9px] font-medium text-emerald-600 dark:text-emerald-400 shrink-0">
+              <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>{lang === 'fa' ? 'ارسال سریع' : 'Fast Delivery'}</span>
+            </div>
           </div>
         </div>
 
-        {/* Price & Cart Button Row */}
-        <div className="mt-auto pt-2 flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80">
-          <div className="flex flex-col">
-            {product.originalPrice && (
-              <span className="text-[9px] sm:text-[10px] text-slate-400 line-through tabular-nums">
+        {/* Price & Cart Button Row (Baseline-aligned for both discounted & regular items) */}
+        <div className="pt-1.5 sm:pt-2 flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 mt-auto">
+          <div className="flex flex-col justify-center min-h-[2rem] sm:min-h-[2.2rem]">
+            {product.originalPrice ? (
+              <span className="text-[8.5px] sm:text-[9.5px] text-slate-400 line-through tabular-nums leading-none mb-0.5">
                 {formatPrice(product.originalPrice, product.originalPriceUSD)}
               </span>
+            ) : (
+              <span className="text-[8.5px] sm:text-[9.5px] opacity-0 select-none leading-none mb-0.5">
+                -
+              </span>
             )}
-            <div className="text-[11.5px] sm:text-xs font-black text-slate-900 dark:text-white tabular-nums tracking-tight">
+            <div className="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white tabular-nums tracking-tight leading-tight">
               {formatPrice(product.price, product.priceUSD)}
             </div>
           </div>
@@ -285,18 +289,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, rankingBadge 
           <button
             onClick={handleAddToCart}
             disabled={isAdding || isAdded}
-            className={`relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl transition-all duration-200 cursor-pointer ${
+            className={`relative flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl transition-all duration-200 cursor-pointer shrink-0 ${
               isAdded
                 ? 'bg-emerald-600 text-white shadow-xs scale-105'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white active:scale-95'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-[#E80645] hover:text-white dark:hover:bg-[#E80645] dark:hover:text-white active:scale-95'
             }`}
             aria-label={lang === 'fa' ? 'افزودن به سبد خرید' : 'Add to cart'}
           >
             {isAdding ? (
-              <Loader2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin text-blue-500" />
+              <Loader2 className="w-3 h-3 animate-spin text-[#E80645]" />
             ) : isAdded ? (
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.15 }}>
-                <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white stroke-[3]" />
+                <Check className="w-3 h-3 text-white stroke-[3]" />
               </motion.div>
             ) : (
               <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

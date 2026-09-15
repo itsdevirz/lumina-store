@@ -34,7 +34,7 @@ export const CategorySection: React.FC = () => {
         {/* Section Header */}
         <div className="flex items-end justify-between mb-4 sm:mb-6">
           <div>
-            <span className="text-[10px] sm:text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block">
+            <span className="text-[10px] sm:text-xs font-bold text-[#E80645] dark:text-rose-400 uppercase tracking-wider block">
               {lang === 'fa' ? 'دسته‌بندی‌های تخصصی' : 'Specialized Collections'}
             </span>
             <h2 className="text-base sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -47,7 +47,7 @@ export const CategorySection: React.FC = () => {
               setFilters(prev => ({ ...prev, selectedCategory: 'all' }));
               setActiveTab('shop');
             }}
-            className="flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+            className="flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
           >
             <span>{lang === 'fa' ? 'همه کالاها' : 'View All'}</span>
             <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
@@ -63,7 +63,7 @@ export const CategorySection: React.FC = () => {
               <div
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
-                className="group relative flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-500/30 hover:shadow-xs cursor-pointer select-none"
+                className="group relative flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-rose-500/30 hover:shadow-xs cursor-pointer select-none"
               >
                 {/* Image Container with Icon badge */}
                 <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800/60 mb-2.5 shadow-2xs">
@@ -81,7 +81,7 @@ export const CategorySection: React.FC = () => {
                 </div>
 
                 {/* Name & Count */}
-                <h3 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate max-w-full">
+                <h3 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-[#E80645] dark:group-hover:text-rose-400 transition-colors truncate max-w-full">
                   {lang === 'fa' ? cat.nameFa : cat.name}
                 </h3>
                 <span className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 font-medium tabular-nums">

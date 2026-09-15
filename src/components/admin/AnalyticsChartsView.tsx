@@ -164,13 +164,13 @@ export const AnalyticsChartsView: React.FC = () => {
           onClick={() => setActiveMetric('visitors')}
           className={`p-5 rounded-3xl text-right transition-all border ${
             activeMetric === 'visitors'
-              ? 'bg-blue-50/50 dark:bg-blue-950/40 border-blue-500 shadow-sm'
+              ? 'bg-rose-50/50 dark:bg-rose-950/40 border-[#E80645] shadow-sm'
               : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
           }`}
         >
           <div className="flex items-center justify-between text-slate-400 mb-2">
             <span className="text-xs font-bold">تعداد بازدیدکنندگان</span>
-            <Eye className="w-4 h-4 text-blue-500" />
+            <Eye className="w-4 h-4 text-[#E80645]" />
           </div>
           <div className="text-xl font-black text-slate-900 dark:text-white">
             {totalVisitorsInPeriod.toLocaleString('fa-IR')} <span className="text-xs font-medium text-slate-400">نفر</span>

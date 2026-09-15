@@ -325,7 +325,7 @@ export const BestsellersView: React.FC = () => {
                     </td>
                     <td className="py-4 px-3">
                       <span className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                        <Eye className="w-3.5 h-3.5 text-blue-500" />
+                        <Eye className="w-3.5 h-3.5 text-slate-400" />
                         <span>{formatNumber(item.views)} بازدید</span>
                       </span>
                     </td>

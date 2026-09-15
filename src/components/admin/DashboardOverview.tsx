@@ -124,7 +124,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-bold">فروش این هفته</span>
-              <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 flex items-center justify-center">
                 <DollarSign className="w-4 h-4" />
               </div>
             </div>
@@ -198,7 +198,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       {/* 3. کاربران (Users Cards) */}
       <div className="space-y-3">
         <h2 className="text-sm font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
-          <Users className="w-4 h-4 text-blue-500" />
+          <Users className="w-4 h-4 text-[#E80645]" />
           <span>آمار کاربران و مخاطبان</span>
         </h2>
 
@@ -216,7 +216,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
           <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2">
             <span className="text-xs font-bold text-slate-400">کاربران جدید امروز</span>
-            <div className="text-2xl font-black text-blue-600 dark:text-blue-400">
+            <div className="text-2xl font-black text-[#E80645] dark:text-rose-400">
               {formatNumber(stats.newUsersToday)}
             </div>
             <span className="text-[11px] text-slate-400">ثبت‌نام مستقیم</span>
@@ -383,11 +383,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         o.status === 'delivered'
                           ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
                           : o.status === 'processing'
-                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400'
+                          ? 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400'
                           : o.status === 'paid'
                           ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400'
                           : o.status === 'shipped'
-                          ? 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400'
+                          ? 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400'
                           : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400'
                       }`}
                     >

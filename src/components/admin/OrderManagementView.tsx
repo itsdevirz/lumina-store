@@ -156,7 +156,7 @@ export const OrderManagementView: React.FC = () => {
         );
       case 'shipped':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400">
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400">
             ارسال شده
           </span>
         );

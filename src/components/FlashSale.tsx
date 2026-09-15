@@ -38,20 +38,20 @@ export const FlashSale: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Flash Sale Header Strip */}
-        <div className="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900 dark:bg-[#111726] text-white shadow-xs mb-4 sm:mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 border border-slate-800">
+        <div className="p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#E80645] via-[#D0053E] to-[#B30435] text-white shadow-md shadow-rose-900/10 mb-4 sm:mb-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 border border-rose-600/30">
           
           {/* Title & Tag */}
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-start">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center shrink-0 border border-rose-500/20">
-                <Flame className="w-5 h-5 text-rose-500" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 text-white flex items-center justify-center shrink-0 backdrop-blur-xs">
+                <Flame className="w-5 h-5 text-white animate-bounce" />
               </div>
               <div>
-                <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-rose-400 uppercase tracking-wider">
+                <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-rose-100 uppercase tracking-wider">
                   <Sparkles className="w-3 h-3" />
                   <span>{lang === 'fa' ? 'پیشنهاد روز' : 'Daily Deal'}</span>
                 </div>
-                <h2 className="text-sm sm:text-base lg:text-lg font-black tracking-tight">
+                <h2 className="text-sm sm:text-base lg:text-lg font-black tracking-tight text-white">
                   {lang === 'fa' ? 'پیشنهادهای شگفت‌انگیز لومینا' : 'Lumina Flash Sale'}
                 </h2>
               </div>
@@ -63,7 +63,7 @@ export const FlashSale: React.FC = () => {
                 setFilters(prev => ({ ...prev, onSaleOnly: true, selectedCategory: 'all' }));
                 setActiveTab('shop');
               }}
-              className="sm:hidden flex items-center gap-1 text-[11px] font-bold text-slate-300 hover:text-white"
+              className="sm:hidden flex items-center gap-1 text-[11px] font-bold text-white/90 hover:text-white"
             >
               <span>{lang === 'fa' ? 'همه' : 'All'}</span>
               <ArrowLeft className="w-3 h-3 rtl:rotate-0 ltr:rotate-180" />
@@ -72,21 +72,21 @@ export const FlashSale: React.FC = () => {
 
           {/* Countdown Clock & Desktop CTA */}
           <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3">
-            <div className="flex items-center gap-1.5 sm:gap-2 bg-black/40 px-3 py-1.5 rounded-xl border border-white/10 text-xs">
-              <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-[10px] sm:text-xs text-slate-300 font-medium">
+            <div className="flex items-center gap-1.5 sm:gap-2 bg-black/25 px-3 py-1.5 rounded-xl border border-white/20 text-xs backdrop-blur-xs">
+              <Clock className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+              <span className="text-[10px] sm:text-xs text-white/90 font-medium">
                 {lang === 'fa' ? 'زمان باقی‌مانده:' : 'Ends In:'}
               </span>
               <div className="flex items-center gap-1 font-mono text-xs font-black" style={{ direction: 'ltr' }}>
-                <span className="bg-slate-800 text-amber-400 px-1.5 py-0.5 rounded text-[11px]">
+                <span className="bg-white text-slate-900 px-1.5 py-0.5 rounded text-[11px] shadow-xs font-bold">
                   {formatNumber(timeLeft.hours)}
                 </span>
-                <span className="text-slate-500 font-bold">:</span>
-                <span className="bg-slate-800 text-amber-400 px-1.5 py-0.5 rounded text-[11px]">
+                <span className="text-white font-bold">:</span>
+                <span className="bg-white text-slate-900 px-1.5 py-0.5 rounded text-[11px] shadow-xs font-bold">
                   {formatNumber(timeLeft.minutes)}
                 </span>
-                <span className="text-slate-500 font-bold">:</span>
-                <span className="bg-slate-800 text-amber-400 px-1.5 py-0.5 rounded text-[11px]">
+                <span className="text-white font-bold">:</span>
+                <span className="bg-white text-slate-900 px-1.5 py-0.5 rounded text-[11px] shadow-xs font-bold">
                   {formatNumber(timeLeft.seconds)}
                 </span>
               </div>
@@ -97,7 +97,7 @@ export const FlashSale: React.FC = () => {
                 setFilters(prev => ({ ...prev, onSaleOnly: true, selectedCategory: 'all' }));
                 setActiveTab('shop');
               }}
-              className="hidden sm:flex items-center gap-1 text-xs font-bold text-slate-200 hover:text-white transition-colors cursor-pointer"
+              className="hidden sm:flex items-center gap-1 text-xs font-bold text-white hover:text-white/80 transition-colors cursor-pointer bg-white/15 px-3 py-1.5 rounded-xl hover:bg-white/25"
             >
               <span>{lang === 'fa' ? 'مشاهده همه تخفیف‌ها' : 'View All Deals'}</span>
               <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
@@ -106,12 +106,12 @@ export const FlashSale: React.FC = () => {
         </div>
 
         {/* Product Cards Grid: 2 columns on mobile, 4 on desktop */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
           {flashProducts.map(product => {
             const soldPercent = Math.min(100, Math.round((product.soldCount / (product.soldCount + product.stock)) * 100));
 
             return (
-              <div key={product.id} className="flex flex-col">
+              <div key={product.id} className="flex flex-col h-full">
                 <ProductCard product={product} />
 
                 {/* Stock Progress Bar */}

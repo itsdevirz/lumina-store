@@ -116,7 +116,7 @@ export const CheckoutView: React.FC = () => {
         </p>
         <button
           onClick={() => setActiveTab('shop')}
-          className="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold text-xs shadow-sm hover:bg-blue-700 transition-colors cursor-pointer"
+          className="px-6 py-3 rounded-xl bg-[#E80645] text-white font-bold text-xs shadow-xs hover:bg-[#c7053b] transition-colors cursor-pointer"
         >
           {lang === 'fa' ? 'بازگشت به فروشگاه' : 'Go to Shop'}
         </button>
@@ -141,9 +141,9 @@ export const CheckoutView: React.FC = () => {
                   <div
                     className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
                       isDone
-                        ? 'bg-emerald-600 text-white shadow-sm'
+                        ? 'bg-emerald-600 text-white shadow-xs'
                         : isCurrent
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 scale-105'
+                        ? 'bg-[#E80645] text-white shadow-md shadow-rose-900/25 scale-105'
                         : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700'
                     }`}
                   >
@@ -152,7 +152,7 @@ export const CheckoutView: React.FC = () => {
                   <span
                     className={`text-[11px] font-bold mt-2 hidden sm:inline ${
                       isCurrent
-                        ? 'text-blue-600 dark:text-blue-400'
+                        ? 'text-[#E80645] dark:text-rose-400'
                         : isDone
                         ? 'text-emerald-600 dark:text-emerald-400'
                         : 'text-slate-400'
@@ -168,7 +168,7 @@ export const CheckoutView: React.FC = () => {
 
         {/* STEP 4: SUCCESS VIEW */}
         {currentStep === 4 ? (
-          <div className="max-w-xl mx-auto p-8 rounded-3xl bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 text-center shadow-sm">
+          <div className="max-w-xl mx-auto p-8 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 text-center shadow-xs">
             <div className="w-16 h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-500 flex items-center justify-center mx-auto mb-4 border border-emerald-200 dark:border-emerald-900/60">
               <CheckCircle2 className="w-9 h-9" />
             </div>
@@ -182,7 +182,7 @@ export const CheckoutView: React.FC = () => {
                 : 'Order confirmation with tracking number has been dispatched.'}
             </p>
 
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/90 dark:border-slate-800 text-xs text-right space-y-2.5 mb-6">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 text-xs text-right space-y-2.5 mb-6">
               <div className="flex justify-between items-center">
                 <span className="text-slate-500">{lang === 'fa' ? 'شماره پیگیری سفارش:' : 'Order ID:'}</span>
                 <span className="font-mono font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700">
@@ -199,7 +199,7 @@ export const CheckoutView: React.FC = () => {
               </div>
               <div className="flex justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
                 <span className="text-slate-700 dark:text-slate-300 font-bold">{lang === 'fa' ? 'مبلغ کل پرداخت‌شده:' : 'Amount Paid:'}</span>
-                <span className="font-black text-blue-600 dark:text-blue-400 text-sm">{formatPrice(cartTotal.total, cartTotal.totalUSD)}</span>
+                <span className="font-black text-[#E80645] dark:text-rose-400 text-sm">{formatPrice(cartTotal.total, cartTotal.totalUSD)}</span>
               </div>
             </div>
 
@@ -218,7 +218,7 @@ export const CheckoutView: React.FC = () => {
                   setActiveTab('home');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="px-6 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors cursor-pointer"
+                className="px-6 py-2.5 rounded-xl bg-[#E80645] text-white text-xs font-bold hover:bg-[#c7053b] transition-colors cursor-pointer"
               >
                 {lang === 'fa' ? 'بازگشت به صفحه اصلی' : 'Back to Home'}
               </button>
@@ -229,13 +229,13 @@ export const CheckoutView: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Form Column (7 cols) */}
-            <div className="lg:col-span-7 bg-white dark:bg-[#0F172A] p-6 sm:p-8 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm">
+            <div className="lg:col-span-7 bg-white dark:bg-[#111726] p-6 sm:p-8 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
               
               {/* STEP 1: SHIPPING ADDRESS */}
               {currentStep === 1 && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
-                    <MapPin className="w-5 h-5 text-blue-600" />
+                    <MapPin className="w-5 h-5 text-[#E80645]" />
                     <h3 className="text-base font-black text-slate-900 dark:text-white">
                       {lang === 'fa' ? '۱. مشخصات و نشانی تحویل‌گیرنده' : '1. Delivery Information'}
                     </h3>
@@ -250,7 +250,7 @@ export const CheckoutView: React.FC = () => {
                         type="text"
                         value={formData.fullName}
                         onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                        className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#E80645] focus:outline-none"
                       />
                       {errors.fullName && <span className="text-[11px] text-rose-500 mt-1 block">{errors.fullName}</span>}
                     </div>
@@ -263,7 +263,7 @@ export const CheckoutView: React.FC = () => {
                         type="text"
                         value={formData.phone}
                         onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#E80645] focus:outline-none"
                       />
                       {errors.phone && <span className="text-[11px] text-rose-500 mt-1 block">{errors.phone}</span>}
                     </div>
@@ -278,7 +278,7 @@ export const CheckoutView: React.FC = () => {
                         type="text"
                         value={formData.city}
                         onChange={e => setFormData({ ...formData, city: e.target.value })}
-                        className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#E80645] focus:outline-none"
                       />
                       {errors.city && <span className="text-[11px] text-rose-500 mt-1 block">{errors.city}</span>}
                     </div>
@@ -291,7 +291,7 @@ export const CheckoutView: React.FC = () => {
                         type="text"
                         value={formData.postalCode}
                         onChange={e => setFormData({ ...formData, postalCode: e.target.value })}
-                        className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono"
+                        className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#E80645] focus:outline-none font-mono"
                       />
                       {errors.postalCode && <span className="text-[11px] text-rose-500 mt-1 block">{errors.postalCode}</span>}
                     </div>
@@ -305,7 +305,7 @@ export const CheckoutView: React.FC = () => {
                       rows={2}
                       value={formData.address}
                       onChange={e => setFormData({ ...formData, address: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#E80645] focus:outline-none"
                     />
                     {errors.address && <span className="text-[11px] text-rose-500 mt-1 block">{errors.address}</span>}
                   </div>
@@ -316,7 +316,7 @@ export const CheckoutView: React.FC = () => {
               {currentStep === 2 && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
-                    <Truck className="w-5 h-5 text-blue-600" />
+                    <Truck className="w-5 h-5 text-[#E80645]" />
                     <h3 className="text-base font-black text-slate-900 dark:text-white">
                       {lang === 'fa' ? '۲. انتخاب شیوه ارسال کالا' : '2. Select Shipping Method'}
                     </h3>
@@ -341,9 +341,9 @@ export const CheckoutView: React.FC = () => {
                     ].map(method => (
                       <label
                         key={method.id}
-                        className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
+                        className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${
                           formData.shippingMethod === method.id
-                            ? 'border-blue-600 bg-blue-50/60 dark:bg-blue-950/40 shadow-xs'
+                            ? 'border-[#E80645] bg-rose-50/50 dark:bg-rose-950/20 shadow-xs'
                             : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40'
                         }`}
                       >
@@ -353,12 +353,12 @@ export const CheckoutView: React.FC = () => {
                             name="shippingMethod"
                             checked={formData.shippingMethod === method.id}
                             onChange={() => setFormData({ ...formData, shippingMethod: method.id })}
-                            className="text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
+                            className="text-[#E80645] focus:ring-[#E80645] w-4 h-4 cursor-pointer accent-[#E80645]"
                           />
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="text-xs font-bold text-slate-900 dark:text-white">{method.title}</span>
-                              <span className="px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-[10px] font-bold">
+                              <span className="px-2 py-0.5 rounded-md bg-rose-100 dark:bg-rose-900/60 text-[#E80645] dark:text-rose-300 text-[10px] font-bold">
                                 {method.badge}
                               </span>
                             </div>
@@ -376,7 +376,7 @@ export const CheckoutView: React.FC = () => {
               {currentStep === 3 && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
-                    <CreditCard className="w-5 h-5 text-blue-600" />
+                    <CreditCard className="w-5 h-5 text-[#E80645]" />
                     <h3 className="text-base font-black text-slate-900 dark:text-white">
                       {lang === 'fa' ? '۳. انتخاب درگاه و نحوه پرداخت' : '3. Payment Method'}
                     </h3>
@@ -405,9 +405,9 @@ export const CheckoutView: React.FC = () => {
                     ].map(payment => (
                       <label
                         key={payment.id}
-                        className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${
+                        className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
                           formData.paymentMethod === payment.id
-                            ? 'border-blue-600 bg-blue-50/60 dark:bg-blue-950/40 shadow-xs'
+                            ? 'border-[#E80645] bg-rose-50/50 dark:bg-rose-950/20 shadow-xs'
                             : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40'
                         }`}
                       >
@@ -416,7 +416,7 @@ export const CheckoutView: React.FC = () => {
                           name="paymentMethod"
                           checked={formData.paymentMethod === payment.id}
                           onChange={() => setFormData({ ...formData, paymentMethod: payment.id })}
-                          className="mt-0.5 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
+                          className="mt-0.5 text-[#E80645] focus:ring-[#E80645] w-4 h-4 cursor-pointer accent-[#E80645]"
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
@@ -456,7 +456,7 @@ export const CheckoutView: React.FC = () => {
                 {currentStep < 3 ? (
                   <button
                     onClick={handleNextStep}
-                    className="flex items-center gap-1.5 px-6 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-xs shadow-sm hover:bg-blue-700 transition-colors cursor-pointer active:scale-98"
+                    className="flex items-center gap-1.5 px-6 py-2.5 rounded-xl bg-[#E80645] text-white font-bold text-xs shadow-md shadow-rose-900/20 hover:bg-[#c7053b] transition-colors cursor-pointer active:scale-98"
                   >
                     <span>{lang === 'fa' ? 'ادامه مرحله بعد' : 'Continue'}</span>
                     <ArrowLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
@@ -475,10 +475,10 @@ export const CheckoutView: React.FC = () => {
             </div>
 
             {/* ORDER SUMMARY SIDEBAR (5 cols) */}
-            <div className="lg:col-span-5 bg-white dark:bg-[#0F172A] p-6 rounded-3xl border border-slate-200/90 dark:border-slate-800/90 shadow-sm sticky top-24 space-y-4">
+            <div className="lg:col-span-5 bg-white dark:bg-[#111726] p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-xs sticky top-24 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                 <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  <Receipt className="w-4 h-4 text-blue-600" />
+                  <Receipt className="w-4 h-4 text-[#E80645]" />
                   <span>{lang === 'fa' ? 'خلاصه فاکتور خرید' : 'Order Summary'}</span>
                 </h4>
                 <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-full font-bold tabular-nums">
@@ -518,7 +518,7 @@ export const CheckoutView: React.FC = () => {
                 </div>
 
                 {cartTotal.discount > 0 && (
-                  <div className="flex justify-between text-rose-600 font-bold">
+                  <div className="flex justify-between text-[#E80645] dark:text-rose-400 font-bold">
                     <span>{lang === 'fa' ? 'تخفیف کوپن' : 'Discount'}</span>
                     <span className="tabular-nums">-{formatPrice(cartTotal.discount, cartTotal.discountUSD)}</span>
                   </div>
@@ -533,7 +533,7 @@ export const CheckoutView: React.FC = () => {
 
                 <div className="flex justify-between text-slate-900 dark:text-white font-black text-sm pt-3 border-t border-slate-200 dark:border-slate-800">
                   <span>{lang === 'fa' ? 'مبلغ نهایی قابل پرداخت' : 'Grand Total'}</span>
-                  <span className="tabular-nums text-blue-600 dark:text-blue-400 text-base">{formatPrice(cartTotal.total, cartTotal.totalUSD)}</span>
+                  <span className="tabular-nums text-[#E80645] dark:text-rose-400 text-base">{formatPrice(cartTotal.total, cartTotal.totalUSD)}</span>
                 </div>
               </div>
             </div>

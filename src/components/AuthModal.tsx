@@ -149,7 +149,7 @@ export const AuthModal: React.FC = () => {
         className="relative w-full max-w-md bg-white dark:bg-[#0F172A] rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800/90 overflow-hidden"
       >
         {/* Top Header Glow Bar */}
-        <div className="absolute top-0 inset-x-0 h-1.5 bg-blue-600" />
+        <div className="absolute top-0 inset-x-0 h-1.5 bg-[#E80645]" />
 
         {/* Close Button */}
         <button
@@ -163,7 +163,7 @@ export const AuthModal: React.FC = () => {
         <div className="p-6 sm:p-8">
           {/* Logo & Brand Header */}
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 mb-3 border border-blue-200 dark:border-blue-900/50">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/80 text-[#E80645] dark:text-rose-400 mb-3 border border-rose-200 dark:border-rose-900/50">
               <Sparkles className="w-6 h-6" />
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -188,7 +188,7 @@ export const AuthModal: React.FC = () => {
               }}
               className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 authModalMode === 'login'
-                  ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                  ? 'bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 shadow-sm'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -203,7 +203,7 @@ export const AuthModal: React.FC = () => {
               }}
               className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 authModalMode === 'register'
-                  ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                  ? 'bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 shadow-sm'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -241,7 +241,7 @@ export const AuthModal: React.FC = () => {
                     onChange={e => setLoginIdentifier(e.target.value)}
                     placeholder={lang === 'fa' ? 'kian.mehrazar@lumina.io یا ۰۹۱۲...' : 'name@example.com or phone'}
                     dir="ltr"
-                    className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3.5 py-3 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-10 ltr:pl-10 focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                    className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3.5 py-3 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-10 ltr:pl-10 focus:bg-white dark:focus:bg-slate-900 focus:border-[#E80645] focus:ring-2 focus:ring-[#E80645]/20 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -257,7 +257,7 @@ export const AuthModal: React.FC = () => {
                       setLoginIdentifier('kian.mehrazar@lumina.io');
                       setLoginPassword('password123');
                     }}
-                    className="text-[11px] text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                    className="text-[11px] text-[#E80645] dark:text-rose-400 hover:underline cursor-pointer"
                   >
                     {lang === 'fa' ? 'تکمیل خودکار اطلاعات دمو' : 'Autofill Demo'}
                   </button>
@@ -272,7 +272,7 @@ export const AuthModal: React.FC = () => {
                     onChange={e => setLoginPassword(e.target.value)}
                     placeholder="••••••••"
                     dir="ltr"
-                    className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3.5 py-3 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-10 rtl:pl-10 ltr:pl-10 ltr:pr-10 focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                    className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3.5 py-3 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-10 rtl:pl-10 ltr:pl-10 ltr:pr-10 focus:bg-white dark:focus:bg-slate-900 focus:border-[#E80645] focus:ring-2 focus:ring-[#E80645]/20 outline-none transition-all"
                   />
                   <button
                     type="button"
@@ -290,7 +290,7 @@ export const AuthModal: React.FC = () => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={e => setRememberMe(e.target.checked)}
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
+                    className="rounded border-slate-300 text-[#E80645] focus:ring-[#E80645] w-4 h-4"
                   />
                   <span>{lang === 'fa' ? 'مرا به خاطر بسپار' : 'Remember me'}</span>
                 </label>
@@ -302,7 +302,7 @@ export const AuthModal: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-98 text-white font-bold text-xs shadow-md shadow-blue-600/25 transition-all disabled:opacity-60 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#E80645] hover:bg-[#c7053b] active:scale-98 text-white font-bold text-xs shadow-md shadow-rose-900/25 transition-all disabled:opacity-60 cursor-pointer"
               >
                 {isLoading ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -332,7 +332,7 @@ export const AuthModal: React.FC = () => {
                     value={regName}
                     onChange={e => setRegName(e.target.value)}
                     placeholder={lang === 'fa' ? 'مثال: سارا رادمنش' : 'Sara Radmanesh'}
-                    className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3.5 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-10 ltr:pl-10 focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 outline-none transition-all"
+                    className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3.5 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-10 ltr:pl-10 focus:bg-white dark:focus:bg-slate-900 focus:border-[#E80645] focus:ring-2 focus:ring-[#E80645]/20 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -352,7 +352,7 @@ export const AuthModal: React.FC = () => {
                       onChange={e => setRegPhone(e.target.value)}
                       placeholder="۰۹۱۲۳۴۵۶۷۸۹"
                       dir="ltr"
-                      className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-9 ltr:pl-9 focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 outline-none transition-all"
+                      className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-9 ltr:pl-9 focus:bg-white dark:focus:bg-slate-900 focus:border-[#E80645] focus:ring-2 focus:ring-[#E80645]/20 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -371,7 +371,7 @@ export const AuthModal: React.FC = () => {
                       onChange={e => setRegEmail(e.target.value)}
                       placeholder="user@example.com"
                       dir="ltr"
-                      className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-9 ltr:pl-9 focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 outline-none transition-all"
+                      className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 rtl:pr-9 ltr:pl-9 focus:bg-white dark:focus:bg-slate-900 focus:border-[#E80645] focus:ring-2 focus:ring-[#E80645]/20 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -389,7 +389,7 @@ export const AuthModal: React.FC = () => {
                       onChange={e => setRegPassword(e.target.value)}
                       placeholder="حداقل ۶ کاراکتر"
                       dir="ltr"
-                      className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 outline-none transition-all"
+                      className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:border-[#E80645] focus:ring-2 focus:ring-[#E80645]/20 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -405,7 +405,7 @@ export const AuthModal: React.FC = () => {
                       onChange={e => setRegConfirmPassword(e.target.value)}
                       placeholder="تکرار رمز عبور"
                       dir="ltr"
-                      className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:border-blue-500 outline-none transition-all"
+                      className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-3 py-2.5 text-slate-900 dark:text-white placeholder-slate-400 focus:bg-white dark:focus:bg-slate-900 focus:border-[#E80645] focus:ring-2 focus:ring-[#E80645]/20 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -417,7 +417,7 @@ export const AuthModal: React.FC = () => {
                   id="accept-terms"
                   checked={acceptTerms}
                   onChange={e => setAcceptTerms(e.target.checked)}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
+                  className="rounded border-slate-300 text-[#E80645] focus:ring-[#E80645] w-4 h-4 cursor-pointer"
                 />
                 <label htmlFor="accept-terms" className="text-slate-600 dark:text-slate-400 cursor-pointer">
                   {lang === 'fa' ? 'قوانین و شرایط خرید از لومینا را می‌پذیرم' : 'I accept the Terms & Privacy policy'}
@@ -427,7 +427,7 @@ export const AuthModal: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-98 text-white font-bold text-xs shadow-md shadow-blue-600/25 transition-all disabled:opacity-60 mt-2 cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#E80645] hover:bg-[#c7053b] active:scale-98 text-white font-bold text-xs shadow-md shadow-rose-900/25 transition-all disabled:opacity-60 mt-2 cursor-pointer"
               >
                 {isLoading ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -446,7 +446,7 @@ export const AuthModal: React.FC = () => {
             <button
               type="button"
               onClick={quickDemoLogin}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50/60 dark:bg-blue-950/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-bold transition-colors cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/60 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-[#E80645] dark:text-rose-300 text-xs font-bold transition-colors cursor-pointer"
             >
               <Zap className="w-4 h-4 text-amber-500 shrink-0" />
               <span>{lang === 'fa' ? 'ورود فوری با حساب کاربری آزمایشی (Demo VIP)' : 'Instant Demo Login (VIP User)'}</span>

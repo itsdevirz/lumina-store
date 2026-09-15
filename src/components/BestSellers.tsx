@@ -50,7 +50,7 @@ export const BestSellers: React.FC = () => {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   selectedCategory === cat.id
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+                    ? 'bg-[#E80645] text-white shadow-xs'
                     : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -61,7 +61,7 @@ export const BestSellers: React.FC = () => {
         </div>
 
         {/* Product Cards Grid: 2 columns on mobile */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
           {filteredProducts.map((product, idx) => (
             <ProductCard
               key={product.id}

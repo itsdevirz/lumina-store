@@ -342,7 +342,7 @@ export const AvatarUploadManager: React.FC = () => {
       {/* Current Active Avatar Preview Bar */}
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80">
         <div className="relative group shrink-0">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden bg-white dark:bg-slate-900 border-2 border-indigo-500/30 p-1 shadow-md">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden bg-white dark:bg-slate-900 border-2 border-[#E80645]/30 p-1 shadow-md">
             <img
               src={userProfile.avatar}
               alt={userProfile.name}
@@ -364,7 +364,7 @@ export const AvatarUploadManager: React.FC = () => {
             <h4 className="text-base font-black text-slate-900 dark:text-white">
               {userProfile.name}
             </h4>
-            <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[11px] font-bold">
+            <span className="px-2 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/80 text-[#E80645] dark:text-rose-400 text-[11px] font-bold">
               {lang === 'fa' ? 'تصویر فعال' : 'Active Avatar'}
             </span>
           </div>
@@ -379,7 +379,7 @@ export const AvatarUploadManager: React.FC = () => {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
             >
               <Upload className="w-3.5 h-3.5" />
               <span>{lang === 'fa' ? 'آپلود عکس جدید' : 'Upload Photo'}</span>
@@ -410,8 +410,8 @@ export const AvatarUploadManager: React.FC = () => {
           onClick={() => fileInputRef.current?.click()}
           className={`relative border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
             isDragging
-              ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/40 scale-[1.01]'
-              : 'border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 hover:border-indigo-400 hover:bg-indigo-50/20'
+              ? 'border-[#E80645] bg-rose-50/50 dark:bg-rose-950/40 scale-[1.01]'
+              : 'border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 hover:border-rose-400 hover:bg-rose-50/20'
           }`}
         >
           <input
@@ -422,7 +422,7 @@ export const AvatarUploadManager: React.FC = () => {
             className="hidden"
           />
 
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-3 shadow-2xs">
+          <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 flex items-center justify-center mx-auto mb-3 shadow-2xs">
             {isUploading ? (
               <RefreshCw className="w-5 h-5 animate-spin" />
             ) : (
@@ -470,7 +470,7 @@ export const AvatarUploadManager: React.FC = () => {
                 onClick={() => handleSelectPreset(avatar)}
                 className={`group relative flex flex-col items-center p-2.5 rounded-2xl border transition-all cursor-pointer ${
                   isSelected
-                    ? 'border-indigo-600 dark:border-indigo-400 bg-indigo-50/70 dark:bg-indigo-950/50 shadow-sm scale-105 ring-2 ring-indigo-500/25'
+                    ? 'border-[#E80645] dark:border-rose-500 bg-rose-50/70 dark:bg-rose-950/50 shadow-xs scale-105 ring-2 ring-[#E80645]/20'
                     : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700 hover:scale-105'
                 }`}
                 title={lang === 'fa' ? avatar.nameFa : avatar.name}
@@ -488,7 +488,7 @@ export const AvatarUploadManager: React.FC = () => {
 
                 {/* Selected Indicator */}
                 {isSelected && (
-                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-xs">
+                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#E80645] text-white flex items-center justify-center shadow-xs">
                     <Check className="w-3 h-3 stroke-[3]" />
                   </span>
                 )}

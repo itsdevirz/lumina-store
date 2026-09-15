@@ -117,7 +117,7 @@ export const Hero: React.FC = () => {
                     key={i}
                     onClick={() => setActiveSlide(i)}
                     className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                      activeSlide === i ? 'w-5 sm:w-6 bg-blue-500' : 'w-1.5 sm:w-2 bg-white/40 hover:bg-white/70'
+                      activeSlide === i ? 'w-5 sm:w-6 bg-[#E80645]' : 'w-1.5 sm:w-2 bg-white/40 hover:bg-white/70'
                     }`}
                     aria-label={`Go to slide ${i + 1}`}
                   />
@@ -142,51 +142,97 @@ export const Hero: React.FC = () => {
               </div>
             </div>
 
-            {/* Slide Content */}
-            <div className="relative z-10 max-w-xl text-right">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-600/90 text-white text-[10px] sm:text-xs font-bold mb-2 sm:mb-2.5 shadow-xs">
-                <Sparkles className="w-3 h-3" />
-                <span>{currentSlide.tag}</span>
-                <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
-                <span>{currentSlide.badge}</span>
-              </div>
-
-              {/* Title */}
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white mb-1.5 sm:mb-2 leading-snug">
-                {currentSlide.title}
-              </h1>
-
-              {/* Description */}
-              <p className="text-[11px] sm:text-xs text-slate-300 mb-3.5 sm:mb-5 line-clamp-2 leading-relaxed font-normal max-w-lg">
-                {currentSlide.description}
-              </p>
-
-              {/* Actions & Price */}
-              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-                <button
-                  onClick={() => {
-                    const found = products.find(p => p.id === currentSlide.productId);
-                    if (found) {
-                      openProductDetails(found);
-                    } else {
-                      setActiveTab('shop');
-                    }
+            {/* Slide Content with Synchronized Ease-In-Out Animation */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide.id}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.08,
+                      delayChildren: 0.05,
+                    },
+                  },
+                  exit: {
+                    opacity: 0,
+                    transition: { duration: 0.25, ease: 'easeInOut' },
+                  },
+                }}
+                className="relative z-10 max-w-xl text-right"
+              >
+                {/* Badge */}
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: -10 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } },
                   }}
-                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-blue-600/20 transition-all active:scale-95 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E80645]/90 text-white text-[10px] sm:text-xs font-bold mb-2 sm:mb-2.5 shadow-xs"
                 >
-                  <span>{lang === 'fa' ? 'مشاهده و خرید محصول' : 'View Product'}</span>
-                  <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
-                </button>
+                  <Sparkles className="w-3 h-3" />
+                  <span>{currentSlide.tag}</span>
+                  <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
+                  <span>{currentSlide.badge}</span>
+                </motion.div>
 
-                <div className="flex items-baseline gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
-                  <span className="text-[11px] text-slate-400 font-medium">{lang === 'fa' ? 'قیمت ویژه:' : 'Price:'}</span>
-                  <span className="text-xs sm:text-sm font-black text-white tabular-nums">
-                    {formatPrice(currentSlide.price, currentSlide.priceUSD)}
-                  </span>
-                </div>
-              </div>
-            </div>
+                {/* Title */}
+                <motion.h1
+                  variants={{
+                    hidden: { opacity: 0, y: 14 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
+                  }}
+                  className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-white mb-1.5 sm:mb-2 leading-snug"
+                >
+                  {currentSlide.title}
+                </motion.h1>
+
+                {/* Description */}
+                <motion.p
+                  variants={{
+                    hidden: { opacity: 0, y: 12 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
+                  }}
+                  className="text-[11px] sm:text-xs text-slate-300 mb-3.5 sm:mb-5 line-clamp-2 leading-relaxed font-normal max-w-lg"
+                >
+                  {currentSlide.description}
+                </motion.p>
+
+                {/* Actions & Price */}
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 10 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } },
+                  }}
+                  className="flex flex-wrap items-center gap-2.5 sm:gap-3"
+                >
+                  <button
+                    onClick={() => {
+                      const found = products.find(p => p.id === currentSlide.productId);
+                      if (found) {
+                        openProductDetails(found);
+                      } else {
+                        setActiveTab('shop');
+                      }
+                    }}
+                    className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-rose-950/20 transition-all active:scale-95 cursor-pointer"
+                  >
+                    <span>{lang === 'fa' ? 'مشاهده و خرید محصول' : 'View Product'}</span>
+                    <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
+                  </button>
+
+                  <div className="flex items-baseline gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
+                    <span className="text-[11px] text-slate-400 font-medium">{lang === 'fa' ? 'قیمت ویژه:' : 'Price:'}</span>
+                    <span className="text-xs sm:text-sm font-black text-white tabular-nums">
+                      {formatPrice(currentSlide.price, currentSlide.priceUSD)}
+                    </span>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Bento Side Cards (4 cols on lg, 2 cols on mobile) */}
@@ -207,7 +253,7 @@ export const Hero: React.FC = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
               <div className="relative z-10 text-right">
-                <span className="px-2 py-0.5 rounded-md bg-blue-600 text-white text-[9.5px] sm:text-[10px] font-bold mb-1 inline-block">
+                <span className="px-2 py-0.5 rounded-md bg-[#E80645] text-white text-[9.5px] sm:text-[10px] font-bold mb-1 inline-block">
                   {lang === 'fa' ? 'صدای های-فای' : 'Hi-Fi Audio'}
                 </span>
                 <h3 className="text-xs sm:text-sm lg:text-base font-black mb-0.5 line-clamp-1">
@@ -216,7 +262,7 @@ export const Hero: React.FC = () => {
                 <p className="text-[10px] sm:text-[11px] text-slate-300 mb-2 line-clamp-1 hidden sm:block">
                   {lang === 'fa' ? 'اسپیکرها و تجهیزات مانیتورینگ' : 'Professional audio gear with warranty'}
                 </p>
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-blue-400 group-hover:text-blue-300">
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-rose-400 group-hover:text-rose-300">
                   <span>{lang === 'fa' ? 'مشاهده کالکشن' : 'Explore'}</span>
                   <ArrowLeft className="w-3 h-3 rtl:rotate-0 ltr:rotate-180" />
                 </div>
@@ -262,7 +308,7 @@ export const Hero: React.FC = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
           
           <div className="flex items-center gap-2.5 p-1">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400 flex items-center justify-center shrink-0">
               <Truck className="w-4 h-4" />
             </div>
             <div className="min-w-0">

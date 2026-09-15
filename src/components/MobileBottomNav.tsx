@@ -25,7 +25,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onGoToAdmin })
           }}
           className={`flex flex-col items-center gap-1 p-1 min-w-[56px] min-h-[44px] justify-center transition-colors cursor-pointer ${
             activeTab === 'home'
-              ? 'text-blue-600 dark:text-blue-400 font-bold'
+              ? 'text-[#E80645] dark:text-rose-400 font-bold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -41,7 +41,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onGoToAdmin })
           }}
           className={`flex flex-col items-center gap-1 p-1 min-w-[56px] min-h-[44px] justify-center transition-colors cursor-pointer ${
             activeTab === 'shop'
-              ? 'text-blue-600 dark:text-blue-400 font-bold'
+              ? 'text-[#E80645] dark:text-rose-400 font-bold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -57,14 +57,14 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onGoToAdmin })
           }}
           className={`relative flex flex-col items-center gap-1 p-1 min-w-[56px] min-h-[44px] justify-center transition-colors cursor-pointer ${
             activeTab === 'wishlist'
-              ? 'text-blue-600 dark:text-blue-400 font-bold'
+              ? 'text-[#E80645] dark:text-rose-400 font-bold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
           <div className="relative">
             <Heart className="w-5 h-5" />
             {wishlist.length > 0 && (
-              <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-rose-600 text-white text-[9px] font-bold flex items-center justify-center tabular-nums">
+              <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-[#E80645] text-white text-[9px] font-bold flex items-center justify-center tabular-nums">
                 {wishlist.length}
               </span>
             )}
@@ -80,7 +80,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onGoToAdmin })
           <div className="relative">
             <ShoppingBag className="w-5 h-5" />
             {totalCartCount > 0 && (
-              <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-blue-600 text-white text-[9px] font-bold flex items-center justify-center tabular-nums">
+              <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-[#E80645] text-white text-[9px] font-bold flex items-center justify-center tabular-nums">
                 {totalCartCount}
               </span>
             )}
@@ -96,7 +96,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onGoToAdmin })
           }}
           className={`flex flex-col items-center gap-1 p-1 min-w-[56px] min-h-[44px] justify-center transition-colors cursor-pointer ${
             activeTab === 'account'
-              ? 'text-blue-600 dark:text-blue-400 font-bold'
+              ? 'text-[#E80645] dark:text-rose-400 font-bold'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
