@@ -1601,11 +1601,25 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     });
   };
 
-  const formatPrice = (priceToman: number, _priceUSD?: number) => {
-    if (lang === 'fa') {
-      return `${priceToman.toLocaleString('fa-IR')} تومان`;
+  const formatPrice = (priceToman: any, _priceUSD?: number) => {
+    let numeric = 0;
+    if (typeof priceToman === 'number' && !isNaN(priceToman)) {
+      numeric = priceToman;
+    } else if (priceToman && typeof priceToman === 'object') {
+      if (typeof priceToman.total === 'number') {
+        numeric = priceToman.total;
+      } else if (typeof priceToman.subtotal === 'number') {
+        numeric = priceToman.subtotal;
+      }
+    } else if (typeof priceToman === 'string') {
+      const parsed = parseFloat(priceToman);
+      if (!isNaN(parsed)) numeric = parsed;
     }
-    return `${priceToman.toLocaleString('en-US')} Toman`;
+
+    if (lang === 'fa') {
+      return `${numeric.toLocaleString('fa-IR')} تومان`;
+    }
+    return `${numeric.toLocaleString('en-US')} Toman`;
   };
 
   const recentlyViewed = useMemo(() => {

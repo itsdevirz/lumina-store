@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { CATEGORIES } from '../../data/products';
+import { LuminaLogo } from '../LuminaLogo';
 
 interface TopCommandBarProps {
   onToggleMobileSidebar: () => void;
@@ -109,6 +110,14 @@ export const TopCommandBar: React.FC<TopCommandBarProps> = ({
         >
           <Menu className="w-4 h-4" />
         </button>
+
+        {/* Mobile Brand Mark */}
+        <div
+          onClick={() => setActiveTab('home')}
+          className="md:hidden flex items-center shrink-0 cursor-pointer"
+        >
+          <LuminaLogo variant="symbol" size="sm" />
+        </div>
 
         {/* Clean Breadcrumb Trail */}
         <nav className="flex items-center gap-1.5 text-xs font-medium text-zinc-400 overflow-hidden whitespace-nowrap">

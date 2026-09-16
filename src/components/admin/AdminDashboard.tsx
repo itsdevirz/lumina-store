@@ -188,7 +188,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const lowStock = stats?.lowStockProducts || 0;
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'} font-sans flex`} dir="rtl">
+    <div className={`min-h-screen ${darkMode ? 'dark bg-[#09090B] text-zinc-100' : 'bg-[#FAFAFA] text-zinc-900'} font-sans flex antialiased selection:bg-[#62DB00]/30 selection:text-white`} dir="rtl">
       {/* Sidebar */}
       <AdminSidebar
         currentTab={currentTab}

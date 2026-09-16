@@ -49,12 +49,12 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <header className="sticky top-0 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-20 bg-white/90 dark:bg-[#09090B]/90 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800/80 px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
       {/* Right side: Mobile Menu Button & Search */}
       <div className="flex items-center gap-3 flex-1 max-w-md">
         <button
           onClick={onToggleMobileMenu}
-          className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          className="lg:hidden p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -64,10 +64,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             type="text"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            placeholder="جستجوی سریع محصولات، سفارش‌ها، کاربران..."
-            className="w-full pr-9 pl-4 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+            placeholder="جستجوی سفارش‌ها، محصولات، کاربران..."
+            className="w-full pr-9 pl-4 py-2 text-xs rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-hidden focus:border-[#62DB00] focus:ring-1 focus:ring-[#62DB00] transition-all"
           />
-          <Search className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
+          <Search className="w-4 h-4 text-zinc-400 absolute right-3 top-2.5" />
         </div>
       </div>
 
@@ -76,19 +76,19 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         {/* Storefront live view button */}
         <button
           onClick={onViewStore}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-indigo-500 hover:text-indigo-600 transition-all"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-xs font-bold text-zinc-700 dark:text-zinc-200 hover:border-[#62DB00] hover:text-[#62DB00] transition-all cursor-pointer"
         >
-          <ExternalLink className="w-3.5 h-3.5 text-emerald-500" />
-          <span>مشاهده فروشگاه</span>
+          <ExternalLink className="w-3.5 h-3.5 text-[#62DB00]" />
+          <span>ویترین فروشگاه</span>
         </button>
 
         {/* Theme toggle */}
         <button
           onClick={onToggleTheme}
           title={theme === 'dark' ? 'حالت روشن' : 'حالت تاریک'}
-          className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          className="p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
         >
-          {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+          {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-zinc-700" />}
         </button>
 
         {/* Notifications Dropdown */}
@@ -98,24 +98,24 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               setIsNotifOpen(!isNotifOpen);
               setIsProfileOpen(false);
             }}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 relative transition-colors"
+            className="p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 relative transition-colors cursor-pointer"
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 bg-indigo-600 text-white rounded-full text-[9px] font-black flex items-center justify-center animate-pulse">
+              <span className="absolute top-1 right-1 w-4 h-4 bg-[#62DB00] text-black rounded-full text-[9px] font-black flex items-center justify-center animate-pulse">
                 {unreadCount}
               </span>
             )}
           </button>
 
           {isNotifOpen && (
-            <div className="absolute left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-3 z-50">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+            <div className="absolute left-0 sm:right-auto mt-2 w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 shadow-2xl p-3 z-50">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-100 dark:border-zinc-800">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-black text-slate-900 dark:text-white">اعلان‌های سیستم</span>
+                  <span className="text-xs font-black text-zinc-900 dark:text-white">اعلان‌های سیستم</span>
                   {unreadCount > 0 && (
-                    <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-bold px-2 py-0.5 rounded-full">
-                      {unreadCount} خوانده نشده
+                    <span className="text-[10px] bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30 font-bold px-2 py-0.5 rounded-full font-mono">
+                      {unreadCount} جدید
                     </span>
                   )}
                 </div>
@@ -123,7 +123,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                 {unreadCount > 0 && (
                   <button
                     onClick={onMarkAllRead}
-                    className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 font-bold"
+                    className="text-[11px] text-[#62DB00] hover:underline flex items-center gap-1 font-bold cursor-pointer"
                   >
                     <CheckCheck className="w-3.5 h-3.5" />
                     <span>خواندن همه</span>
@@ -131,9 +131,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                 )}
               </div>
 
-              <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60 my-1">
+              <div className="max-h-80 overflow-y-auto divide-y divide-zinc-100 dark:divide-zinc-800/60 my-1">
                 {notifications.length === 0 ? (
-                  <div className="py-6 text-center text-xs text-slate-400">اعلانی وجود ندارد.</div>
+                  <div className="py-6 text-center text-xs text-zinc-400">اعلانی وجود ندارد.</div>
                 ) : (
                   notifications.map(n => (
                     <div
@@ -141,22 +141,22 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                       onClick={() => onMarkNotificationRead(n.id)}
                       className={`p-2.5 rounded-xl cursor-pointer transition-colors flex items-start gap-2.5 ${
                         n.read
-                          ? 'opacity-70 hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                          : 'bg-indigo-50/50 dark:bg-indigo-950/30 hover:bg-indigo-50 dark:hover:bg-indigo-950/50'
+                          ? 'opacity-65 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
+                          : 'bg-zinc-100/70 dark:bg-zinc-900/60 hover:bg-zinc-100 dark:hover:bg-zinc-900'
                       }`}
                     >
-                      <div className="mt-0.5 p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 shrink-0">
-                        {n.type === 'order' && <ShoppingBag className="w-3.5 h-3.5 text-indigo-500" />}
+                      <div className="mt-0.5 p-1.5 rounded-lg bg-zinc-200/80 dark:bg-zinc-800 shrink-0">
+                        {n.type === 'order' && <ShoppingBag className="w-3.5 h-3.5 text-[#62DB00]" />}
                         {n.type === 'stock' && <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />}
                         {n.type === 'user' && <User className="w-3.5 h-3.5 text-emerald-500" />}
                       </div>
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{n.title}</p>
-                          <span className="text-[10px] text-slate-400">{n.time}</span>
+                          <p className="text-xs font-bold text-zinc-900 dark:text-white truncate">{n.title}</p>
+                          <span className="text-[10px] text-zinc-400 font-mono">{n.time}</span>
                         </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">
+                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
                           {n.message}
                         </p>
                       </div>
@@ -175,37 +175,37 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               setIsProfileOpen(!isProfileOpen);
               setIsNotifOpen(false);
             }}
-            className="flex items-center gap-2 p-1 pl-2.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="flex items-center gap-2 p-1 pl-2.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <img
               src={adminUser?.avatar || '/images/products/photo-1534528741775-53994a69daeb.jpg'}
               alt=""
-              className="w-7 h-7 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+              className="w-7 h-7 rounded-lg object-cover ring-1 ring-zinc-300 dark:ring-zinc-700"
             />
-            <span className="hidden md:inline text-xs font-bold text-slate-700 dark:text-slate-200">
+            <span className="hidden md:inline text-xs font-bold text-zinc-700 dark:text-zinc-200">
               {adminUser?.name || 'مدیر لومینا'}
             </span>
           </button>
 
           {isProfileOpen && (
-            <div className="absolute left-0 mt-2 w-52 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-2 z-50">
-              <div className="p-2 border-b border-slate-100 dark:border-slate-800">
-                <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{adminUser?.name}</p>
-                <p className="text-[10px] text-slate-400 truncate">{adminUser?.email}</p>
+            <div className="absolute left-0 mt-2 w-52 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 shadow-xl p-2 z-50">
+              <div className="p-2 border-b border-zinc-100 dark:border-zinc-800">
+                <p className="text-xs font-bold text-zinc-900 dark:text-white truncate">{adminUser?.name}</p>
+                <p className="text-[10px] text-zinc-400 truncate font-mono">{adminUser?.email}</p>
               </div>
 
               <div className="py-1 space-y-1">
                 <button
                   onClick={onViewStore}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 font-medium cursor-pointer"
                 >
-                  <ExternalLink className="w-3.5 h-3.5 text-emerald-500" />
+                  <ExternalLink className="w-3.5 h-3.5 text-[#62DB00]" />
                   <span>مشاهده فروشگاه</span>
                 </button>
 
                 <button
                   onClick={onLogout}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-bold"
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-rose-500 hover:bg-rose-500/10 font-bold cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>خروج از حساب مدیریت</span>

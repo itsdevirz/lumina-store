@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useStore } from '../../context/StoreContext';
-import { ModernSidebar } from './ModernSidebar';
-import { TopCommandBar } from './TopCommandBar';
+import { ModernHeader } from '../ModernHeader';
+import { MobileBottomNav } from '../MobileBottomNav';
+import { SearchModal } from '../SearchModal';
 import { CommandPalette } from '../CommandPalette';
 import { KeyboardShortcutsModal } from '../KeyboardShortcutsModal';
 
@@ -28,8 +29,7 @@ export const AppShell: React.FC<AppShellProps> = ({
     openFestivalPage
   } = useStore();
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState<boolean>(false);
 
@@ -55,13 +55,20 @@ export const AppShell: React.FC<AppShellProps> = ({
         return;
       }
 
+      // ⌘F / /: Search Modal
+      if (e.key === '/' && !isInput) {
+        e.preventDefault();
+        setIsSearchModalOpen(true);
+        return;
+      }
+
       if (isInput) return;
 
       // ESC: Close open modals
       if (e.key === 'Escape') {
         setIsCommandPaletteOpen(false);
         setIsShortcutsModalOpen(false);
-        setIsMobileSidebarOpen(false);
+        setIsSearchModalOpen(false);
         return;
       }
 
@@ -156,34 +163,30 @@ export const AppShell: React.FC<AppShellProps> = ({
   }, [handleKeyDown]);
 
   return (
-    <div className="min-h-screen flex bg-white dark:bg-[#09090B] text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-150 antialiased selection:bg-indigo-500/20 selection:text-indigo-500">
-      {/* Compact Modern Sidebar (Linear Style) */}
-      <ModernSidebar
-        isCollapsed={isSidebarCollapsed}
-        onToggleCollapse={() => setIsSidebarCollapsed(prev => !prev)}
-        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
-        onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
+    <div className="min-h-screen flex flex-col bg-white dark:bg-[#09090B] text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-150 antialiased selection:bg-[#62DB00]/30 selection:text-black">
+      {/* Modern Flagship Header with Glass Blur & Mega Menu */}
+      <ModernHeader
         onGoToAdmin={onGoToAdmin}
+        onOpenSearchModal={() => setIsSearchModalOpen(true)}
         onOpenSeoInspector={onOpenSeoInspector}
-        mobileOpen={isMobileSidebarOpen}
-        onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
 
       {/* Main Workspace Frame */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Command & Navigation Area */}
-        <TopCommandBar
-          onToggleMobileSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
-          onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
-          onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
-          onGoToAdmin={onGoToAdmin}
-        />
+      <main className="flex-1 overflow-x-hidden pb-16 md:pb-0 focus:outline-none">
+        {children}
+      </main>
 
-        {/* Large Content Workspace */}
-        <main className="flex-1 overflow-x-hidden focus:outline-none">
-          {children}
-        </main>
-      </div>
+      {/* Mobile Bottom Thumb Navigation */}
+      <MobileBottomNav
+        onOpenSearch={() => setIsSearchModalOpen(true)}
+        onGoToAdmin={onGoToAdmin}
+      />
+
+      {/* Global Interactive Search Modal */}
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+      />
 
       {/* Command Palette (⌘K) */}
       <CommandPalette

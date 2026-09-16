@@ -485,17 +485,22 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
       {/* View Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-            مدیریت محصولات فروشگاه
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white">
+              مدیریت محصولات فروشگاه
+            </h1>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30">
+              INVENTORY
+            </span>
+          </div>
+          <p className="text-xs text-zinc-400 mt-1">
             ایجاد، ویرایش، کنترل موجودی انبار، قیمت‌گذاری و وضعیت عرضه کالاها در دیتابیس
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-black shadow-lg shadow-[#62DB00]/15 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>افزودن محصول جدید</span>
@@ -503,7 +508,7 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
+      <div className="p-4 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
           {/* Search Query */}
           <div className="relative lg:col-span-2">
@@ -512,9 +517,9 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="جستجو با نام، برند یا کد SKU..."
-              className="w-full pr-9 pl-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:border-indigo-500 transition-all"
+              className="w-full pr-9 pl-3 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-hidden focus:border-[#62DB00] transition-all"
             />
-            <Search className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
+            <Search className="w-4 h-4 text-zinc-400 absolute right-3 top-2.5" />
           </div>
 
           {/* Category Filter */}
@@ -522,12 +527,12 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-hidden focus:border-indigo-500"
+              className="w-full px-3 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-200 focus:outline-hidden focus:border-[#62DB00] cursor-pointer"
             >
               <option value="all">همه دسته‌بندی‌ها</option>
               {(availableCategories.length > 0 ? availableCategories : CATEGORIES).map(c => (
                 <option key={c.id} value={c.slug || c.id}>
-                  {c.parentId ? `  └── ${c.nameFa}` : `● ${c.nameFa}`}
+                  {c.parentId ? `  └── ${c.nameFa}` : `● ${c.nameFa}`}
                 </option>
               ))}
             </select>
@@ -538,7 +543,7 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
             <select
               value={selectedStatus}
               onChange={e => setSelectedStatus(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-hidden focus:border-indigo-500"
+              className="w-full px-3 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-200 focus:outline-hidden focus:border-[#62DB00] cursor-pointer"
             >
               <option value="all">همه وضعیت‌ها</option>
               <option value="active">فقط فعال</option>
@@ -551,7 +556,7 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
             <select
               value={selectedStock}
               onChange={e => setSelectedStock(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-hidden focus:border-indigo-500"
+              className="w-full px-3 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-200 focus:outline-hidden focus:border-[#62DB00] cursor-pointer"
             >
               <option value="all">همه موجودی‌ها</option>
               <option value="in_stock">موجود در انبار</option>
@@ -563,13 +568,13 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
       </div>
 
       {/* Products Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#121215] rounded-2xl border border-zinc-200 dark:border-zinc-800/90 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-right text-xs">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-bold">
+              <tr className="bg-zinc-50 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 text-zinc-400 font-bold">
                 <th className="py-4 pr-6">کالا</th>
-                <th className="py-4 px-3">کد SKU</th>
+                <th className="py-4 px-3 font-mono">کد SKU</th>
                 <th className="py-4 px-3">دسته‌بندی</th>
                 <th className="py-4 px-3">قیمت واحد</th>
                 <th className="py-4 px-3">موجودی</th>
@@ -577,50 +582,50 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                 <th className="py-4 pl-6 text-center">عملیات</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium">
+            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/60 font-medium">
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-zinc-400">
                     در حال دریافت محصولات از دیتابیس...
                   </td>
                 </tr>
               ) : paginatedProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-zinc-400">
                     محصولی با این مشخصات یافت نشد.
                   </td>
                 </tr>
               ) : (
                 paginatedProducts.map(p => (
-                  <tr key={p.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                  <tr key={p.id} className="hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30 transition-colors">
                     <td className="py-4 pr-6">
                       <div className="flex items-center gap-3">
                         <img
                           src={p.images?.[0] || '/images/products/photo-1526170375885-4d8ecf77b99f.jpg'}
                           alt=""
-                          className="w-12 h-12 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
+                          className="w-12 h-12 rounded-xl object-cover ring-1 ring-zinc-200 dark:ring-zinc-800 shrink-0"
                         />
                         <div className="min-w-0">
-                          <p className="font-bold text-slate-900 dark:text-white truncate max-w-xs">
+                          <p className="font-bold text-zinc-900 dark:text-white truncate max-w-xs">
                             {p.nameFa}
                           </p>
-                          <p className="text-[11px] text-slate-400 truncate">{p.brand}</p>
+                          <p className="text-[11px] text-zinc-400 truncate">{p.brand}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 px-3 font-mono text-slate-600 dark:text-slate-300 font-bold">
+                    <td className="py-4 px-3 font-mono text-zinc-600 dark:text-zinc-300 font-bold">
                       {p.sku || '-'}
                     </td>
-                    <td className="py-4 px-3 text-slate-600 dark:text-slate-400">
+                    <td className="py-4 px-3 text-zinc-600 dark:text-zinc-400">
                       {p.categoryFa || p.category}
                     </td>
                     <td className="py-4 px-3">
                       <div>
-                        <span className="font-bold text-slate-900 dark:text-white">
+                        <span className="font-bold text-zinc-900 dark:text-white font-mono">
                           {formatTomans(p.price)}
                         </span>
                         {p.originalPrice && p.originalPrice > p.price && (
-                          <span className="block text-[10px] text-slate-400 line-through">
+                          <span className="block text-[10px] text-zinc-400 line-through font-mono">
                             {formatTomans(p.originalPrice)}
                           </span>
                         )}
@@ -628,15 +633,15 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     </td>
                     <td className="py-4 px-3">
                       {p.stock === 0 ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
                           ناموجود
                         </span>
                       ) : p.stock <= 5 ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400">
-                          {formatNumber(p.stock)} عدد (محدود)
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                          {formatNumber(p.stock)} عدد (رو به اتمام)
                         </span>
                       ) : (
-                        <span className="font-bold text-slate-700 dark:text-slate-300">
+                        <span className="font-bold text-zinc-700 dark:text-zinc-300 font-mono">
                           {formatNumber(p.stock)} عدد
                         </span>
                       )}
@@ -644,10 +649,10 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     <td className="py-4 px-3">
                       <button
                         onClick={() => handleToggleStatus(p)}
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all ${
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
                           p.isActive
-                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 hover:bg-emerald-200'
-                            : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200'
+                            ? 'bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30 hover:bg-[#62DB00]/25'
+                            : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200'
                         }`}
                       >
                         {p.isActive ? (

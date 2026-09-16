@@ -83,17 +83,22 @@ export const CouponsView: React.FC = () => {
       {/* View Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-            کدهای تخفیف و جشنواره‌ها
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white">
+              کدهای تخفیف و جشنواره‌ها
+            </h1>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30">
+              PROMOTIONS
+            </span>
+          </div>
+          <p className="text-xs text-zinc-400 mt-1">
             تعریف و نظارت بر کوپن‌های تخفیف درصدی، سقف مجاز و محدودیت استفاده مشتریان
           </p>
         </div>
 
         <button
           onClick={() => setIsCreateOpen(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-black shadow-lg shadow-[#62DB00]/15 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>ایجاد کد تخفیف جدید</span>
@@ -105,49 +110,49 @@ export const CouponsView: React.FC = () => {
         {coupons.map(c => (
           <div
             key={c.id}
-            className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4"
+            className="p-5 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-4"
           >
             <div className="flex items-center justify-between">
-              <span className="font-mono text-base font-black px-3 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+              <span className="font-mono text-base font-black px-3 py-1 rounded-xl bg-[#62DB00]/10 text-[#62DB00] border border-[#62DB00]/25">
                 {c.code}
               </span>
               <button
                 onClick={() => handleToggle(c.id)}
-                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold cursor-pointer ${
                   c.isActive
-                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                    : 'bg-slate-100 text-slate-500 dark:bg-slate-800'
+                    ? 'bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30'
+                    : 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700'
                 }`}
               >
                 {c.isActive ? 'فعال' : 'غیرفعال'}
               </button>
             </div>
 
-            <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+            <div className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-300">
               <div className="flex justify-between">
-                <span className="text-slate-400">میزان تخفیف:</span>
-                <span className="font-bold text-slate-900 dark:text-white">{c.discountPercent}٪</span>
+                <span className="text-zinc-400">میزان تخفیف:</span>
+                <span className="font-bold text-zinc-900 dark:text-white font-mono">{c.discountPercent}٪</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">حداقل خرید:</span>
-                <span className="font-bold">{formatTomans(c.minPurchase)}</span>
+                <span className="text-zinc-400">حداقل خرید:</span>
+                <span className="font-bold font-mono">{formatTomans(c.minPurchase)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">انقضا:</span>
-                <span className="font-bold">{c.expiresAt}</span>
+                <span className="text-zinc-400">انقضا:</span>
+                <span className="font-bold font-mono">{c.expiresAt}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">تعداد استفاده:</span>
-                <span className="font-bold">
+                <span className="text-zinc-400">تعداد استفاده:</span>
+                <span className="font-bold font-mono">
                   {formatNumber(c.usageCount)} از {formatNumber(c.maxUsage)}
                 </span>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
-              <div className="h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+            <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800">
+              <div className="h-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
                 <div
-                  className="h-full bg-indigo-600 rounded-full"
+                  className="h-full bg-[#62DB00] rounded-full"
                   style={{ width: `${Math.min(100, (c.usageCount / c.maxUsage) * 100)}%` }}
                 />
               </div>

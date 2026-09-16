@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Lock, User, ArrowRight, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Lock, User, ArrowLeft, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
 import { AdminUser } from '../../types/admin';
+import { LuminaLogo } from '../LuminaLogo';
 
 interface AdminLoginProps {
   onLoginSuccess: (admin: AdminUser, token: string) => void;
@@ -62,10 +63,12 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
         throw new Error(apiErrorMessage);
       }
 
-      // If backend was not reached or returned HTML (e.g. running on static web host / cPanel without Node.js):
-      // Verify built-in admin credentials gracefully so admin is NEVER locked out!
+      // Built-in admin credentials fallback
       const trimmedUser = username.trim().toLowerCase();
-      if ((trimmedUser === 'admin' || trimmedUser === 'admin@luminastore.ir') && (password === 'admin123' || password === 'admin')) {
+      if (
+        (trimmedUser === 'admin' || trimmedUser === 'admin@luminastore.ir') &&
+        (password === 'admin123' || password === 'admin')
+      ) {
         const fallbackAdmin: AdminUser = {
           id: 'adm-01',
           name: 'مدیر ارشد لومینا',
@@ -109,33 +112,42 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
       localStorage.setItem('lumina_admin_user', JSON.stringify(mockAdmin));
       onLoginSuccess(mockAdmin, 'jwt_admin_lumina_secret_session_token');
       setIsLoading(false);
-    }, 400);
+    }, 350);
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 relative overflow-hidden font-sans" dir="rtl">
-      {/* Subtle Background Glow */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
+    <div
+      className="min-h-screen bg-[#09090B] text-zinc-100 flex items-center justify-center p-4 relative overflow-hidden font-sans selection:bg-[#62DB00]/30 selection:text-white"
+      dir="rtl"
+    >
+      {/* Subtle Ambient Radial Lighting */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] bg-[#62DB00]/6 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
-        {/* Top Header info */}
+        {/* Top Header branding */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400 mb-4 shadow-xl shadow-indigo-600/10">
-            <ShieldCheck className="w-8 h-8" />
+          <div className="inline-flex items-center justify-center mb-5">
+            <LuminaLogo variant="full" size="md" />
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
-            سامانه مدیریت لومینا استور
+
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#62DB00]/10 border border-[#62DB00]/25 text-[#62DB00] text-[11px] font-mono tracking-wider font-bold mb-3">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>ENTERPRISE CONTROL PLANE</span>
+          </div>
+
+          <h1 className="text-xl font-black text-white tracking-tight">
+            سامانه مدیریت مرکزی لومینا
           </h1>
-          <p className="text-xs text-slate-400 mt-2">
-            ورود ایمن به پنل کنترل، آمار و مدیریت محصولات
+          <p className="text-xs text-zinc-400 mt-1">
+            دسترسی به بخش مدیریت کاتالوگ، انبار، سفارش‌ها و مانیتورینگ زنده
           </p>
         </div>
 
         {/* Login Box */}
-        <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/40">
+        <div className="bg-[#121215] border border-zinc-800/90 rounded-2xl p-6 sm:p-7 shadow-2xl">
           {error && (
-            <div className="mb-5 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2.5">
+            <div className="mb-5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2.5">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -143,8 +155,8 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                نام کاربری مدیر
+              <label className="block text-xs font-bold text-zinc-300 mb-1.5">
+                نام کاربری یا ایمیل مدیریت
               </label>
               <div className="relative">
                 <input
@@ -153,15 +165,15 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   placeholder="admin"
-                  className="w-full pl-4 pr-10 py-3 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-xs placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden transition-all"
+                  className="w-full pl-4 pr-10 py-2.5 rounded-xl bg-zinc-900/90 border border-zinc-800 text-white text-xs placeholder-zinc-500 focus:border-[#62DB00] focus:ring-1 focus:ring-[#62DB00] outline-hidden transition-all"
                 />
-                <User className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5" />
+                <User className="w-4 h-4 text-zinc-500 absolute right-3.5 top-3" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 mb-1.5">
-                کلمه عبور
+              <label className="block text-xs font-bold text-zinc-300 mb-1.5">
+                کلمه عبور امنیتی
               </label>
               <div className="relative">
                 <input
@@ -170,41 +182,40 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-4 pr-10 py-3 rounded-xl bg-slate-900/80 border border-slate-700 text-white text-xs placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden transition-all"
+                  className="w-full pl-4 pr-10 py-2.5 rounded-xl bg-zinc-900/90 border border-zinc-800 text-white text-xs placeholder-zinc-500 focus:border-[#62DB00] focus:ring-1 focus:ring-[#62DB00] outline-hidden transition-all"
                 />
-                <Lock className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5" />
+                <Lock className="w-4 h-4 text-zinc-500 absolute right-3.5 top-3" />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/40 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full mt-2 py-3 px-4 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#62DB00]/15 cursor-pointer disabled:opacity-50"
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>ورود به پنل مدیریت</span>
-                  <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                  <span>ورود به سامانه مدیریت</span>
+                  <ArrowLeft className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
 
           {/* Quick Demo Button */}
-          <div className="mt-5 pt-5 border-t border-slate-700/60">
+          <div className="mt-5 pt-5 border-t border-zinc-800/80">
             <button
               type="button"
               onClick={handleQuickDemo}
-              className="w-full py-2.5 px-4 rounded-xl border border-indigo-500/30 bg-indigo-950/40 hover:bg-indigo-900/50 text-indigo-300 text-xs font-bold transition-all flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 rounded-xl border border-zinc-700/70 bg-zinc-900 hover:bg-zinc-800/80 text-zinc-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>ورود سریع آزمایشی (بدون نیاز به تایپ)</span>
+              <Sparkles className="w-3.5 h-3.5 text-[#62DB00]" />
+              <span>ورود سریع با کاربر آزمایشی</span>
             </button>
-            <p className="text-[11px] text-slate-400 text-center mt-2.5">
-              نام کاربری پیش‌فرض: <code className="text-slate-300 font-mono">admin</code> | کلمه عبور:{' '}
-              <code className="text-slate-300 font-mono">admin123</code>
+            <p className="text-[11px] text-zinc-400 text-center mt-2.5 font-mono">
+              admin / admin123
             </p>
           </div>
         </div>
@@ -213,10 +224,10 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
         <div className="text-center mt-6">
           <button
             onClick={onBackToStore}
-            className="text-xs text-slate-400 hover:text-white transition-colors inline-flex items-center gap-1.5"
+            className="text-xs text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-1.5 cursor-pointer"
           >
             <span>بازگشت به ویترین فروشگاه</span>
-            <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+            <ArrowLeft className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

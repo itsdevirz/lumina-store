@@ -144,37 +144,37 @@ export const OrderManagementView: React.FC = () => {
     switch (status) {
       case 'paid':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400">
+          <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
             پرداخت شده
           </span>
         );
       case 'processing':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400">
+          <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
             در حال پردازش
           </span>
         );
       case 'shipped':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-400">
+          <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-sky-500/15 text-sky-400 border border-sky-500/30">
             ارسال شده
           </span>
         );
       case 'delivered':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">
+          <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30">
             تحویل داده شده
           </span>
         );
       case 'cancelled':
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400">
+          <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
             لغو شده
           </span>
         );
       default:
         return (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-zinc-500/15 text-zinc-400 border border-zinc-500/30">
             در انتظار پرداخت
           </span>
         );
@@ -187,37 +187,37 @@ export const OrderManagementView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white">
               مدیریت و تعیین وضعیت مرسولات
             </h1>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-              کنترل پنل مدیر
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30">
+              LOGISTICS
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             تعیین وضعیت سفارش‌ها، تخصیص ناوگان پستی، صدور کد رهگیری و بازتاب لحظه‌ای در پنل کاربری خریداران
           </p>
         </div>
       </div>
 
       {/* Filter and Search */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-wrap gap-3 items-center justify-between">
+      <div className="p-4 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs flex flex-wrap gap-3 items-center justify-between">
         <div className="relative flex-1 min-w-[240px]">
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="جستجوی کد سفارش، نام مشتری یا شماره تماس..."
-            className="w-full pr-9 pl-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:border-indigo-500 transition-all"
+            className="w-full pr-9 pl-3 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-hidden focus:border-[#62DB00] transition-all"
           />
-          <Search className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
+          <Search className="w-4 h-4 text-zinc-400 absolute right-3 top-2.5" />
         </div>
 
         <div className="flex items-center gap-2">
           <select
             value={selectedStatus}
             onChange={e => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-hidden focus:border-indigo-500"
+            className="px-3 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-200 focus:outline-hidden focus:border-[#62DB00] cursor-pointer"
           >
             <option value="all">همه وضعیت‌ها</option>
             <option value="paid">پرداخت شده</option>
@@ -230,12 +230,12 @@ export const OrderManagementView: React.FC = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-[#121215] rounded-2xl border border-zinc-200 dark:border-zinc-800/90 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-right text-xs">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-bold">
-                <th className="py-4 pr-6">شماره سفارش</th>
+              <tr className="bg-zinc-50 dark:bg-zinc-900/60 border-b border-zinc-200 dark:border-zinc-800 text-zinc-400 font-bold">
+                <th className="py-4 pr-6 font-mono">شماره سفارش</th>
                 <th className="py-4 px-3">خریدار</th>
                 <th className="py-4 px-3">تاریخ ثبت</th>
                 <th className="py-4 px-3">مبلغ کل</th>

@@ -16,6 +16,7 @@ import {
   Command
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
+import { LuminaLogo } from './LuminaLogo';
 
 interface FooterProps {
   onGoToAdmin?: () => void;
@@ -104,10 +105,7 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
           {/* Brand Info */}
           <div className="md:col-span-4 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-indigo-500" />
-              <span className="font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-100 text-sm">
-                LUMINA TECH
-              </span>
+              <LuminaLogo variant="full" size="md" />
             </div>
             <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-sm">
               {lang === 'fa'
@@ -170,7 +168,7 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
               <li>
                 <button
                   onClick={onGoToAdmin}
-                  className="hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer flex items-center gap-1 text-indigo-600 dark:text-indigo-400 font-medium"
+                  className="hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer flex items-center gap-1 text-[#62DB00] font-medium"
                 >
                   <Terminal className="w-3 h-3" />
                   <span>{lang === 'fa' ? 'کنسول ادمین' : 'Admin Console'}</span>
@@ -209,11 +207,11 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
                 value={newsletterEmail}
                 onChange={e => setNewsletterEmail(e.target.value)}
                 placeholder="dev@domain.com"
-                className="flex-1 px-2.5 py-1.5 rounded-md bg-white dark:bg-[#0C0C0E] border border-zinc-200 dark:border-zinc-800 text-xs font-mono focus:outline-none focus:border-indigo-500"
+                className="flex-1 px-2.5 py-1.5 rounded-md bg-white dark:bg-[#0C0C0E] border border-zinc-200 dark:border-zinc-800 text-xs font-mono focus:outline-none focus:border-[#62DB00]"
               />
               <button
                 type="submit"
-                className="px-3 py-1.5 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium cursor-pointer"
+                className="px-3 py-1.5 rounded-md bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-semibold cursor-pointer transition-colors"
               >
                 {lang === 'fa' ? 'ثبت' : 'Join'}
               </button>

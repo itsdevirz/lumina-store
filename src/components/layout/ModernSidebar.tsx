@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { CATEGORIES } from '../../data/products';
+import { LuminaLogo } from '../LuminaLogo';
 
 interface ModernSidebarProps {
   isCollapsed: boolean;
@@ -97,7 +98,7 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
       id: 'flash',
       label: lang === 'fa' ? 'پیشنهادهای شگفت‌انگیز' : 'Flash Drops',
       icon: Flame,
-      badge: 'Drop',
+      badge: lang === 'fa' ? 'ویژه' : 'Drop',
       badgeColor: 'text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20',
       hotkey: 'G D',
       action: () => {
@@ -180,7 +181,7 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
   const sidebarContent = (
     <aside
       className={`h-full flex flex-col justify-between bg-[#FAFAFA] dark:bg-[#0C0C0E] border-x border-zinc-200 dark:border-zinc-800/80 transition-all duration-200 select-none ${
-        isCollapsed ? 'w-16' : 'w-64'
+        isCollapsed ? 'w-16' : 'w-64 sm:w-70'
       }`}
     >
       {/* Top Workspace Header */}
@@ -193,23 +194,17 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
             }}
             className="flex items-center gap-2.5 cursor-pointer overflow-hidden group"
           >
-            {/* Minimalist Geometric Logo */}
-            <div className="w-7 h-7 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-mono font-bold text-xs shrink-0 tracking-tighter transition-transform group-hover:scale-105">
-              ▲
-            </div>
-            {!isCollapsed && (
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 leading-none">
-                  <span className="font-semibold text-xs text-zinc-900 dark:text-zinc-100 tracking-tight">
-                    Lumina
-                  </span>
-                  <span className="text-[10px] font-mono px-1 py-0.2 rounded border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10">
-                    Live
-                  </span>
-                </div>
-                <p className="text-[10.5px] font-mono text-zinc-400 truncate mt-0.5">
-                  v2.6 • Storefront
-                </p>
+            {/* Official Lumina Logo */}
+            {isCollapsed ? (
+              <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/60 flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
+                <LuminaLogo variant="symbol" size="sm" />
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <LuminaLogo variant="full" size="md" />
+                <span className="text-[10px] font-mono px-1 py-0.2 rounded border border-[#74DB00]/40 text-[#55A800] dark:text-[#74DB00] bg-[#74DB00]/10 font-bold">
+                  PRO
+                </span>
               </div>
             )}
           </div>
@@ -272,9 +267,9 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
                     : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 hover:text-zinc-900 dark:hover:text-zinc-200'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
                   <Icon className="w-4 h-4 shrink-0 text-zinc-500 dark:text-zinc-400" />
-                  {!isCollapsed && <span className="truncate">{item.label}</span>}
+                  {!isCollapsed && <span className="text-xs truncate font-medium">{item.label}</span>}
                 </div>
 
                 {!isCollapsed && (

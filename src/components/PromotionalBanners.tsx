@@ -1,93 +1,121 @@
 import React from 'react';
-import { ArrowLeft, Sparkles, Compass, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Zap, Sparkles } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 
 export const PromotionalBanners: React.FC = () => {
-  const { lang, setActiveTab, setFilters } = useStore();
+  const { lang, setFilters, setActiveTab } = useStore();
+
+  const handleBannerClick = (cat: string, onSaleOnly = false) => {
+    setFilters(prev => ({
+      ...prev,
+      selectedCategory: cat,
+      onSaleOnly,
+      searchQuery: ''
+    }));
+    setActiveTab('shop');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <section className="py-6 sm:py-8 border-t border-slate-200/60 dark:border-slate-800/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-6">
-          
-          {/* Banner 1: Audio & Studio Essentials */}
-          <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 text-white p-4.5 sm:p-7 flex flex-col justify-between min-h-[210px] sm:min-h-[250px] border border-slate-800 shadow-xs group">
-            <img
-              src="/images/products/photo-1546435770-a3e426bf472b.jpg"
-              alt="Audio gear"
-              className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:scale-103 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 select-none">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Banner 1: Audio */}
+        <div
+          onClick={() => handleBannerClick('audio')}
+          className="group relative h-64 rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 p-6 flex flex-col justify-between text-white shadow-md cursor-pointer"
+        >
+          <img
+            src="/images/products/photo-1505740420928-5e560c06d30e.jpg"
+            alt="Audio Studio"
+            className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 group-hover:opacity-50 transition-all duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-            <div className="relative z-10 text-right">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E80645]/90 text-white text-[11px] font-bold mb-2 shadow-xs font-modern">
-                <Sparkles className="w-3 h-3" />
-                <span>{lang === 'fa' ? 'کالکشن ویژه' : 'Special Collection'}</span>
-              </span>
-              <h3 className="text-base sm:text-xl font-black mb-1.5 leading-tight font-modern">
-                {lang === 'fa' ? 'تجهیزات صوتی استودیویی های-فای' : 'Studio-Grade Acoustic Sound'}
-              </h3>
-              <p className="text-slate-300 text-xs sm:text-sm max-w-sm mb-3 leading-relaxed font-normal">
-                {lang === 'fa'
-                  ? 'هدفون‌ها و اسپیکرهای حرفه‌ای با تفکیک فرکانسی دقیق و حذف نویز فعال.'
-                  : 'Studio-grade headphones and wireless audio with acoustic clarity.'}
-              </p>
-            </div>
-
-            <div className="relative z-10 text-right">
-              <button
-                onClick={() => {
-                  setFilters(prev => ({ ...prev, selectedCategory: 'audio' }));
-                  setActiveTab('shop');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs font-modern"
-              >
-                <span>{lang === 'fa' ? 'مشاهده محصولات صوتی' : 'Shop Audio Gear'}</span>
-                <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
-              </button>
-            </div>
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-xs text-[10px] font-mono font-bold tracking-wider">
+              STUDIO SOUND
+            </span>
+            <span className="text-xs font-mono text-[#62DB00] font-bold">UP TO 30% OFF</span>
           </div>
 
-          {/* Banner 2: Minimal Workspace */}
-          <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 text-white p-4.5 sm:p-7 flex flex-col justify-between min-h-[210px] sm:min-h-[250px] border border-slate-800 shadow-xs group">
-            <img
-              src="/images/products/photo-1587829741301-dc798b83add3.jpg"
-              alt="Keyboard"
-              className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:scale-103 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
-
-            <div className="relative z-10 text-right">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-600/90 text-white text-[11px] font-bold mb-2 shadow-xs font-modern">
-                <Compass className="w-3 h-3" />
-                <span>{lang === 'fa' ? 'میز کار ارگونومیک' : 'Productivity Setup'}</span>
-              </span>
-              <h3 className="text-base sm:text-xl font-black mb-1.5 leading-tight font-modern">
-                {lang === 'fa' ? 'چیدمان مینیمال و ارگونومیک محیط کار' : 'Minimalist Desk Setups'}
-              </h3>
-              <p className="text-slate-300 text-xs sm:text-sm max-w-sm mb-3 leading-relaxed font-normal">
-                {lang === 'fa'
-                  ? 'کیبوردهای مکانیکال گسکت‌مانت، پایه‌های چوب گردو و دسک‌پدهای ارگونومیک.'
-                  : 'Gasket-mounted mechanical keyboards and walnut desk organizers.'}
-              </p>
-            </div>
-
-            <div className="relative z-10 text-right">
-              <button
-                onClick={() => {
-                  setFilters(prev => ({ ...prev, selectedCategory: 'workspace' }));
-                  setActiveTab('shop');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs font-modern"
-              >
-                <span>{lang === 'fa' ? 'مشاهده تجهیزات میز کار' : 'Shop Desk Essentials'}</span>
-                <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
-              </button>
+          <div className="relative z-10 text-right rtl:text-right ltr:text-left">
+            <h3 className="text-lg sm:text-xl font-black mb-1">
+              {lang === 'fa' ? 'تجهیزات صوتی حرفه‌ای' : 'Audiophile Studio Gear'}
+            </h3>
+            <p className="text-xs text-zinc-300 line-clamp-1 mb-3">
+              {lang === 'fa' ? 'هدفون‌های Hi-Res با حذف نویز فعال' : 'Hi-Res certified wireless acoustics'}
+            </p>
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#62DB00] group-hover:underline">
+              <span>{lang === 'fa' ? 'مشاهده محصولات' : 'Shop Collection'}</span>
+              {lang === 'fa' ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
             </div>
           </div>
+        </div>
 
+        {/* Banner 2: Workspace Essentials */}
+        <div
+          onClick={() => handleBannerClick('accessories')}
+          className="group relative h-64 rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 p-6 flex flex-col justify-between text-white shadow-md cursor-pointer"
+        >
+          <img
+            src="/images/products/photo-1527864550417-7fd91fc51a46.jpg"
+            alt="Desk Setup"
+            className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 group-hover:opacity-50 transition-all duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-xs text-[10px] font-mono font-bold tracking-wider">
+              WORKSPACE
+            </span>
+            <span className="text-xs font-mono text-sky-400 font-bold">SOLID WALNUT</span>
+          </div>
+
+          <div className="relative z-10 text-right rtl:text-right ltr:text-left">
+            <h3 className="text-lg sm:text-xl font-black mb-1">
+              {lang === 'fa' ? 'اکسسوری‌های ارگونومیک میز' : 'Minimal Desk Setups'}
+            </h3>
+            <p className="text-xs text-zinc-300 line-clamp-1 mb-3">
+              {lang === 'fa' ? 'استندهای چوب گردو و نورپردازی مانیتور' : 'Engineered solid wood monitor stands'}
+            </p>
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-400 group-hover:underline">
+              <span>{lang === 'fa' ? 'مشاهده محصولات' : 'Shop Collection'}</span>
+              {lang === 'fa' ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
+            </div>
+          </div>
+        </div>
+
+        {/* Banner 3: Keyboards & Gaming */}
+        <div
+          onClick={() => handleBannerClick('peripherals')}
+          className="group relative h-64 rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 p-6 flex flex-col justify-between text-white shadow-md cursor-pointer"
+        >
+          <img
+            src="/images/products/photo-1587829741301-dc798b83add3.jpg"
+            alt="Keyboards"
+            className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 group-hover:opacity-50 transition-all duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-xs text-[10px] font-mono font-bold tracking-wider">
+              CUSTOM MECHANICAL
+            </span>
+            <span className="text-xs font-mono text-amber-400 font-bold">HOT-SWAP</span>
+          </div>
+
+          <div className="relative z-10 text-right rtl:text-right ltr:text-left">
+            <h3 className="text-lg sm:text-xl font-black mb-1">
+              {lang === 'fa' ? 'کیبوردهای مکانیکال آلومینیومی' : 'Custom CNC Keyboards'}
+            </h3>
+            <p className="text-xs text-zinc-300 line-clamp-1 mb-3">
+              {lang === 'fa' ? 'سوئیچ‌های روغن‌کاری شده و شاسی ماشین‌کاری' : 'Factory lubed linear & tactile switches'}
+            </p>
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 group-hover:underline">
+              <span>{lang === 'fa' ? 'مشاهده محصولات' : 'Shop Collection'}</span>
+              {lang === 'fa' ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
+            </div>
+          </div>
         </div>
       </div>
     </section>

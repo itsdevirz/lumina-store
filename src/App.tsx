@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { StoreProvider, useStore } from './context/StoreContext';
 import { AppShell } from './components/layout/AppShell';
 import { Hero } from './components/Hero';
+import { TrustBadges } from './components/TrustBadges';
 import { FestivalBanner } from './components/FestivalBanner';
 import { FestivalPage } from './components/FestivalPage';
 import { ProductSlider } from './components/ProductSlider';
 import { FlashSale } from './components/FlashSale';
 import { PromotionalBanners } from './components/PromotionalBanners';
+import { DiscountSection } from './components/DiscountSection';
 import { BestSellers } from './components/BestSellers';
 import { RecentlyViewed } from './components/RecentlyViewed';
 import { ProductListing } from './components/ProductListing';
@@ -24,6 +26,7 @@ import { AdminDashboard } from './components/admin/AdminDashboard';
 import { DynamicSEO } from './components/DynamicSEO';
 import { SeoInspectorModal } from './components/SeoInspectorModal';
 import { SupportChatWidget } from './components/SupportChatWidget';
+import { SiteLoadingScreen } from './components/SiteLoadingScreen';
 
 interface MainContentProps {
   onGoToAdmin: () => void;
@@ -53,9 +56,11 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
           <>
             <FestivalBanner />
             <Hero />
+            <TrustBadges />
             <FlashSale />
             <ProductSlider />
             <PromotionalBanners />
+            <DiscountSection />
             <BestSellers />
             <RecentlyViewed />
           </>
@@ -78,6 +83,9 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
         {/* Developer-Tool Minimal Footer */}
         <Footer onGoToAdmin={onGoToAdmin} onOpenSeoInspector={() => setIsSeoModalOpen(true)} />
       </AppShell>
+
+      {/* Modern Lumina Studio Loading Screen */}
+      <SiteLoadingScreen />
 
       {/* Floating AI Support Chat Widget */}
       <SupportChatWidget />

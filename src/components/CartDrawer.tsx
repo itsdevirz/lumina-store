@@ -216,7 +216,7 @@ export const CartDrawer: React.FC = () => {
                   </div>
                   <div className="flex justify-between font-mono font-semibold text-sm text-zinc-900 dark:text-zinc-100 pt-1">
                     <span>{lang === 'fa' ? 'مبلغ نهایی:' : 'Total:'}</span>
-                    <span>{formatPrice(cartTotal, Math.round(cartTotal / 50000))}</span>
+                    <span>{formatPrice(cartTotal.total, Math.round(cartTotal.total / 50000))}</span>
                   </div>
                 </div>
 
