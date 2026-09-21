@@ -46,23 +46,41 @@ export const UserBehaviorView: React.FC = () => {
         // High-quality fallback behavior data for static / host environments
         setData({
           onlineUsers: 14,
-          pageViewsToday: 1840,
-          cartAdditions: 76,
-          checkoutStarts: 32,
-          completedOrders: 19,
+          dailyVisits: 1840,
+          weeklyVisits: 12450,
+          monthlyVisits: 48900,
           conversionRate: 4.1,
-          bounceRate: 28.4,
-          avgSessionDuration: '3 دقیقه و 45 ثانیه',
-          deviceBreakdown: [
-            { device: 'موبایل', percentage: 68 },
-            { device: 'دسکتاپ', percentage: 27 },
-            { device: 'تبلت', percentage: 5 }
-          ],
+          cartAdditions: 76,
+          successfulPurchases: 19,
+          abandonmentRate: 28.4,
           trafficSources: [
-            { source: 'ورودی مستقیم', percentage: 42 },
-            { source: 'گوگل و موتورهای جستجو', percentage: 38 },
-            { source: 'شبکه‌های اجتماعی (اینستاگرام)', percentage: 15 },
-            { source: 'سایر ارجاع‌دهنده‌ها', percentage: 5 }
+            { name: 'ورودی مستقیم', percent: 42, visits: 772, color: '#62DB00' },
+            { name: 'گوگل و موتورهای جستجو', percent: 38, visits: 699, color: '#3B82F6' },
+            { name: 'شبکه‌های اجتماعی (اینستاگرام)', percent: 15, visits: 276, color: '#EC4899' },
+            { name: 'سایر ارجاع‌دهنده‌ها', percent: 5, visits: 92, color: '#F59E0B' }
+          ],
+          devices: [
+            { name: 'Mobile', percent: 68, count: 1251, color: '#62DB00' },
+            { name: 'Desktop', percent: 27, count: 496, color: '#3B82F6' },
+            { name: 'Tablet', percent: 5, count: 92, color: '#F59E0B' }
+          ],
+          topPages: [
+            { path: '/', title: 'صفحه اصلی فروشگاه', views: 820, bounceRate: '22%' },
+            { path: '/categories', title: 'دسته‌بندی‌ها', views: 430, bounceRate: '18%' },
+            { path: '/bestsellers', title: 'محصولات پرفروش', views: 310, bounceRate: '15%' },
+            { path: '/cart', title: 'سبد خرید', views: 180, bounceRate: '8%' }
+          ],
+          browsers: [
+            { name: 'Chrome', percent: 64 },
+            { name: 'Safari', percent: 24 },
+            { name: 'Firefox', percent: 8 },
+            { name: 'Edge', percent: 4 }
+          ],
+          operatingSystems: [
+            { name: 'Android', percent: 52 },
+            { name: 'iOS', percent: 28 },
+            { name: 'Windows', percent: 16 },
+            { name: 'macOS', percent: 4 }
           ]
         });
       }

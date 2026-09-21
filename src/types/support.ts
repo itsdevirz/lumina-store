@@ -25,11 +25,11 @@ export interface SupportSession {
 
 export interface AgentStatusResponse {
   isOnline: boolean;
-  manualOnline: boolean;
-  isWorkingHours: boolean;
-  workStartHour: number;
-  workEndHour: number;
-  workHoursText: string;
+  manualOnline?: boolean;
+  isWorkingHours?: boolean;
+  workStartHour?: number;
+  workEndHour?: number;
+  workHoursText?: string;
   offlineReason?: 'outside_hours' | 'manual_offline';
   activeSessionsCount: number;
   waitingUsersCount: number;

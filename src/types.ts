@@ -7,6 +7,7 @@ export type VariantType = 'none' | 'color_only' | 'size_only' | 'color_size' | '
 export interface ProductColor {
   id: string;
   name: string;
+  nameFa?: string;
   hex: string;
   image?: string;
   stock?: number;
@@ -51,14 +52,15 @@ export interface Category {
   id: string;
   name: string;
   nameFa: string;
-  slug: string;
+  slug?: string;
   description?: string;
   image?: string;
   icon?: string;
   parentId?: string | null;
-  isActive: boolean;
-  sortOrder: number;
+  isActive?: boolean;
+  sortOrder?: number;
   itemCount?: number;
+  totalProductCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -67,6 +69,8 @@ export interface Product {
   id: string;
   name: string;
   nameFa: string;
+  nameEn?: string;
+  sku?: string;
   brand: string;
   category: string;
   categoryFa: string;
@@ -211,6 +215,7 @@ export interface FestivalProduct {
   discountedPrice: number;
   discountPercent: number;
   festivalStock: number;
+  stock?: number;
   soldInFestival?: number;
   validUntil?: string;
 }
@@ -240,6 +245,7 @@ export interface Festival {
   slogan?: string; // Optional promotional slogan
   sloganEn?: string;
   description?: string;
+  descriptionEn?: string;
   startDate: string;
   endDate: string;
   startTimestamp: number;

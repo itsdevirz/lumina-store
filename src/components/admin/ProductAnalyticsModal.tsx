@@ -708,7 +708,7 @@ export const ProductAnalyticsModal: React.FC<ProductAnalyticsModalProps> = ({
                           />
                         )}
 
-                        {(chartMetric === 'combined' || chartMetric === 'sales') && (
+                        {chartMetric === 'combined' && (
                           <Area
                             type="monotone"
                             dataKey="salesCount"

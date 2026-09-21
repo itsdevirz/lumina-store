@@ -45,8 +45,6 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
     wishlist,
     lang,
     setLang,
-    currency,
-    setCurrency,
     darkMode,
     toggleDarkMode,
     activeTab,
@@ -61,6 +59,7 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
   } = useStore();
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const [currency, setCurrency] = useState<'IRR' | 'USD'>('IRR');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);

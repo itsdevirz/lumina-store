@@ -201,7 +201,7 @@ export const CartDrawer: React.FC = () => {
 
                 {appliedCoupon && (
                   <div className="flex items-center justify-between text-xs font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded">
-                    <span>COUPON: {appliedCoupon.code} (-{appliedCoupon.discountPercent}%)</span>
+                    <span>COUPON: {appliedCoupon.code} (-{(appliedCoupon as any).percent ?? (appliedCoupon as any).discountPercent}%)</span>
                     <button onClick={removeCoupon} className="text-zinc-400 hover:text-rose-500">
                       <X className="w-3 h-3" />
                     </button>

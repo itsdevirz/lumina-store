@@ -218,7 +218,7 @@ interface StoreContextType {
   updateOrderStatus: (
     orderId: string,
     status: Order['status'],
-    extra?: { trackingCode?: string; courierName?: string; estimatedDelivery?: string; adminNote?: string }
+    extra?: { trackingCode?: string; trackingNumber?: string; courierName?: string; courier?: string; estimatedDelivery?: string; adminNote?: string; statusAdminNote?: string }
   ) => Promise<void> | void;
   syncOrdersWithBackend: () => Promise<void>;
   isSyncingOrders: boolean;

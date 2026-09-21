@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component, ErrorInfo, ReactNode } from 'react';
 import { AdminLogin } from './AdminLogin';
 import { AdminSidebar, AdminTab } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
@@ -18,6 +18,52 @@ import { AdminReviews } from './AdminReviews';
 import { AdminSettingsView } from './AdminSettingsView';
 import { AdminNotification, AdminUser, DashboardStats } from '../../types/admin';
 import { useStore } from '../../context/StoreContext';
+import { AlertCircle, RefreshCw } from 'lucide-react';
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class AdminTabErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  public override state: ErrorBoundaryState = { hasError: false, error: null };
+
+  public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Admin Tab Error:', error, errorInfo);
+  }
+
+  public override render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-8 max-w-2xl mx-auto my-12 bg-white dark:bg-[#121215] border border-rose-200 dark:border-rose-900/60 rounded-2xl shadow-xl text-center space-y-4 font-sans">
+          <div className="w-12 h-12 mx-auto rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center">
+            <AlertCircle className="w-6 h-6" />
+          </div>
+          <h2 className="text-lg font-black text-zinc-900 dark:text-white">خطا در بارگذاری این بخش</h2>
+          <p className="text-xs text-zinc-500 leading-relaxed">
+            مشکلی در نمایش این تب رخ داده است. داده‌های اصلی بدون مشکل هستند.
+          </p>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-black transition-all cursor-pointer shadow-md"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>تلاش مجدد و بارگذاری دوباره</span>
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 interface AdminDashboardProps {
   onBackToStore: () => void;
@@ -74,12 +120,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       }
       // Fallback default stats if API is unavailable on static host
       setStats({
-        totalSales: 48500000,
-        totalOrders: 38,
+        totalUsers: 142,
+        newUsersToday: 4,
+        newUsersWeek: 28,
+        newUsersMonth: 95,
+        usersChangeWeek: 12.5,
         totalProducts: 12,
-        totalCustomers: 142,
-        growthRate: 18.5,
-        todaySales: 3200000
+        activeProducts: 10,
+        outOfStockProducts: 1,
+        lowStockProducts: 3,
+        totalOrders: 38,
+        ordersToday: 5,
+        ordersWeek: 24,
+        ordersMonth: 38,
+        ordersChangeWeek: 8.2,
+        totalRevenue: 48500000,
+        salesToday: 3200000,
+        salesWeek: 18400000,
+        salesMonth: 48500000,
+        revenueChangeWeek: 15.4,
+        visitsToday: 340,
+        visitsWeek: 2150,
+        visitsMonth: 8900,
+        visitsChangeWeek: 11.2
       });
     } catch (err) {
       console.error('Error fetching dashboard stats:', err);
@@ -219,65 +282,67 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         />
 
         <main className={`flex-1 ${currentTab === 'support-chat' ? 'overflow-hidden flex flex-col min-h-0' : 'overflow-y-auto'}`}>
-          {currentTab === 'dashboard' && (
-            <DashboardOverview
-              stats={stats}
-              onNavigateTab={setCurrentTab}
-              recentOrders={orders}
-            />
-          )}
+          <AdminTabErrorBoundary key={currentTab}>
+            {currentTab === 'dashboard' && (
+              <DashboardOverview
+                stats={stats}
+                onNavigateTab={setCurrentTab}
+                recentOrders={orders}
+              />
+            )}
 
-          {currentTab === 'support-chat' && <LiveSupportChatView />}
+            {currentTab === 'support-chat' && <LiveSupportChatView />}
 
-          {currentTab === 'festivals' && (
-            <FestivalManagementView
-              onViewStoreFestival={fest => {
-                onBackToStore();
-                window.dispatchEvent(new CustomEvent('lumina_open_festival', { detail: fest }));
-              }}
-            />
-          )}
+            {currentTab === 'festivals' && (
+              <FestivalManagementView
+                onViewStoreFestival={fest => {
+                  onBackToStore();
+                  window.dispatchEvent(new CustomEvent('lumina_open_festival', { detail: fest }));
+                }}
+              />
+            )}
 
-          {currentTab === 'reviews' && <AdminReviews />}
+            {currentTab === 'reviews' && <AdminReviews />}
 
-          {currentTab === 'charts' && <AnalyticsChartsView />}
+            {currentTab === 'charts' && <AnalyticsChartsView />}
 
-          {currentTab === 'products' && (
-            <ProductManagementView
-              key={selectedCategoryFilter}
-              initialCategoryFilter={selectedCategoryFilter}
-              onProductChanged={handleProductChanged}
-            />
-          )}
+            {currentTab === 'products' && (
+              <ProductManagementView
+                key={selectedCategoryFilter}
+                initialCategoryFilter={selectedCategoryFilter}
+                onProductChanged={handleProductChanged}
+              />
+            )}
 
-          {currentTab === 'categories' && (
-            <CategoryManagementView
-              onCategorySelected={catSlug => {
-                setSelectedCategoryFilter(catSlug);
-                setCurrentTab('products');
-              }}
-              onCategoryChanged={handleProductChanged}
-            />
-          )}
+            {currentTab === 'categories' && (
+              <CategoryManagementView
+                onCategorySelected={catSlug => {
+                  setSelectedCategoryFilter(catSlug);
+                  setCurrentTab('products');
+                }}
+                onCategoryChanged={handleProductChanged}
+              />
+            )}
 
-          {currentTab === 'bestsellers' && <BestsellersView />}
+            {currentTab === 'bestsellers' && <BestsellersView />}
 
-          {currentTab === 'orders' && <OrderManagementView />}
+            {currentTab === 'orders' && <OrderManagementView />}
 
-          {currentTab === 'users' && <UserManagementView />}
+            {currentTab === 'users' && <UserManagementView />}
 
-          {currentTab === 'behavior' && <UserBehaviorView />}
+            {currentTab === 'behavior' && <UserBehaviorView />}
 
-          {currentTab === 'reports' && <ReportsView />}
+            {currentTab === 'reports' && <ReportsView />}
 
-          {currentTab === 'coupons' && <CouponsView />}
+            {currentTab === 'coupons' && <CouponsView />}
 
-          {currentTab === 'settings' && (
-            <AdminSettingsView
-              adminUser={adminUser}
-              onUpdateAdminUser={setAdminUser}
-            />
-          )}
+            {currentTab === 'settings' && (
+              <AdminSettingsView
+                adminUser={adminUser}
+                onUpdateAdminUser={setAdminUser}
+              />
+            )}
+          </AdminTabErrorBoundary>
         </main>
       </div>
     </div>

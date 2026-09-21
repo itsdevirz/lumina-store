@@ -10,6 +10,7 @@ import {
   FileSpreadsheet,
   Tag,
   Settings,
+  FolderTree,
   LogOut,
   ExternalLink,
   ChevronLeft,
@@ -29,6 +30,7 @@ export type AdminTab =
   | 'reviews'
   | 'charts'
   | 'products'
+  | 'categories'
   | 'bestsellers'
   | 'orders'
   | 'users'
@@ -91,6 +93,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       badge: lowStockCount > 0 ? `${lowStockCount} هشدار` : undefined,
       badgeColor: 'bg-amber-500/15 text-amber-400 border border-amber-500/30 font-mono'
     },
+    { id: 'categories' as AdminTab, label: 'دسته‌بندی‌ها', icon: FolderTree },
     { id: 'bestsellers' as AdminTab, label: 'محصولات پرفروش', icon: TrendingUp },
     {
       id: 'orders' as AdminTab,

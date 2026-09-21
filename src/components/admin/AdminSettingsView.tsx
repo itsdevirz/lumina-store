@@ -383,13 +383,15 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
             <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
               <span className="text-[11px] text-zinc-400 block mb-1">تعداد محصولات</span>
               <span className="font-bold text-zinc-800 dark:text-zinc-200">
-                {dbStatus?.mysqlCounts ? `${dbStatus.mysqlCounts.products} در MySQL` : `${dbStatus?.memoryCounts.products || 12} قلم`}
+                {dbStatus?.mysqlCounts?.products != null
+                  ? `${dbStatus.mysqlCounts.products} در MySQL`
+                  : `${dbStatus?.memoryCounts?.products ?? 12} قلم`}
               </span>
             </div>
             <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
               <span className="text-[11px] text-zinc-400 block mb-1">سفارشات و مشتریان</span>
               <span className="font-bold text-zinc-800 dark:text-zinc-200">
-                {dbStatus?.memoryCounts.orders || 3} سفارش / {dbStatus?.memoryCounts.users || 5} کاربر
+                {dbStatus?.memoryCounts?.orders ?? 4} سفارش / {dbStatus?.memoryCounts?.users ?? 6} کاربر
               </span>
             </div>
           </div>

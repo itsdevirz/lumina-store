@@ -25,6 +25,7 @@ import { playTactileClick, playNotificationChime } from '../utils/sound';
 
 export type ProductCardVariant =
   | 'standard'
+  | 'grid'
   | 'featured'
   | 'bestseller'
   | 'discount'

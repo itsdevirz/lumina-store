@@ -25,7 +25,8 @@ interface ProductVariantManagerProps {
   customAttributes: ProductAttribute[];
   variants: ProductVariant[];
   basePrice: number;
-  productSku: string;
+  productSku?: string;
+  baseSku?: string;
   onChangeVariantType: (type: VariantType) => void;
   onChangeColors: (colors: ProductColor[]) => void;
   onChangeSizes: (sizes: string[]) => void;

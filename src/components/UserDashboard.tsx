@@ -52,7 +52,7 @@ export const UserDashboard: React.FC = () => {
   } = useStore();
 
   const [activeSection, setActiveSection] = useState<'overview' | 'orders' | 'addresses' | 'profile'>('overview');
-  const [orderStatusFilter, setOrderStatusFilter] = useState<'all' | 'processing' | 'shipped' | 'delivered'>('all');
+  const [orderStatusFilter, setOrderStatusFilter] = useState<'all' | 'processing' | 'shipped' | 'delivered' | 'cancelled'>('all');
   const [expandedOverviewTimeline, setExpandedOverviewTimeline] = useState<string | null>(null);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [newAddrTitle, setNewAddrTitle] = useState('');
