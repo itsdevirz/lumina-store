@@ -1162,18 +1162,17 @@ apiRouter.get('/database/status', async (req: Request, res: Response) => {
 
 apiRouter.post('/database/sync-to-mysql', async (req: Request, res: Response) => {
   try {
-    const isConnected = mySQLService.isConnectedToMySQL();
-    if (!isConnected) {
-      // Try to connect first
-      const rawDb = dbManager.getRawDatabase();
-      const testResult = await mySQLService.testAndReconnect(req.body, rawDb);
-      if (!testResult.success) {
-        return res.json({
-          success: false,
-          connected: false,
-          message: 'سرور MySQL هنوز در دسترس نیست یا اطلاعات اتصال تنظیم نشده است. داده‌ها در حافظه امن محلی ذخیره هستند. پس از انتقال پروژه به هاست شخصی و وارد کردن مشخصات در فایل .env، دکمه همگام‌سازی را بزنید.'
-        });
-      }
+    const rawDb = dbManager.getRawDatabase();
+    const configOverride = req.body && Object.keys(req.body).length > 0 ? req.body : undefined;
+    const testResult = await mySQLService.testAndReconnect(configOverride, rawDb);
+    if (!testResult.success) {
+      return res.json({
+        success: false,
+        connected: false,
+        message: testResult.message,
+        diagnostic: testResult.diagnostic,
+        error: testResult.error
+      });
     }
 
     const success = await dbManager.syncToMySQL();
@@ -1211,6 +1210,7 @@ apiRouter.post('/database/test-connection', async (req: Request, res: Response) 
       success: result.success,
       connected: result.success,
       message: result.message,
+      diagnostic: result.diagnostic,
       error: result.error
     });
   } catch (err: any) {

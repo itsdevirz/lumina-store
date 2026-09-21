@@ -66,7 +66,7 @@ class MySQLService {
     return this.isConnected;
   }
 
-  public async testAndReconnect(newConfig?: Partial<MySQLConfig>, initialData?: any): Promise<{ success: boolean; message: string; error?: string }> {
+  public async testAndReconnect(newConfig?: Partial<MySQLConfig>, initialData?: any): Promise<{ success: boolean; message: string; error?: string; diagnostic?: string }> {
     if (newConfig) {
       this.config = {
         ...this.config,
@@ -86,13 +86,28 @@ class MySQLService {
       if (success) {
         return {
           success: true,
-          message: `اتصال مستقیم به پایگاه داده MySQL (${this.config.database}) در ${this.config.host}:${this.config.port} با موفقیت برقرار شد.`
+          message: `اتصال به پایگاه داده MySQL (${this.config.database}) در ${this.config.host}:${this.config.port} با موفقیت برقرار شد و آماده همگام‌سازی بلادرنگ است.`
         };
       } else {
+        let diagnostic = '';
+        const errStr = (this.lastError || '').toLowerCase();
+        const host = this.config.host;
+
+        if (host === 'localhost' || host === '127.0.0.1') {
+          diagnostic = 'نکته مهم: آدرس سرور روی «localhost» قرار دارد. چون این برنامه فعلاً در سرور ابری در حال اجراست، برای اتصال زنده به هاست cPanel خود باید آدرس IP سرور یا دامنه سایتتان را در فیلد میزبان (Host) وارد کنید و در cPanel بخش Remote MySQL دسترسی را فعال نمایید. پس از استقرار مستقیم برنامه روی هاست، مقدار localhost به طور خودکار کار خواهد کرد.';
+        } else if (errStr.includes('access denied') || errStr.includes('1045')) {
+          diagnostic = 'خطای دسترسی نام کاربری یا رمز عبور: لطفاً در سی‌پنل (MySQL Databases) بررسی کنید که کاربر به این دیتابیس متصل بوده و تیک دسترسی ALL PRIVILEGES خورده باشد.';
+        } else if (errStr.includes('timedout') || errStr.includes('econnrefused') || errStr.includes('enotfound')) {
+          diagnostic = 'فایروال هاست اجازه اتصال به پورت 3306 را نداد: در سی‌پنل به منوی «Remote MySQL» بروید و در کادر Host علامت % (درصد) را اضافه کنید تا هاست اجازه اتصال راه دور به MySQL را صادر کند.';
+        } else if (errStr.includes('unknown database') || errStr.includes('1049')) {
+          diagnostic = `دیتابیسی با نام «${this.config.database}» در هاست پیدا نشد. لطفاً ابتدا در سی‌پنل این دیتابیس را بسازید.`;
+        }
+
         return {
           success: false,
-          message: `امکان برقراری اتصال با مشخصات فعلی وجود ندارد: ${this.lastError || 'دسترسی رد شد یا سرور در دسترس نیست'}. سیستم از حافظه امن داخلی استفاده می‌کند.`,
-          error: this.lastError || undefined
+          message: this.lastError ? `پاسخ سرور دیتابیس: ${this.lastError}` : 'اتصال برقرار نشد.',
+          error: this.lastError || undefined,
+          diagnostic
         };
       }
     } catch (err: any) {
