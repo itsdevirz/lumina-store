@@ -59,10 +59,12 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
 
   // Custom connection inputs for testing
   const [showDbConfigForm, setShowDbConfigForm] = useState(false);
+  const [configMode, setConfigMode] = useState<'url' | 'manual'>('url');
+  const [dbConnectionUrl, setDbConnectionUrl] = useState('mysql://cp63925519643_dev:Alireza23%21%23@localhost:3306/cp63925519643_online_shop_db');
   const [dbHost, setDbHost] = useState('localhost');
   const [dbPort, setDbPort] = useState('3306');
-  const [dbUser, setDbUser] = useState('cp63925519643_user');
-  const [dbPass, setDbPass] = useState('');
+  const [dbUser, setDbUser] = useState('cp63925519643_dev');
+  const [dbPass, setDbPass] = useState('Alireza23!#');
   const [dbName, setDbName] = useState('cp63925519643_online_shop_db');
 
   const safeFetchJson = async (url: string, options?: RequestInit) => {
@@ -100,6 +102,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
       const data = await safeFetchJson('/api/database/status');
       if (data && typeof data === 'object') {
         setDbStatus(data);
+        if (data.databaseUrl) setDbConnectionUrl(data.databaseUrl);
         if (data.host) setDbHost(data.host);
         if (data.port) setDbPort(String(data.port));
         if (data.database) setDbName(data.database);
@@ -116,17 +119,24 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
     fetchDbStatus();
   }, []);
 
+  const getPayload = () => {
+    if (configMode === 'url') {
+      return { databaseUrl: dbConnectionUrl.trim() };
+    }
+    return {
+      host: dbHost.trim(),
+      port: Number(dbPort) || 3306,
+      user: dbUser.trim(),
+      password: dbPass,
+      database: dbName.trim()
+    };
+  };
+
   const handleTestConnection = async () => {
     setIsLoadingDb(true);
     setDbActionMessage(null);
     try {
-      const body = showDbConfigForm ? {
-        host: dbHost,
-        port: Number(dbPort) || 3306,
-        user: dbUser,
-        password: dbPass,
-        database: dbName
-      } : {};
+      const body = showDbConfigForm ? getPayload() : { databaseUrl: dbConnectionUrl };
 
       const data = await safeFetchJson('/api/database/test-connection', {
         method: 'POST',
@@ -157,13 +167,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
     setIsSyncingDb(true);
     setDbActionMessage(null);
     try {
-      const body = showDbConfigForm ? {
-        host: dbHost,
-        port: Number(dbPort) || 3306,
-        user: dbUser,
-        password: dbPass,
-        database: dbName
-      } : {};
+      const body = showDbConfigForm ? getPayload() : { databaseUrl: dbConnectionUrl };
 
       const data = await safeFetchJson('/api/database/sync-to-mysql', {
         method: 'POST',
@@ -394,8 +398,8 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
               <span className="text-[11px] text-zinc-400 block mb-1">نام دیتابیس</span>
-              <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200">
-                {dbStatus?.database || 'online_shop_db'}
+              <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200 truncate block" title={dbStatus?.database || 'cp63925519643_online_shop_db'}>
+                {dbStatus?.database || 'cp63925519643_online_shop_db'}
               </span>
             </div>
             <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
@@ -448,7 +452,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
               className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium transition-all cursor-pointer"
             >
               <Settings className="w-3.5 h-3.5 text-[#62DB00]" />
-              <span>{showDbConfigForm ? 'بستن فرم اتصال' : 'تغییر مشخصات هاست'}</span>
+              <span>{showDbConfigForm ? 'بستن تنظیمات URL / هاست' : 'تنظیم و تغییر URL دیتابیس'}</span>
             </button>
 
             <a
@@ -461,74 +465,133 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
             </a>
           </div>
 
-          {/* Optional Form for custom credentials testing */}
+          {/* Form for custom credentials / URL testing */}
           {showDbConfigForm && (
-            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 text-xs space-y-3 animate-in fade-in">
-              <h4 className="font-bold text-zinc-800 dark:text-zinc-200">
-                تنظیم موقت مشخصات دیتابیس جهت تست اتصال:
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
-                <div>
-                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">میزبان (Host)</label>
-                  <input
-                    type="text"
-                    value={dbHost}
-                    onChange={e => setDbHost(e.target.value)}
-                    placeholder="localhost یا IP هاست"
-                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">نام دیتابیس (DB Name)</label>
-                  <input
-                    type="text"
-                    value={dbName}
-                    onChange={e => setDbName(e.target.value)}
-                    placeholder="cp63925519643_online_shop_db"
-                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">نام کاربری (DB User)</label>
-                  <input
-                    type="text"
-                    value={dbUser}
-                    onChange={e => setDbUser(e.target.value)}
-                    placeholder="cp63925519643_user"
-                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">رمز عبور (Password)</label>
-                  <input
-                    type="password"
-                    value={dbPass}
-                    onChange={e => setDbPass(e.target.value)}
-                    placeholder="رمز دیتابیس"
-                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">پورت (Port)</label>
-                  <input
-                    type="text"
-                    value={dbPort}
-                    onChange={e => setDbPort(e.target.value)}
-                    placeholder="3306"
-                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
-                  />
-                </div>
-                <div className="flex items-end">
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 text-xs space-y-4 animate-in fade-in">
+              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
+                <h4 className="font-bold text-zinc-800 dark:text-zinc-200">
+                  تنظیم آدرس و مشخصات اتصال به پایگاه داده MySQL:
+                </h4>
+                <div className="flex rounded-lg bg-zinc-200 dark:bg-zinc-800 p-0.5 text-[11px] font-bold">
                   <button
                     type="button"
-                    onClick={handleTestConnection}
-                    disabled={isLoadingDb}
-                    className="w-full py-2 rounded-lg bg-[#62DB00] hover:bg-[#52B800] text-black font-sans font-black text-xs transition-all cursor-pointer disabled:opacity-50"
+                    onClick={() => setConfigMode('url')}
+                    className={`px-3 py-1 rounded-md transition-all ${
+                      configMode === 'url'
+                        ? 'bg-white dark:bg-zinc-900 text-[#62DB00] shadow-xs'
+                        : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                    }`}
                   >
-                    تست اتصال با این مشخصات
+                    آدرس URL اتصال (پیشنهادی)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfigMode('manual')}
+                    className={`px-3 py-1 rounded-md transition-all ${
+                      configMode === 'manual'
+                        ? 'bg-white dark:bg-zinc-900 text-[#62DB00] shadow-xs'
+                        : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                    }`}
+                  >
+                    فیلدهای تفکیک‌شده
                   </button>
                 </div>
               </div>
+
+              {configMode === 'url' ? (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-sans text-[11px] font-bold text-zinc-600 dark:text-zinc-400 mb-1">
+                      آدرس کامل اتصال MySQL (Connection URL):
+                    </label>
+                    <input
+                      type="text"
+                      dir="ltr"
+                      value={dbConnectionUrl}
+                      onChange={e => setDbConnectionUrl(e.target.value)}
+                      placeholder="mysql://user:password@host:3306/dbname"
+                      className="w-full px-3 py-2 font-mono text-xs rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 outline-hidden focus:border-[#62DB00]"
+                    />
+                    <span className="text-[11px] text-zinc-400 block mt-1">
+                      فرمت: <code className="text-[#62DB00]">mysql://user:password@host:3306/dbname</code> (با قابلیت دیکد خودکار کاراکترهای خاص)
+                    </span>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={handleTestConnection}
+                      disabled={isLoadingDb}
+                      className="px-6 py-2 rounded-lg bg-[#62DB00] hover:bg-[#52B800] text-black font-sans font-black text-xs transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      {isLoadingDb ? 'در حال بررسی اتصال...' : 'تست اتصال با این URL'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
+                  <div>
+                    <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">میزبان (Host)</label>
+                    <input
+                      type="text"
+                      value={dbHost}
+                      onChange={e => setDbHost(e.target.value)}
+                      placeholder="localhost یا IP هاست"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">نام دیتابیس (DB Name)</label>
+                    <input
+                      type="text"
+                      value={dbName}
+                      onChange={e => setDbName(e.target.value)}
+                      placeholder="cp63925519643_online_shop_db"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">نام کاربری (DB User)</label>
+                    <input
+                      type="text"
+                      value={dbUser}
+                      onChange={e => setDbUser(e.target.value)}
+                      placeholder="cp63925519643_dev"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">رمز عبور (Password)</label>
+                    <input
+                      type="password"
+                      value={dbPass}
+                      onChange={e => setDbPass(e.target.value)}
+                      placeholder="رمز دیتابیس"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">پورت (Port)</label>
+                    <input
+                      type="text"
+                      value={dbPort}
+                      onChange={e => setDbPort(e.target.value)}
+                      placeholder="3306"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <button
+                      type="button"
+                      onClick={handleTestConnection}
+                      disabled={isLoadingDb}
+                      className="w-full py-2 rounded-lg bg-[#62DB00] hover:bg-[#52B800] text-black font-sans font-black text-xs transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      تست اتصال با مشخصات تفکیک شده
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

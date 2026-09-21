@@ -1131,6 +1131,7 @@ apiRouter.get('/database/status', async (req: Request, res: Response) => {
       host: config.host,
       port: config.port,
       user: config.user,
+      databaseUrl: mySQLService.getDatabaseUrl(false),
       memoryCounts: {
         products: rawDb.products?.length || 0,
         orders: rawDb.orders?.length || 0,
@@ -1142,16 +1143,17 @@ apiRouter.get('/database/status', async (req: Request, res: Response) => {
       mysqlCounts: tableCounts,
       statusMessage: isConnected
         ? `دیتابیس MySQL با نام «${config.database}» متصل است و همگام‌سازی بلادرنگ فعال می‌باشد.`
-        : `سیستم هم‌اکنون در حالت ذخیره‌سازی محلی (فالبک امن) است. در صورت تمایل برای اتصال به MySQL در هاست، مشخصات DB_HOST, DB_USER, DB_PASSWORD را تنظیم نمایید.`
+        : `سیستم هم‌اکنون در حالت ذخیره‌سازی محلی (فالبک امن) است. در صورت تمایل برای اتصال به MySQL در هاست، مشخصات DB_HOST, DB_USER, DB_PASSWORD یا DATABASE_URL را تنظیم نمایید.`
     });
   } catch (err: any) {
     return res.json({
       success: false,
       connected: false,
-      database: 'online_shop_db',
+      database: 'cp63925519643_online_shop_db',
       host: 'localhost',
       port: 3306,
-      user: 'root',
+      user: 'cp63925519643_dev',
+      databaseUrl: 'mysql://cp63925519643_dev:Alireza23%21%23@localhost:3306/cp63925519643_online_shop_db',
       memoryCounts: { products: 12, orders: 4, users: 6, categories: 10, reviews: 6, coupons: 2 },
       mysqlCounts: null,
       statusMessage: 'وضعیت: حالت ذخیره‌سازی محلی فعال است.',
