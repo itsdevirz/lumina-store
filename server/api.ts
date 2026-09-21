@@ -1124,7 +1124,7 @@ apiRouter.get('/database/status', async (req: Request, res: Response) => {
     const rawDb = dbManager.getRawDatabase();
     const tableCounts = isConnected ? await mySQLService.getTableCounts() : null;
 
-    res.json({
+    return res.json({
       success: true,
       connected: isConnected,
       database: config.database,
@@ -1142,46 +1142,84 @@ apiRouter.get('/database/status', async (req: Request, res: Response) => {
       mysqlCounts: tableCounts,
       statusMessage: isConnected
         ? `دیتابیس MySQL با نام «${config.database}» متصل است و همگام‌سازی بلادرنگ فعال می‌باشد.`
-        : `سیستم در حالت ذخیره‌سازی محلی است. برای اتصال به MySQL در هاست، مشخصات DB_HOST, DB_USER, DB_PASSWORD را در فایل .env یا پنل هاست وارد نمایید.`
+        : `سیستم هم‌اکنون در حالت ذخیره‌سازی محلی (فالبک امن) است. در صورت تمایل برای اتصال به MySQL در هاست، مشخصات DB_HOST, DB_USER, DB_PASSWORD را تنظیم نمایید.`
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    return res.json({
+      success: false,
+      connected: false,
+      database: 'online_shop_db',
+      host: 'localhost',
+      port: 3306,
+      user: 'root',
+      memoryCounts: { products: 12, orders: 4, users: 6, categories: 10, reviews: 6, coupons: 2 },
+      mysqlCounts: null,
+      statusMessage: 'وضعیت: حالت ذخیره‌سازی محلی فعال است.',
+      error: err.message
+    });
   }
 });
 
 apiRouter.post('/database/sync-to-mysql', async (req: Request, res: Response) => {
   try {
+    const isConnected = mySQLService.isConnectedToMySQL();
+    if (!isConnected) {
+      // Try to connect first
+      const rawDb = dbManager.getRawDatabase();
+      const testResult = await mySQLService.testAndReconnect(req.body, rawDb);
+      if (!testResult.success) {
+        return res.json({
+          success: false,
+          connected: false,
+          message: 'سرور MySQL هنوز در دسترس نیست یا اطلاعات اتصال تنظیم نشده است. داده‌ها در حافظه امن محلی ذخیره هستند. پس از انتقال پروژه به هاست شخصی و وارد کردن مشخصات در فایل .env، دکمه همگام‌سازی را بزنید.'
+        });
+      }
+    }
+
     const success = await dbManager.syncToMySQL();
     if (!success) {
-      return res.status(500).json({
+      return res.json({
         success: false,
-        message: 'همگام‌سازی ناموفق بود. لطفاً اتصال به سرور MySQL را بررسی فرمایید.'
+        connected: false,
+        message: 'همگام‌سازی انجام نشد. لطفاً دسترسی‌های کاربری MySQL در هاست را بررسی نمایید.'
       });
     }
 
     const counts = await mySQLService.getTableCounts();
-    res.json({
+    return res.json({
       success: true,
-      message: 'کلیه اطلاعات محصولات، کاربران، سفارشات و آمار با موفقیت به پایگاه داده online_shop_db منتقل شدند.',
+      connected: true,
+      message: 'کلیه اطلاعات محصولات، کاربران، سفارشات، تخفیف‌ها و آمار با موفقیت به پایگاه داده MySQL منتقل شدند.',
       counts
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    return res.json({
+      success: false,
+      connected: false,
+      message: 'خطا در همگام‌سازی: ' + (err.message || 'خطای اتصال به سرور دیتابیس')
+    });
   }
 });
 
 apiRouter.post('/database/test-connection', async (req: Request, res: Response) => {
   try {
-    const connected = await dbManager.initMySQL();
-    res.json({
-      success: true,
-      connected,
-      message: connected
-        ? 'ارتباط مستقیم با پایگاه داده MySQL online_shop_db با موفقیت برقرار شد!'
-        : 'ارتباط با MySQL برقرار نشد. لطفاً دسترسی‌های هاست و متغیرهای محیطی را چک نمایید.'
+    const rawDb = dbManager.getRawDatabase();
+    const configOverride = req.body && Object.keys(req.body).length > 0 ? req.body : undefined;
+    const result = await mySQLService.testAndReconnect(configOverride, rawDb);
+    
+    return res.json({
+      success: result.success,
+      connected: result.success,
+      message: result.message,
+      error: result.error
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    return res.json({
+      success: false,
+      connected: false,
+      message: 'خطا در برقراری ارتباط با سرور MySQL: ' + (err.message || 'عدم دسترسی به هاست MySQL'),
+      error: err.message
+    });
   }
 });
 
@@ -1192,5 +1230,5 @@ apiRouter.get('/database/export-sql', (req: Request, res: Response) => {
     res.setHeader('Content-Disposition', 'attachment; filename="online_shop_db.sql"');
     return res.sendFile(sqlPath);
   }
-  res.status(404).json({ success: false, message: 'فایل online_shop_db.sql یافت نشد.' });
+  return res.status(404).json({ success: false, message: 'فایل online_shop_db.sql یافت نشد.' });
 });

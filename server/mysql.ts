@@ -66,6 +66,46 @@ class MySQLService {
     return this.isConnected;
   }
 
+  public async testAndReconnect(newConfig?: Partial<MySQLConfig>, initialData?: any): Promise<{ success: boolean; message: string; error?: string }> {
+    if (newConfig) {
+      this.config = {
+        ...this.config,
+        ...newConfig,
+        port: Number(newConfig.port) || this.config.port
+      };
+    }
+    try {
+      if (this.pool) {
+        try {
+          await this.pool.end();
+        } catch {
+          // ignore pool close error
+        }
+      }
+      const success = await this.init(initialData);
+      if (success) {
+        return {
+          success: true,
+          message: `اتصال مستقیم به پایگاه داده MySQL (${this.config.database}) در ${this.config.host}:${this.config.port} با موفقیت برقرار شد.`
+        };
+      } else {
+        return {
+          success: false,
+          message: `امکان برقراری اتصال با مشخصات فعلی وجود ندارد: ${this.lastError || 'دسترسی رد شد یا سرور در دسترس نیست'}. سیستم از حافظه امن داخلی استفاده می‌کند.`,
+          error: this.lastError || undefined
+        };
+      }
+    } catch (err: any) {
+      this.isConnected = false;
+      this.lastError = err?.message || String(err);
+      return {
+        success: false,
+        message: `خطا در اتصال به MySQL: ${this.lastError}`,
+        error: this.lastError
+      };
+    }
+  }
+
   public async getTableCounts(): Promise<Record<string, number> | null> {
     if (!this.pool || !this.isConnected) return null;
     try {

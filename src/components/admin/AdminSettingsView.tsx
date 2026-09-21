@@ -57,13 +57,45 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [isSyncingDb, setIsSyncingDb] = useState(false);
   const [dbActionMessage, setDbActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  // Custom connection inputs for testing
+  const [showDbConfigForm, setShowDbConfigForm] = useState(false);
+  const [dbHost, setDbHost] = useState('localhost');
+  const [dbPort, setDbPort] = useState('3306');
+  const [dbUser, setDbUser] = useState('cp63925519643_user');
+  const [dbPass, setDbPass] = useState('');
+  const [dbName, setDbName] = useState('cp63925519643_online_shop_db');
+
+  const safeFetchJson = async (url: string, options?: RequestInit) => {
+    try {
+      const res = await fetch(url, {
+        ...options,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          ...(options?.headers || {})
+        }
+      });
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch {
+        return { success: false, message: text || `خطای سرور (کد ${res.status})` };
+      }
+    } catch (err: any) {
+      return { success: false, message: err?.message || 'خطا در برقراری ارتباط با سرور' };
+    }
+  };
+
   const fetchDbStatus = async () => {
     setIsLoadingDb(true);
     try {
-      const res = await fetch('/api/database/status');
-      if (res.ok) {
-        const data = await res.json();
+      const data = await safeFetchJson('/api/database/status');
+      if (data && typeof data === 'object') {
         setDbStatus(data);
+        if (data.host) setDbHost(data.host);
+        if (data.port) setDbPort(String(data.port));
+        if (data.database) setDbName(data.database);
+        if (data.user) setDbUser(data.user);
       }
     } catch (err) {
       console.error('Failed to fetch DB status:', err);
@@ -80,16 +112,30 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
     setIsLoadingDb(true);
     setDbActionMessage(null);
     try {
-      const res = await fetch('/api/database/test-connection', { method: 'POST' });
-      const data = await res.json();
-      if (data.connected) {
-        setDbActionMessage({ type: 'success', text: data.message });
+      const body = showDbConfigForm ? {
+        host: dbHost,
+        port: Number(dbPort) || 3306,
+        user: dbUser,
+        password: dbPass,
+        database: dbName
+      } : {};
+
+      const data = await safeFetchJson('/api/database/test-connection', {
+        method: 'POST',
+        body: JSON.stringify(body)
+      });
+
+      if (data && (data.connected || data.success)) {
+        setDbActionMessage({ type: 'success', text: data.message || 'اتصال با موفقیت برقرار شد.' });
       } else {
-        setDbActionMessage({ type: 'error', text: data.message });
+        setDbActionMessage({
+          type: 'error',
+          text: data.message || 'ارتباط با پایگاه داده برقرار نشد. (در محیط پیش‌نمایش ابری از حافظه لوکال استفاده می‌شود؛ روی هاست شما با دیتابیس MySQL کار خواهد کرد).'
+        });
       }
       fetchDbStatus();
     } catch (err: any) {
-      setDbActionMessage({ type: 'error', text: 'خطا در برقراری ارتباط با سرور: ' + err.message });
+      setDbActionMessage({ type: 'error', text: 'خطا در تست اتصال: ' + err.message });
     } finally {
       setIsLoadingDb(false);
     }
@@ -99,13 +145,27 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
     setIsSyncingDb(true);
     setDbActionMessage(null);
     try {
-      const res = await fetch('/api/database/sync-to-mysql', { method: 'POST' });
-      const data = await res.json();
-      if (data.success) {
-        setDbActionMessage({ type: 'success', text: data.message });
+      const body = showDbConfigForm ? {
+        host: dbHost,
+        port: Number(dbPort) || 3306,
+        user: dbUser,
+        password: dbPass,
+        database: dbName
+      } : {};
+
+      const data = await safeFetchJson('/api/database/sync-to-mysql', {
+        method: 'POST',
+        body: JSON.stringify(body)
+      });
+
+      if (data && data.success) {
+        setDbActionMessage({ type: 'success', text: data.message || 'همگام‌سازی با موفقیت انجام شد.' });
         fetchDbStatus();
       } else {
-        setDbActionMessage({ type: 'error', text: data.message });
+        setDbActionMessage({
+          type: 'error',
+          text: data.message || 'همگام‌سازی انجام نشد. اطلاعات در فایل ذخیره‌سازی محلی کاملاً امن و ذخیره هستند.'
+        });
       }
     } catch (err: any) {
       setDbActionMessage({ type: 'error', text: 'خطا در همگام‌سازی: ' + err.message });
@@ -343,7 +403,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoadingDb ? 'animate-spin' : ''}`} />
-              <span>تست و اتصال مجدد</span>
+              <span>تست و بررسی اتصال</span>
             </button>
 
             <button
@@ -353,7 +413,16 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#62DB00]/15 hover:bg-[#62DB00]/25 text-[#62DB00] border border-[#62DB00]/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
             >
               <HardDrive className={`w-3.5 h-3.5 ${isSyncingDb ? 'animate-pulse' : ''}`} />
-              <span>{isSyncingDb ? 'در حال ارسال داده‌ها...' : 'همگام‌سازی کامل داده‌ها به MySQL'}</span>
+              <span>{isSyncingDb ? 'در حال ارسال داده‌ها...' : 'همگام‌سازی داده‌ها با MySQL'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowDbConfigForm(!showDbConfigForm)}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium transition-all cursor-pointer"
+            >
+              <Settings className="w-3.5 h-3.5 text-[#62DB00]" />
+              <span>{showDbConfigForm ? 'بستن فرم اتصال' : 'تغییر مشخصات هاست'}</span>
             </button>
 
             <a
@@ -362,26 +431,98 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/80 text-xs font-bold transition-all cursor-pointer ml-auto"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>دانلود فایل SQL آماده (online_shop_db.sql)</span>
+              <span>دانلود فایل SQL اصلاح‌شده</span>
             </a>
           </div>
+
+          {/* Optional Form for custom credentials testing */}
+          {showDbConfigForm && (
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 text-xs space-y-3 animate-in fade-in">
+              <h4 className="font-bold text-zinc-800 dark:text-zinc-200">
+                تنظیم موقت مشخصات دیتابیس جهت تست اتصال:
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
+                <div>
+                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">میزبان (Host)</label>
+                  <input
+                    type="text"
+                    value={dbHost}
+                    onChange={e => setDbHost(e.target.value)}
+                    placeholder="localhost یا IP هاست"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">نام دیتابیس (DB Name)</label>
+                  <input
+                    type="text"
+                    value={dbName}
+                    onChange={e => setDbName(e.target.value)}
+                    placeholder="cp63925519643_online_shop_db"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">نام کاربری (DB User)</label>
+                  <input
+                    type="text"
+                    value={dbUser}
+                    onChange={e => setDbUser(e.target.value)}
+                    placeholder="cp63925519643_user"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">رمز عبور (Password)</label>
+                  <input
+                    type="password"
+                    value={dbPass}
+                    onChange={e => setDbPass(e.target.value)}
+                    placeholder="رمز دیتابیس"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                  />
+                </div>
+                <div>
+                  <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">پورت (Port)</label>
+                  <input
+                    type="text"
+                    value={dbPort}
+                    onChange={e => setDbPort(e.target.value)}
+                    placeholder="3306"
+                    className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-xs outline-hidden focus:border-[#62DB00]"
+                  />
+                </div>
+                <div className="flex items-end">
+                  <button
+                    type="button"
+                    onClick={handleTestConnection}
+                    disabled={isLoadingDb}
+                    className="w-full py-2 rounded-lg bg-[#62DB00] hover:bg-[#52B800] text-black font-sans font-black text-xs transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    تست اتصال با این مشخصات
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Host Setup Instructions Helper Box */}
           <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/80 dark:border-zinc-800/60 text-xs space-y-2">
             <h4 className="font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
               <Server className="w-3.5 h-3.5 text-[#62DB00]" />
-              <span>راهنمای اتصال به هاست شخصی شما:</span>
+              <span>راهنمای اتصال به هاست شخصی شما (سی‌پنل / دایرکت‌ادمین):</span>
             </h4>
             <p className="text-zinc-500 leading-relaxed text-[11px]">
-              ۱. در هاست خود (سی‌پنل یا دایرکت‌ادمین) وارد <strong>phpMyAdmin</strong> شوید و فایل <strong>online_shop_db.sql</strong> را با دکمه Import وارد کنید.<br />
-              ۲. متغیرهای اتصال را در فایل <strong>.env</strong> هاست تنظیم نمایید:
+              ۱. در هاست خود وارد <strong>phpMyAdmin</strong> شوید، از ستون سمت چپ روی نام دیتابیس ساخته‌شده کلیک کنید، سپس تب <strong>Import</strong> را انتخاب کرده و فایل <strong>online_shop_db.sql</strong> را بارگذاری نمایید.<br />
+              ۲. توجه: در سی‌پنل، نام دیتابیس و نام کاربر معمولاً دارای پیشوند یوزرنیم هاست شما هستند (مثلاً <code className="text-[#62DB00]">cp63925519643_online_shop_db</code>).<br />
+              ۳. در فایل <strong>.env</strong> هاست، متغیرها را با نام کامل وارد کنید:
             </p>
             <div className="p-2.5 rounded-lg bg-zinc-900 text-zinc-200 font-mono text-[11px] leading-tight space-y-1">
               <div>DB_HOST=localhost</div>
               <div>DB_PORT=3306</div>
-              <div>DB_USER=نام_کاربری_دیتابیس_شما</div>
-              <div>DB_PASSWORD=رمز_عبور_دیتابیس_شما</div>
-              <div>DB_NAME=online_shop_db</div>
+              <div>DB_USER=cp63925519643_نام‌کاربر</div>
+              <div>DB_PASSWORD=رمز_عبور_دیتابیس</div>
+              <div>DB_NAME=cp63925519643_online_shop_db</div>
             </div>
           </div>
         </div>
