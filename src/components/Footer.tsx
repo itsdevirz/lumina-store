@@ -12,7 +12,6 @@ import {
   Headphones,
   CheckCircle2,
   Terminal,
-  Globe,
   Command
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
@@ -20,10 +19,9 @@ import { LuminaLogo } from './LuminaLogo';
 
 interface FooterProps {
   onGoToAdmin?: () => void;
-  onOpenSeoInspector?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector }) => {
+export const Footer: React.FC<FooterProps> = ({ onGoToAdmin }) => {
   const { lang, addToast, setActiveTab, setFilters } = useStore();
   const [newsletterEmail, setNewsletterEmail] = useState('');
 
@@ -172,15 +170,6 @@ export const Footer: React.FC<FooterProps> = ({ onGoToAdmin, onOpenSeoInspector 
                 >
                   <Terminal className="w-3 h-3" />
                   <span>{lang === 'fa' ? 'کنسول ادمین' : 'Admin Console'}</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={onOpenSeoInspector}
-                  className="hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer flex items-center gap-1"
-                >
-                  <Globe className="w-3 h-3" />
-                  <span>{lang === 'fa' ? 'آنالایزر سئو' : 'SEO Telemetry'}</span>
                 </button>
               </li>
               <li>

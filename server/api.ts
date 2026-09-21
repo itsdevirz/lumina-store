@@ -4,6 +4,7 @@ import fs from 'fs';
 import crypto from 'crypto';
 import multer from 'multer';
 import { dbManager } from './db';
+import { mySQLService } from './mysql';
 import { TimeRange } from '../src/types/admin';
 import { handleSupportChat, handleSupportChatStream } from './aiSupport';
 
@@ -34,6 +35,162 @@ apiRouter.post('/admin/login', (req: Request, res: Response) => {
     success: false,
     message: 'نام کاربری یا رمز عبور اشتباه است. (پیش‌فرض: admin / admin123)'
   });
+});
+
+// --- Customer / User Authentication & Profile ---
+apiRouter.post('/auth/register', (req: Request, res: Response) => {
+  try {
+    const { name, email, phone, password } = req.body || {};
+    if (!name || !email || !phone) {
+      return res.status(400).json({
+        success: false,
+        error: 'لطفاً نام، ایمیل و شماره همراه را تکمیل فرمایید.'
+      });
+    }
+
+    const user = dbManager.createUser({
+      name,
+      email,
+      phone,
+      password: password || 'password123'
+    });
+
+    const safeUser = { ...user };
+    delete safeUser.password;
+
+    res.status(201).json({
+      success: true,
+      user: safeUser,
+      token: `usr_token_${user.id}_${Date.now()}`
+    });
+  } catch (err: any) {
+    res.status(400).json({
+      success: false,
+      error: err.message || 'خطا در ثبت‌نام کاربر.'
+    });
+  }
+});
+
+apiRouter.post('/auth/login', (req: Request, res: Response) => {
+  const { identifier, password } = req.body || {};
+  if (!identifier) {
+    return res.status(400).json({
+      success: false,
+      error: 'لطفاً ایمیل یا شماره موبایل خود را وارد کنید.'
+    });
+  }
+
+  const user: any = dbManager.findUserByIdentifier(identifier);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      error: 'کاربری با این مشخصات یافت نشد. لطفاً ثبت‌نام فرمایید.'
+    });
+  }
+
+  if (user.status === 'blocked') {
+    return res.status(403).json({
+      success: false,
+      error: 'حساب کاربری شما مسدود شده است. لطفاً با پشتیبانی لومینا تماس بگیرید.'
+    });
+  }
+
+  // If password provided and user has a password, verify
+  if (password && user.password && user.password !== password) {
+    return res.status(401).json({
+      success: false,
+      error: 'رمز عبور وارد شده نادرست است.'
+    });
+  }
+
+  user.lastActive = 'هم‌اکنون';
+  const safeUser = { ...user };
+  delete safeUser.password;
+
+  res.json({
+    success: true,
+    user: safeUser,
+    token: `usr_token_${user.id}_${Date.now()}`
+  });
+});
+
+apiRouter.get('/auth/me', (req: Request, res: Response) => {
+  const userId = (req.query.userId as string) || (req.headers['x-user-id'] as string);
+  if (!userId) {
+    return res.status(401).json({ authenticated: false, error: 'User ID is required' });
+  }
+
+  const user: any = dbManager.getUserById(userId);
+  if (!user) {
+    return res.status(404).json({ authenticated: false, error: 'User not found' });
+  }
+
+  const safeUser = { ...user };
+  delete safeUser.password;
+  res.json({ authenticated: true, user: safeUser });
+});
+
+apiRouter.put('/auth/profile', (req: Request, res: Response) => {
+  const { userId, name, phone, email, avatar } = req.body || {};
+  if (!userId) {
+    return res.status(400).json({ success: false, error: 'شناسه کاربر الزامی است.' });
+  }
+
+  const updated: any = dbManager.updateUserProfile(userId, { name, phone, email, avatar });
+  if (!updated) {
+    return res.status(404).json({ success: false, error: 'کاربر یافت نشد.' });
+  }
+
+  const safeUser = { ...updated };
+  delete safeUser.password;
+  res.json({ success: true, user: safeUser });
+});
+
+apiRouter.post('/auth/addresses', (req: Request, res: Response) => {
+  const { userId, title, city, address, postalCode, isDefault } = req.body || {};
+  if (!userId || !address) {
+    return res.status(400).json({ success: false, error: 'نشانی و شناسه کاربر الزامی است.' });
+  }
+
+  const newAddr = dbManager.addUserAddress(userId, { title, city, address, postalCode, isDefault });
+  if (!newAddr) {
+    return res.status(404).json({ success: false, error: 'کاربر یافت نشد.' });
+  }
+  res.status(201).json({ success: true, address: newAddr });
+});
+
+apiRouter.delete('/auth/addresses/:id', (req: Request, res: Response) => {
+  const userId = (req.query.userId as string) || (req.headers['x-user-id'] as string);
+  if (!userId) {
+    return res.status(400).json({ success: false, error: 'شناسه کاربر الزامی است.' });
+  }
+
+  const ok = dbManager.removeUserAddress(userId, req.params.id);
+  res.json({ success: ok });
+});
+
+apiRouter.put('/auth/addresses/:id/default', (req: Request, res: Response) => {
+  const { userId } = req.body || {};
+  if (!userId) {
+    return res.status(400).json({ success: false, error: 'شناسه کاربر الزامی است.' });
+  }
+
+  const ok = dbManager.setDefaultAddress(userId, req.params.id);
+  res.json({ success: ok });
+});
+
+apiRouter.post('/auth/change-password', (req: Request, res: Response) => {
+  const { userId, oldPassword, newPassword } = req.body || {};
+  if (!userId || !newPassword) {
+    return res.status(400).json({ success: false, error: 'اطلاعات کامل ارسال نشده است.' });
+  }
+
+  try {
+    dbManager.changeUserPassword(userId, oldPassword, newPassword);
+    res.json({ success: true, message: 'رمز عبور با موفقیت بروزرسانی شد.' });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
 });
 
 // --- Dashboard & Analytics ---
@@ -312,6 +469,16 @@ apiRouter.get('/orders', (req: Request, res: Response) => {
   };
   const orders = dbManager.getOrders(filter);
   res.json(orders);
+});
+
+apiRouter.get('/orders/my-orders', (req: Request, res: Response) => {
+  const { userId, email, phone } = req.query;
+  const userOrders = dbManager.getUserOrders({
+    userId: userId as string,
+    email: email as string,
+    phone: phone as string
+  });
+  res.json(userOrders);
 });
 
 apiRouter.get('/orders/:id', (req: Request, res: Response) => {
@@ -947,4 +1114,83 @@ apiRouter.delete('/upload', (req: Request, res: Response) => {
     console.error('Error deleting upload:', err);
     res.status(500).json({ success: false, error: 'خطا در حذف فایل فیزیکی.' });
   }
+});
+
+// --- MySQL Database Management & Synchronization Endpoints ---
+apiRouter.get('/database/status', async (req: Request, res: Response) => {
+  try {
+    const isConnected = mySQLService.isConnectedToMySQL();
+    const config = mySQLService.getConfig();
+    const rawDb = dbManager.getRawDatabase();
+    const tableCounts = isConnected ? await mySQLService.getTableCounts() : null;
+
+    res.json({
+      success: true,
+      connected: isConnected,
+      database: config.database,
+      host: config.host,
+      port: config.port,
+      user: config.user,
+      memoryCounts: {
+        products: rawDb.products?.length || 0,
+        orders: rawDb.orders?.length || 0,
+        users: rawDb.users?.length || 0,
+        categories: rawDb.categories?.length || 0,
+        reviews: rawDb.reviews?.length || 0,
+        coupons: rawDb.coupons?.length || 0
+      },
+      mysqlCounts: tableCounts,
+      statusMessage: isConnected
+        ? `دیتابیس MySQL با نام «${config.database}» متصل است و همگام‌سازی بلادرنگ فعال می‌باشد.`
+        : `سیستم در حالت ذخیره‌سازی محلی است. برای اتصال به MySQL در هاست، مشخصات DB_HOST, DB_USER, DB_PASSWORD را در فایل .env یا پنل هاست وارد نمایید.`
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+apiRouter.post('/database/sync-to-mysql', async (req: Request, res: Response) => {
+  try {
+    const success = await dbManager.syncToMySQL();
+    if (!success) {
+      return res.status(500).json({
+        success: false,
+        message: 'همگام‌سازی ناموفق بود. لطفاً اتصال به سرور MySQL را بررسی فرمایید.'
+      });
+    }
+
+    const counts = await mySQLService.getTableCounts();
+    res.json({
+      success: true,
+      message: 'کلیه اطلاعات محصولات، کاربران، سفارشات و آمار با موفقیت به پایگاه داده online_shop_db منتقل شدند.',
+      counts
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+apiRouter.post('/database/test-connection', async (req: Request, res: Response) => {
+  try {
+    const connected = await dbManager.initMySQL();
+    res.json({
+      success: true,
+      connected,
+      message: connected
+        ? 'ارتباط مستقیم با پایگاه داده MySQL online_shop_db با موفقیت برقرار شد!'
+        : 'ارتباط با MySQL برقرار نشد. لطفاً دسترسی‌های هاست و متغیرهای محیطی را چک نمایید.'
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+apiRouter.get('/database/export-sql', (req: Request, res: Response) => {
+  const sqlPath = path.join(process.cwd(), 'online_shop_db.sql');
+  if (fs.existsSync(sqlPath)) {
+    res.setHeader('Content-Type', 'application/sql');
+    res.setHeader('Content-Disposition', 'attachment; filename="online_shop_db.sql"');
+    return res.sendFile(sqlPath);
+  }
+  res.status(404).json({ success: false, message: 'فایل online_shop_db.sql یافت نشد.' });
 });

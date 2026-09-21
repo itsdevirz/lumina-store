@@ -481,26 +481,26 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 font-sans">
+    <div className="p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 font-sans">
       {/* View Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white">
+            <h1 className="text-lg sm:text-2xl font-black text-zinc-900 dark:text-white">
               مدیریت محصولات فروشگاه
             </h1>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30">
               INVENTORY
             </span>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-[11px] sm:text-xs text-zinc-400 mt-1">
             ایجاد، ویرایش، کنترل موجودی انبار، قیمت‌گذاری و وضعیت عرضه کالاها در دیتابیس
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-black shadow-lg shadow-[#62DB00]/15 transition-all cursor-pointer"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-black shadow-lg shadow-[#62DB00]/15 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>افزودن محصول جدید</span>
@@ -508,8 +508,8 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+      <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-2.5 sm:space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-2.5">
           {/* Search Query */}
           <div className="relative lg:col-span-2">
             <input
@@ -567,8 +567,121 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
         </div>
       </div>
 
-      {/* Products Table */}
-      <div className="bg-white dark:bg-[#121215] rounded-2xl border border-zinc-200 dark:border-zinc-800/90 shadow-xs overflow-hidden">
+      {/* Mobile View: Product Cards */}
+      <div className="block md:hidden space-y-3">
+        {isLoading ? (
+          <div className="p-8 text-center text-xs text-zinc-400 bg-white dark:bg-[#121215] rounded-2xl border border-zinc-200 dark:border-zinc-800">
+            در حال دریافت محصولات از دیتابیس...
+          </div>
+        ) : paginatedProducts.length === 0 ? (
+          <div className="p-8 text-center text-xs text-zinc-400 bg-white dark:bg-[#121215] rounded-2xl border border-zinc-200 dark:border-zinc-800">
+            محصولی با این مشخصات یافت نشد.
+          </div>
+        ) : (
+          paginatedProducts.map(p => (
+            <div
+              key={p.id}
+              className="p-3.5 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-3"
+            >
+              <div className="flex items-start gap-3">
+                <img
+                  src={p.images?.[0] || '/images/products/photo-1526170375885-4d8ecf77b99f.jpg'}
+                  alt=""
+                  className="w-14 h-14 rounded-xl object-cover ring-1 ring-zinc-200 dark:ring-zinc-800 shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="font-black text-xs text-zinc-900 dark:text-white line-clamp-1">
+                      {p.nameFa}
+                    </p>
+                    <span className="font-mono text-[10px] text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded-md shrink-0">
+                      {p.sku || '-'}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 mt-0.5">{p.brand} • {p.categoryFa || p.category}</p>
+                  <div className="flex items-baseline gap-2 mt-1.5">
+                    <span className="font-black text-xs text-zinc-900 dark:text-white font-mono">
+                      {formatTomans(p.price)}
+                    </span>
+                    {p.originalPrice && p.originalPrice > p.price && (
+                      <span className="text-[10px] text-zinc-400 line-through font-mono">
+                        {formatTomans(p.originalPrice)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-zinc-800/70 text-xs">
+                <div>
+                  {p.stock === 0 ? (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                      ناموجود
+                    </span>
+                  ) : p.stock <= 5 ? (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                      {formatNumber(p.stock)} عدد (رو به اتمام)
+                    </span>
+                  ) : (
+                    <span className="font-bold text-zinc-700 dark:text-zinc-300 font-mono text-[11px]">
+                      موجودی: {formatNumber(p.stock)} عدد
+                    </span>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => handleToggleStatus(p)}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
+                    p.isActive
+                      ? 'bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30'
+                      : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700'
+                  }`}
+                >
+                  {p.isActive ? (
+                    <>
+                      <CheckCircle2 className="w-3 h-3" />
+                      <span>فعال در فروشگاه</span>
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-3 h-3" />
+                      <span>غیرفعال</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-3 gap-2 pt-1">
+                <button
+                  onClick={() => setAnalyticsProductId(p.id)}
+                  className="flex items-center justify-center gap-1.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-200/50 dark:border-emerald-800/50 cursor-pointer"
+                >
+                  <BarChart2 className="w-3.5 h-3.5" />
+                  <span>آمار</span>
+                </button>
+                <button
+                  onClick={() => openEditModal(p)}
+                  className="flex items-center justify-center gap-1.5 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-bold border border-indigo-200/50 dark:border-indigo-800/50 cursor-pointer"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                  <span>ویرایش</span>
+                </button>
+                <button
+                  onClick={() => setDeleteConfirmId(p.id)}
+                  className="flex items-center justify-center gap-1.5 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 text-xs font-bold border border-rose-200/50 dark:border-rose-800/50 cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>حذف</span>
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Products Table */}
+      <div className="hidden md:block bg-white dark:bg-[#121215] rounded-2xl border border-zinc-200 dark:border-zinc-800/90 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-right text-xs">
             <thead>
@@ -701,7 +814,7 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
         </div>
 
         {/* Pagination Footer */}
-        <div className="p-4 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+        <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
           <span>
             نمایش {formatNumber(products.length > 0 ? (currentPage - 1) * pageSize + 1 : 0)} تا{' '}
             {formatNumber(Math.min(currentPage * pageSize, products.length))} از مجموع{' '}
@@ -712,17 +825,17 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
             <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-30"
+              className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 disabled:opacity-30 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
-            <span className="px-2 font-bold text-slate-900 dark:text-white">
+            <span className="px-2 font-bold text-zinc-900 dark:text-white">
               صفحه {formatNumber(currentPage)} از {formatNumber(totalPages)}
             </span>
             <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-30"
+              className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 disabled:opacity-30 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -732,39 +845,39 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
 
       {/* Add / Edit Product Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-[#121215] rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Modal Header */}
-            <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+            <div className="p-3.5 sm:p-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-xl bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30 flex items-center justify-center font-bold shrink-0">
                   <Package className="w-4 h-4" />
                 </div>
-                <div>
-                  <h3 className="font-black text-sm text-slate-900 dark:text-white">
+                <div className="min-w-0">
+                  <h3 className="font-black text-xs sm:text-sm text-zinc-900 dark:text-white truncate">
                     {modalMode === 'create' ? 'ثبت محصول جدید در فروشگاه' : 'ویرایش اطلاعات کالا'}
                   </h3>
                   {modalMode === 'edit' && editingId && (
-                    <p className="text-[11px] text-slate-400">شناسه سیستم: {editingId}</p>
+                    <p className="text-[10px] sm:text-[11px] text-zinc-400 truncate">شناسه: {editingId}</p>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 {modalMode === 'edit' && editingId && (
                   <button
                     type="button"
                     onClick={() => setAnalyticsProductId(editingId)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/80 dark:hover:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-[#62DB00]/10 hover:bg-[#62DB00]/20 text-[#62DB00] border border-[#62DB00]/30 transition-colors cursor-pointer"
                   >
                     <BarChart2 className="w-3.5 h-3.5" />
-                    <span>آمار و عملکرد این محصول</span>
+                    <span className="hidden sm:inline">آمار محصول</span>
                   </button>
                 )}
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  className="p-1.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -772,10 +885,10 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
             </div>
 
             {/* Modal Body / Form */}
-            <form onSubmit={handleSaveProduct} className="p-6 overflow-y-auto space-y-5 text-xs">
+            <form onSubmit={handleSaveProduct} className="p-3.5 sm:p-6 overflow-y-auto space-y-4 sm:space-y-5 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     نام محصول (فارسی) *
                   </label>
                   <input
@@ -784,12 +897,12 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.nameFa}
                     onChange={e => setFormState({ ...formState, nameFa: e.target.value })}
                     placeholder="مثال: هدفون نویزکنسلینگ لومینا پرو"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-indigo-500 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 focus:border-[#62DB00] outline-hidden"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     نام لاتین کالا (English)
                   </label>
                   <input
@@ -797,14 +910,14 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.name}
                     onChange={e => setFormState({ ...formState, name: e.target.value })}
                     placeholder="Lumina Horizon ANC Pro"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-indigo-500 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 focus:border-[#62DB00] outline-hidden"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     کد انبار (SKU)
                   </label>
                   <input
@@ -812,12 +925,12 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.sku}
                     onChange={e => setFormState({ ...formState, sku: e.target.value })}
                     placeholder="LUM-AUD-001"
-                    className="w-full px-3 py-2 rounded-xl font-mono bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl font-mono bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     برند محصول
                   </label>
                   <input
@@ -825,22 +938,22 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.brand}
                     onChange={e => setFormState({ ...formState, brand: e.target.value })}
                     placeholder="Lumina Collection"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     دسته‌بندی کالا
                   </label>
                   <select
                     value={formState.category}
                     onChange={e => setFormState({ ...formState, category: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-200 outline-hidden focus:border-[#62DB00]"
                   >
                     {(availableCategories.length > 0 ? availableCategories : CATEGORIES).map(c => (
                       <option key={c.id} value={c.slug || c.id}>
-                        {c.parentId ? `  └── ${c.nameFa}` : `● ${c.nameFa}`}
+                        {c.parentId ? `  └── ${c.nameFa}` : `● ${c.nameFa}`}
                       </option>
                     ))}
                   </select>
@@ -848,9 +961,9 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
               </div>
 
               {/* Pricing & Stock */}
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     قیمت فروش (تومان) *
                   </label>
                   <input
@@ -859,12 +972,12 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.price}
                     onChange={e => setFormState({ ...formState, price: e.target.value })}
                     placeholder="8900000"
-                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     قیمت خط‌خورده (اصلی)
                   </label>
                   <input
@@ -872,12 +985,12 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.originalPrice}
                     onChange={e => setFormState({ ...formState, originalPrice: e.target.value })}
                     placeholder="9900000"
-                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     درصد تخفیف
                   </label>
                   <input
@@ -885,12 +998,12 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.discountPercent}
                     onChange={e => setFormState({ ...formState, discountPercent: e.target.value })}
                     placeholder="10"
-                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     موجودی در انبار *
                   </label>
                   <input
@@ -899,13 +1012,13 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.stock}
                     onChange={e => setFormState({ ...formState, stock: e.target.value })}
                     placeholder="25"
-                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
                   />
                 </div>
               </div>
 
               {/* Product Images: Modern Real File Upload Box */}
-              <div className="p-4 rounded-2xl bg-slate-50/60 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
+              <div className="p-4 rounded-2xl bg-zinc-50/60 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800">
                 <ProductImageUploadBox
                   images={formState.images}
                   primaryImage={formState.primaryImage}
@@ -922,7 +1035,7 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
 
               {/* Description */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                   توضیحات معرفی محصول (فارسی)
                 </label>
                 <textarea
@@ -930,14 +1043,14 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                   value={formState.descriptionFa}
                   onChange={e => setFormState({ ...formState, descriptionFa: e.target.value })}
                   placeholder="توضیحات و ویژگی‌های بارز برای نمایش در صفحه محصول..."
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00]"
                 />
               </div>
 
               {/* Key Features & Tags */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     ویژگی‌های کلیدی (هر مورد در یک خط)
                   </label>
                   <textarea
@@ -945,12 +1058,12 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.featuresFaText}
                     onChange={e => setFormState({ ...formState, featuresFaText: e.target.value })}
                     placeholder="قابلیت نویزکنسلینگ فعال&#10;باتری با دوام ۴۰ ساعت&#10;بدنه آلومینیومی سبک"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     برچسب‌ها و تگ‌های سئو (با ویرگول جدا کنید)
                   </label>
                   <textarea
@@ -958,16 +1071,16 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     value={formState.tagsText}
                     onChange={e => setFormState({ ...formState, tagsText: e.target.value })}
                     placeholder="هدفون, بی‌سیم, نویزکنسلینگ, لومینا"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00]"
                   />
                 </div>
               </div>
 
               {/* Product Variants (Color, Size, Custom Specs & Inventory) */}
-              <div className="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/40">
+              <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800">
                 <div className="flex items-center gap-2 mb-3">
-                  <Palette className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                  <h4 className="font-extrabold text-slate-900 dark:text-white text-sm">
+                  <Palette className="w-4 h-4 text-[#62DB00]" />
+                  <h4 className="font-extrabold text-zinc-900 dark:text-white text-sm">
                     مدیریت رنگ، سایز و تنوع محصول (Variants)
                   </h4>
                 </div>
@@ -988,15 +1101,15 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
               </div>
 
               {/* Status Toggles */}
-              <div className="flex flex-wrap gap-6 pt-2 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex flex-wrap gap-6 pt-2 border-t border-zinc-200 dark:border-zinc-800">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formState.isActive}
                     onChange={e => setFormState({ ...formState, isActive: e.target.checked })}
-                    className="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                    className="rounded text-[#62DB00] focus:ring-[#62DB00] w-4 h-4 accent-[#62DB00]"
                   />
-                  <span className="font-bold text-slate-800 dark:text-slate-200">
+                  <span className="font-bold text-zinc-800 dark:text-zinc-200">
                     وضعیت فعال (قابل رویت و خرید در فروشگاه)
                   </span>
                 </label>
@@ -1006,26 +1119,26 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
                     type="checkbox"
                     checked={formState.isFlashSale}
                     onChange={e => setFormState({ ...formState, isFlashSale: e.target.checked })}
-                    className="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                    className="rounded text-[#62DB00] focus:ring-[#62DB00] w-4 h-4 accent-[#62DB00]"
                   />
-                  <span className="font-bold text-slate-800 dark:text-slate-200">
+                  <span className="font-bold text-zinc-800 dark:text-zinc-200">
                     نمایش در بخش فروش ویژه (Flash Sale)
                   </span>
                 </label>
               </div>
 
               {/* Modal Footer Actions */}
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800"
+                  className="px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
                 >
                   انصراف
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-md shadow-indigo-600/30"
+                  className="px-6 py-2 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black font-black shadow-md shadow-[#62DB00]/20 cursor-pointer"
                 >
                   {modalMode === 'create' ? 'افزودن و انتشار کالا' : 'ذخیره تغییرات محصول'}
                 </button>
@@ -1038,28 +1151,28 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
       {/* Delete Confirmation Dialog */}
       {deleteConfirmId && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 max-w-sm w-full space-y-4 text-center shadow-2xl">
+          <div className="bg-white dark:bg-[#121215] rounded-3xl border border-zinc-200 dark:border-zinc-800 p-6 max-w-sm w-full space-y-4 text-center shadow-2xl">
             <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 mx-auto flex items-center justify-center">
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-base font-black text-slate-900 dark:text-white">
+              <h4 className="text-base font-black text-zinc-900 dark:text-white">
                 آیا از حذف این محصول اطمینان دارید؟
               </h4>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-zinc-400 mt-1">
                 این کالا به طور کامل از انبار و ویترین فروشگاه حذف خواهد شد.
               </p>
             </div>
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold"
+                className="px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 text-xs font-bold cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800"
               >
                 انصراف
               </button>
               <button
                 onClick={handleDelete}
-                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md shadow-rose-600/30"
+                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md shadow-rose-600/30 cursor-pointer"
               >
                 بله، حذف کن
               </button>

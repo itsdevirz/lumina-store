@@ -439,35 +439,35 @@ export const ProductDetailView: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-1.5 text-xs text-slate-400 mb-6 flex-wrap">
+        <nav className="flex items-center gap-1.5 text-xs text-zinc-400 mb-6 flex-wrap">
           <button
             onClick={() => setActiveTab('home')}
-            className="hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
+            className="hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
           >
             {lang === 'fa' ? 'صفحه اصلی' : 'Home'}
           </button>
-          <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-slate-300" />
+          <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-zinc-300 dark:text-zinc-600" />
           <button
             onClick={() => {
               setFilters(prev => ({ ...prev, selectedCategory: 'all' }));
               setActiveTab('shop');
             }}
-            className="hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
+            className="hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
           >
             {lang === 'fa' ? 'فروشگاه' : 'Shop'}
           </button>
-          <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-slate-300" />
+          <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-zinc-300 dark:text-zinc-600" />
           <button
             onClick={() => {
               setFilters(prev => ({ ...prev, selectedCategory: selectedProduct.category }));
               setActiveTab('shop');
             }}
-            className="hover:text-[#E80645] dark:hover:text-rose-400 font-medium text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+            className="hover:text-zinc-900 dark:hover:text-white font-medium text-zinc-600 dark:text-zinc-300 transition-colors cursor-pointer"
           >
             {lang === 'fa' ? selectedProduct.categoryFa : selectedProduct.category}
           </button>
-          <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-slate-300" />
-          <span className="text-slate-900 dark:text-white font-bold truncate max-w-[240px]">
+          <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180 text-zinc-300 dark:text-zinc-600" />
+          <span className="text-zinc-900 dark:text-white font-bold truncate max-w-[240px]">
             {lang === 'fa' ? selectedProduct.nameFa : selectedProduct.name}
           </span>
         </nav>
@@ -479,7 +479,7 @@ export const ProductDetailView: React.FC = () => {
           <div className="lg:col-span-5 flex flex-col gap-3 lg:sticky lg:top-24">
             {/* Main Stage Image (Clean, No-Zoom, High-Fidelity) */}
             <div
-              className="relative aspect-square w-full rounded-2xl overflow-hidden bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs select-none group"
+              className="relative aspect-square w-full rounded-2xl overflow-hidden bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs select-none group img-outline"
             >
               <AnimatePresence mode="wait">
                 <motion.img
@@ -502,7 +502,7 @@ export const ProductDetailView: React.FC = () => {
                       e.stopPropagation();
                       setActiveImageIndex(prev => (prev - 1 + images.length) % images.length);
                     }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 dark:bg-slate-900/90 shadow-md text-slate-800 dark:text-slate-200 flex items-center justify-center hover:scale-105 transition-all z-20 cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 dark:bg-zinc-900/90 shadow-md text-zinc-800 dark:text-zinc-200 flex items-center justify-center hover:scale-105 transition-all z-20 cursor-pointer tactile-press"
                     aria-label="Previous image"
                   >
                     <ChevronRight className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
@@ -512,7 +512,7 @@ export const ProductDetailView: React.FC = () => {
                       e.stopPropagation();
                       setActiveImageIndex(prev => (prev + 1) % images.length);
                     }}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 dark:bg-slate-900/90 shadow-md text-slate-800 dark:text-slate-200 flex items-center justify-center hover:scale-105 transition-all z-20 cursor-pointer"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 dark:bg-zinc-900/90 shadow-md text-zinc-800 dark:text-zinc-200 flex items-center justify-center hover:scale-105 transition-all z-20 cursor-pointer tactile-press"
                     aria-label="Next image"
                   >
                     <ChevronLeft className="w-4 h-4 rtl:rotate-0 ltr:rotate-180" />
@@ -523,7 +523,7 @@ export const ProductDetailView: React.FC = () => {
               {/* Top Bar on Image: Discount Badge & Fullscreen */}
               <div className="absolute top-3 inset-x-3 flex items-center justify-between pointer-events-none z-20">
                 {selectedProduct.discountPercent ? (
-                  <span className="px-3 py-1 rounded-xl bg-[#E80645] text-white text-xs font-black shadow-xs pointer-events-auto">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#62DB00] text-black text-xs font-mono font-bold shadow-xs pointer-events-auto">
                     {lang === 'fa' ? `${selectedProduct.discountPercent}٪ تخفیف ویژه` : `-${selectedProduct.discountPercent}%`}
                   </span>
                 ) : <div />}
@@ -531,7 +531,7 @@ export const ProductDetailView: React.FC = () => {
                 <div className="flex items-center gap-1.5 pointer-events-auto">
                   <button
                     onClick={() => setIsFullscreenImage(true)}
-                    className="p-1.5 rounded-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-700 dark:text-slate-200 shadow-sm hover:bg-white cursor-pointer"
+                    className="p-1.5 rounded-lg bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md text-zinc-700 dark:text-zinc-200 shadow-sm hover:bg-white dark:hover:bg-zinc-800 cursor-pointer"
                     title={lang === 'fa' ? 'تمام‌صفحه' : 'Fullscreen'}
                   >
                     <Maximize2 className="w-4 h-4" />
@@ -547,10 +547,10 @@ export const ProductDetailView: React.FC = () => {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`relative w-16 h-16 rounded-xl overflow-hidden bg-white dark:bg-slate-900 border-2 shrink-0 transition-all cursor-pointer ${
+                    className={`relative w-16 h-16 rounded-xl overflow-hidden bg-white dark:bg-zinc-900 border-2 shrink-0 transition-all cursor-pointer ${
                       activeImageIndex === idx
-                        ? 'border-[#E80645] shadow-xs scale-102'
-                        : 'border-slate-200 dark:border-slate-800 opacity-60 hover:opacity-100'
+                        ? 'border-zinc-900 dark:border-[#62DB00] shadow-xs'
+                        : 'border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100'
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
@@ -565,11 +565,11 @@ export const ProductDetailView: React.FC = () => {
             {/* Brand & Stock Pill */}
             <div className="flex items-center justify-between gap-2 mb-2.5">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[#E80645] dark:text-rose-400 tracking-wider uppercase">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                   {selectedProduct.brand}
                 </span>
-                <span className="text-slate-300 dark:text-slate-700">•</span>
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                <span className="text-zinc-300 dark:text-zinc-700">•</span>
+                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                   {selectedProduct.categoryFa}
                 </span>
               </div>
@@ -581,20 +581,20 @@ export const ProductDetailView: React.FC = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-2 leading-tight font-modern">
+            <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-white mb-2 leading-tight font-modern">
               {lang === 'fa' ? selectedProduct.nameFa : selectedProduct.name}
             </h1>
 
             {/* English Subtitle */}
-            <div className="text-xs font-medium text-slate-400 dir-ltr text-right mb-3">
+            <div className="text-xs font-mono text-zinc-400 dir-ltr text-right mb-3">
               {selectedProduct.name}
             </div>
 
             {/* Rating & Review Counter & Social Summary */}
-            <div className="flex flex-wrap items-center gap-3 text-xs mb-4 pb-3 border-b border-slate-200/80 dark:border-slate-800/80">
+            <div className="flex flex-wrap items-center gap-3 text-xs mb-4 pb-3 border-b border-zinc-200/80 dark:border-zinc-800/80">
               <div className="flex items-center gap-1 text-amber-500">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                <span className="font-black text-slate-900 dark:text-white text-sm tabular-nums">
+                <span className="font-black text-zinc-900 dark:text-white text-sm tabular-nums">
                   {selectedProduct.rating}
                 </span>
               </div>
@@ -800,10 +800,10 @@ export const ProductDetailView: React.FC = () => {
                       id="product-add-to-cart-btn"
                       onClick={handleAddToCart}
                       disabled={isAdding || isOutOfStock}
-                      className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm transition-all select-none ${
+                      className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm transition-all select-none tactile-press ${
                         isOutOfStock
-                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 cursor-not-allowed shadow-none'
-                          : 'bg-[#E80645] hover:bg-[#c7053b] text-white shadow-md shadow-rose-900/20 cursor-pointer active:scale-98'
+                          ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-zinc-700 cursor-not-allowed shadow-none'
+                          : 'bg-[#62DB00] hover:bg-[#52B800] text-black font-black shadow-sm cursor-pointer'
                       }`}
                     >
                       <ShoppingBag className="w-5 h-5" />
@@ -822,10 +822,10 @@ export const ProductDetailView: React.FC = () => {
                     <button
                       onClick={handleBuyNow}
                       disabled={isOutOfStock}
-                      className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm transition-all select-none ${
+                      className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold text-sm transition-all select-none tactile-press ${
                         isOutOfStock
-                          ? 'bg-slate-100 dark:bg-slate-800/60 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-800 cursor-not-allowed'
-                          : 'bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 cursor-pointer active:scale-98 shadow-xs'
+                          ? 'bg-zinc-100 dark:bg-zinc-800/60 text-zinc-400 dark:text-zinc-600 border border-zinc-200 dark:border-zinc-800 cursor-not-allowed'
+                          : 'bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-900 cursor-pointer shadow-xs'
                       }`}
                     >
                       <CreditCard className="w-5 h-5" />
@@ -876,13 +876,13 @@ export const ProductDetailView: React.FC = () => {
         <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-8 mb-12 shadow-xs">
           
           {/* Tabs Navigation Strip */}
-          <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6 overflow-x-auto scrollbar-none">
+          <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-4 mb-6 overflow-x-auto scrollbar-none">
             <button
               onClick={() => setActiveTabNav('specs')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTabNav === 'specs'
-                  ? 'bg-[#E80645] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
             >
               {lang === 'fa' ? 'مشخصات فنی کالا' : 'Specifications'}
@@ -892,8 +892,8 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('features')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTabNav === 'features'
-                  ? 'bg-[#E80645] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
             >
               {lang === 'fa' ? 'ویژگی‌های برجسته' : 'Key Features'}
@@ -903,8 +903,8 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('reviews')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTabNav === 'reviews'
-                  ? 'bg-[#E80645] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
             >
               {lang === 'fa' ? `دیدگاه‌های خریداران (${selectedProduct.reviewsCount})` : `Reviews (${selectedProduct.reviewsCount})`}
@@ -914,8 +914,8 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('analytics')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer inline-flex items-center gap-1.5 ${
                 activeTabNav === 'analytics'
-                  ? 'bg-[#E80645] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
             >
               <BarChart2 className="w-3.5 h-3.5" />
@@ -926,8 +926,8 @@ export const ProductDetailView: React.FC = () => {
               onClick={() => setActiveTabNav('shipping')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 activeTabNav === 'shipping'
-                  ? 'bg-[#E80645] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
               }`}
             >
               {lang === 'fa' ? 'شرایط ارسال و گارانتی' : 'Shipping & Guarantee'}

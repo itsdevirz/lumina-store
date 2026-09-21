@@ -191,52 +191,52 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
     activeIndex === -1 ? 0 : Math.min(100, Math.max(0, (activeIndex / (steps.length - 1)) * 100));
 
   return (
-    <div className="w-full rounded-2xl bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800/90 p-4 sm:p-5 space-y-4 shadow-sm">
+    <div className="w-full rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/90 dark:border-zinc-800/90 p-4 sm:p-5 space-y-4 shadow-xs">
       {/* Header: Current Status Summary & Estimated Delivery */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-100 dark:border-zinc-800/80">
         <div className="flex items-center gap-2.5">
           <div
-            className={`w-3 h-3 rounded-full ${
+            className={`w-2.5 h-2.5 rounded-full ${
               order.status === 'delivered'
-                ? 'bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950/60'
+                ? 'bg-emerald-500 ring-2 ring-emerald-500/20'
                 : order.status === 'shipped'
-                ? 'bg-[#E80645] ring-4 ring-rose-100 dark:ring-rose-950/60 animate-pulse'
+                ? 'bg-[#62DB00] ring-2 ring-[#62DB00]/30 animate-pulse'
                 : order.status === 'processing'
-                ? 'bg-amber-500 ring-4 ring-amber-100 dark:ring-amber-950/60 animate-pulse'
-                : 'bg-[#E80645] ring-4 ring-rose-100 dark:ring-rose-950/60'
+                ? 'bg-amber-500 ring-2 ring-amber-500/20 animate-pulse'
+                : 'bg-zinc-900 dark:bg-zinc-100 ring-2 ring-zinc-500/20'
             }`}
           />
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-slate-900 dark:text-white">
+              <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
                 {lang === 'fa' ? 'وضعیت مرسوله:' : 'Shipment Status:'}
               </span>
               <span
-                className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full ${
+                className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full ${
                   order.status === 'delivered'
                     ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
                     : order.status === 'shipped'
-                    ? 'bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 border border-rose-200 dark:border-rose-900/50'
+                    ? 'bg-[#62DB00]/10 text-[#62DB00] border border-[#62DB00]/30'
                     : order.status === 'processing'
                     ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800'
-                    : 'bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 border border-rose-200 dark:border-rose-900/50'
+                    : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700'
                 }`}
               >
                 {displayStatus}
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 font-medium">
                 {lang === 'fa' ? 'سیستم رهگیری لومینا' : 'Verified by Lumina'}
               </span>
               {order.lastUpdatedByAdmin && (
-                <span className="text-[10px] text-slate-400">
+                <span className="text-[10px] font-mono text-zinc-400">
                   {lang === 'fa' ? `(بروزرسانی: ${order.lastUpdatedByAdmin})` : `(Updated: ${order.lastUpdatedByAdmin})`}
                 </span>
               )}
             </div>
 
             {order.estimatedDelivery && (
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 flex items-center gap-1.5 font-mono">
+                <Clock className="w-3.5 h-3.5 text-zinc-400" />
                 <span>
                   {lang === 'fa'
                     ? `موعد تحویل: ${order.estimatedDelivery}`
@@ -246,8 +246,8 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
             )}
 
             {order.statusAdminNote && (
-              <div className="mt-2 p-2.5 rounded-xl bg-rose-50/70 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900/50 text-[11px] text-rose-950 dark:text-rose-200 flex items-start gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#E80645] dark:text-rose-400 shrink-0 mt-0.5" />
+              <div className="mt-2 p-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[11px] text-zinc-800 dark:text-zinc-200 flex items-start gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#62DB00] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold">{lang === 'fa' ? 'یادداشت ادمین: ' : 'Admin note: '}</span>
                   <span>{order.statusAdminNote}</span>
@@ -259,21 +259,21 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
 
         {/* Tracking Code Badge with Copy */}
         {order.trackingCode && (
-          <div className="flex items-center gap-2 self-start sm:self-auto bg-slate-50 dark:bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80">
-            <span className="text-[11px] text-slate-400">
+          <div className="flex items-center gap-2 self-start sm:self-auto bg-zinc-50 dark:bg-zinc-800/80 px-3 py-1.5 rounded-xl border border-zinc-200/80 dark:border-zinc-700/80">
+            <span className="text-[11px] text-zinc-400">
               {lang === 'fa' ? 'کد رهگیری:' : 'Tracking #:'}
             </span>
-            <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200 select-all">
+            <span className="text-xs font-mono font-bold text-zinc-900 dark:text-zinc-100 select-all">
               {order.trackingCode}
             </span>
             <button
               type="button"
               onClick={() => handleCopyTracking(order.trackingCode || '')}
               title={lang === 'fa' ? 'کپی کد رهگیری' : 'Copy Tracking Code'}
-              className="p-1 rounded-lg text-slate-400 hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
+              className="p-1 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
             >
               {copiedCode ? (
-                <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <CheckCheck className="w-3.5 h-3.5 text-[#62DB00]" />
               ) : (
                 <Copy className="w-3.5 h-3.5" />
               )}
@@ -285,12 +285,12 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
       {/* MODERN HORIZONTAL STEPPER */}
       <div className="relative pt-2 pb-1">
         {/* Background Connecting Line */}
-        <div className="hidden sm:block absolute top-[28px] left-[5%] right-[5%] h-1 bg-slate-100 dark:bg-slate-800 rounded-full z-0">
+        <div className="hidden sm:block absolute top-[28px] left-[5%] right-[5%] h-0.5 bg-zinc-200 dark:bg-zinc-800 rounded-full z-0">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="h-full bg-[#E80645] rounded-full"
+            className="h-full bg-[#62DB00] rounded-full"
           />
         </div>
 
@@ -310,12 +310,12 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                 {/* Node Circle */}
                 <div className="relative shrink-0">
                   <div
-                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
                       isCompleted
-                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
+                        ? 'bg-emerald-600 text-white shadow-xs'
                         : isCurrent
-                        ? 'bg-[#E80645] text-white ring-4 ring-rose-100 dark:ring-rose-950/80 shadow-md shadow-rose-900/20'
-                        : 'bg-slate-100 dark:bg-slate-800/90 text-slate-400 border border-slate-200 dark:border-slate-700'
+                        ? 'bg-zinc-900 dark:bg-[#62DB00] text-white dark:text-black ring-2 ring-[#62DB00]/40 shadow-xs'
+                        : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 border border-zinc-200 dark:border-zinc-700'
                     }`}
                   >
                     {isCompleted ? (
@@ -329,8 +329,8 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                   <span
                     className={`sm:hidden absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center ${
                       isCompleted || isCurrent
-                        ? 'bg-[#E80645] text-white'
-                        : 'bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-[#62DB00] text-black'
+                        : 'bg-zinc-300 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300'
                     }`}
                   >
                     {step.stepNumber}
@@ -343,26 +343,26 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                     <p
                       className={`text-xs font-bold leading-tight ${
                         isCurrent
-                          ? 'text-[#E80645] dark:text-rose-400'
+                          ? 'text-zinc-900 dark:text-white'
                           : isCompleted
-                          ? 'text-slate-900 dark:text-white'
-                          : 'text-slate-400 dark:text-slate-500'
+                          ? 'text-zinc-900 dark:text-zinc-100'
+                          : 'text-zinc-400 dark:text-zinc-500'
                       }`}
                     >
                       {lang === 'fa' ? step.titleFa : step.titleEn}
                     </p>
                     {isCurrent && (
-                      <span className="inline-flex sm:hidden text-[10px] font-bold px-1.5 py-0.2 rounded-sm bg-rose-50 dark:bg-rose-950 text-[#E80645] dark:text-rose-400">
+                      <span className="inline-flex sm:hidden text-[10px] font-mono font-bold px-1.5 py-0.2 rounded-sm bg-[#62DB00]/10 text-[#62DB00]">
                         {lang === 'fa' ? 'مرحله فعلی' : 'Current'}
                       </span>
                     )}
                   </div>
 
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                  <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug">
                     {lang === 'fa' ? step.subtitleFa : step.subtitleEn}
                   </p>
 
-                  <span className="text-[10px] text-slate-400 dark:text-slate-500 block mt-0.5 font-mono">
+                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500 block mt-0.5 font-mono">
                     {isCompleted
                       ? getStepTimestamp(idx)
                       : isCurrent
@@ -377,14 +377,14 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
       </div>
 
       {/* DETAILED CHRONOLOGICAL EVENT LOG (Collapsible) */}
-      <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+      <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between py-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-[#E80645] dark:hover:text-rose-400 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between py-1.5 text-xs font-bold text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
         >
           <div className="flex items-center gap-2">
-            <FileText className="w-3.5 h-3.5 text-[#E80645]" />
+            <FileText className="w-3.5 h-3.5 text-[#62DB00]" />
             <span>
               {isExpanded
                 ? (lang === 'fa' ? 'بستن ریزگزارش و جزئیات رویدادها' : 'Hide Detailed Event Log')
@@ -392,9 +392,9 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
             </span>
           </div>
           {isExpanded ? (
-            <ChevronUp className="w-4 h-4 text-slate-400" />
+            <ChevronUp className="w-4 h-4 text-zinc-400" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <ChevronDown className="w-4 h-4 text-zinc-400" />
           )}
         </button>
 
@@ -407,8 +407,8 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="mt-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800 space-y-3">
-                <div className="relative border-r-2 rtl:border-r-2 ltr:border-l-2 border-slate-200 dark:border-slate-700 pr-4 rtl:pr-4 ltr:pl-4 space-y-4">
+              <div className="mt-3 p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-zinc-800 space-y-3">
+                <div className="relative border-r-2 rtl:border-r-2 ltr:border-l-2 border-zinc-200 dark:border-zinc-700 pr-4 rtl:pr-4 ltr:pl-4 space-y-4">
                   {steps.map((step, idx) => {
                     const isPassed = idx <= activeIndex || order.status === 'delivered';
                     const isCurrent = idx === activeIndex && order.status !== 'delivered';
@@ -417,12 +417,12 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                       <div key={step.key} className="relative">
                         {/* Event Dot */}
                         <div
-                          className={`absolute -right-[23px] rtl:-right-[23px] ltr:-left-[23px] top-1 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${
+                          className={`absolute -right-[23px] rtl:-right-[23px] ltr:-left-[23px] top-1 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-zinc-900 ${
                             isPassed
                               ? isCurrent
-                                ? 'bg-[#E80645] ring-2 ring-rose-200 dark:ring-rose-900 animate-pulse'
+                                ? 'bg-[#62DB00] ring-2 ring-[#62DB00]/30 animate-pulse'
                                 : 'bg-emerald-500'
-                              : 'bg-slate-300 dark:bg-slate-600'
+                              : 'bg-zinc-300 dark:bg-zinc-600'
                           }`}
                         />
 
@@ -431,18 +431,18 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                             <span
                               className={`text-xs font-bold ${
                                 isPassed
-                                  ? 'text-slate-900 dark:text-white'
-                                  : 'text-slate-400 dark:text-slate-500'
+                                  ? 'text-zinc-900 dark:text-white'
+                                  : 'text-zinc-400 dark:text-zinc-500'
                               }`}
                             >
                               {lang === 'fa' ? step.titleFa : step.titleEn}
                             </span>
-                            <span className="text-[10px] font-mono text-slate-400">
+                            <span className="text-[10px] font-mono text-zinc-400">
                               {getStepTimestamp(idx)}
                             </span>
                           </div>
 
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+                          <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-relaxed">
                             {lang === 'fa' ? step.descFa : step.descEn}
                           </p>
                         </div>
@@ -452,9 +452,9 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                 </div>
 
                 {/* Destination & Insurance Info */}
-                <div className="mt-3 pt-3 border-t border-slate-200/60 dark:border-slate-700/60 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+                <div className="mt-3 pt-3 border-t border-zinc-200/60 dark:border-zinc-800/60 flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-500 dark:text-zinc-400">
                   <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
                     <span>
                       {lang === 'fa'
                         ? `مقصد: ${order.shippingAddress?.city} - ${order.shippingAddress?.address}`
@@ -462,7 +462,7 @@ export const OrderStatusTimeline: React.FC<OrderStatusTimelineProps> = ({
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#62DB00] shrink-0" />
                     <span>{lang === 'fa' ? 'بیمه بارنامه رسمی لومینا' : 'Full Value Cargo Insurance'}</span>
                   </div>
                 </div>

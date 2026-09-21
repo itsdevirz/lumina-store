@@ -25,6 +25,7 @@ import {
 } from '../src/types/analytics';
 import { PRODUCTS, CATEGORIES } from '../src/data/products';
 import { SupportSession, SupportMessage } from '../src/types/support';
+import { mySQLService } from './mysql';
 
 const DB_FILE = path.join(process.cwd(), 'server_store_db.json');
 
@@ -1077,6 +1078,33 @@ class DatabaseManager {
 
   constructor() {
     this.db = this.loadFromDisk();
+    // Connect to MySQL (online_shop_db) asynchronously if configured
+    this.initMySQL();
+  }
+
+  public async initMySQL(): Promise<boolean> {
+    try {
+      const connected = await mySQLService.init(this.db);
+      if (connected) {
+        const mysqlData = await mySQLService.loadAllFromMySQL();
+        if (mysqlData && Array.isArray(mysqlData.products) && mysqlData.products.length > 0) {
+          this.db = {
+            ...this.db,
+            ...mysqlData
+          };
+          this.saveToDisk(this.db);
+          console.log(`[DatabaseManager] Successfully synced from MySQL database "online_shop_db". Loaded ${mysqlData.products.length} products, ${mysqlData.orders.length} orders.`);
+        }
+      }
+      return connected;
+    } catch (err) {
+      console.warn('[DatabaseManager] Notice: MySQL database connection deferred/fallback active:', err);
+      return false;
+    }
+  }
+
+  public async syncToMySQL(): Promise<boolean> {
+    return await mySQLService.syncAllToMySQL(this.db);
   }
 
   private loadFromDisk(): StoreDatabase {
@@ -1203,6 +1231,10 @@ class DatabaseManager {
     }
   }
 
+  public getRawDatabase(): StoreDatabase {
+    return this.db;
+  }
+
   // --- Products ---
   public getProducts(filter?: {
     search?: string;
@@ -1312,6 +1344,7 @@ class DatabaseManager {
     });
 
     this.saveToDisk(this.db);
+    mySQLService.saveProduct(newProduct).catch(e => console.warn('[MySQL] saveProduct deferred:', e.message));
     return newProduct;
   }
 
@@ -1345,6 +1378,7 @@ class DatabaseManager {
     }
 
     this.saveToDisk(this.db);
+    mySQLService.saveProduct(this.db.products[idx]).catch(e => console.warn('[MySQL] saveProduct deferred:', e.message));
     return this.db.products[idx];
   }
 
@@ -1353,6 +1387,7 @@ class DatabaseManager {
     if (idx === -1) return false;
     const deleted = this.db.products.splice(idx, 1)[0];
     this.saveToDisk(this.db);
+    mySQLService.deleteProduct(id).catch(e => console.warn('[MySQL] deleteProduct deferred:', e.message));
 
     // Clean up physical uploaded files if not referenced by other products
     if (deleted && Array.isArray(deleted.images)) {
@@ -1465,6 +1500,7 @@ class DatabaseManager {
 
     this.db.categories.push(newCategory);
     this.saveToDisk(this.db);
+    mySQLService.saveCategory(newCategory).catch(e => console.warn('[MySQL] saveCategory deferred:', e.message));
     return newCategory;
   }
 
@@ -1503,6 +1539,7 @@ class DatabaseManager {
     }
 
     this.saveToDisk(this.db);
+    mySQLService.saveCategory(updated).catch(e => console.warn('[MySQL] saveCategory deferred:', e.message));
     return updated;
   }
 
@@ -1664,6 +1701,26 @@ class DatabaseManager {
         order.statusAdminNote = note;
       }
     }
+    const previousStatus = order.status;
+    if (previousStatus !== status && status === 'cancelled') {
+      // Restore stock if order was cancelled
+      if (Array.isArray(order.items)) {
+        for (const item of order.items) {
+          const prod = this.db.products.find(p => p.id === (item.productId || item.id));
+          if (prod) {
+            prod.stock += item.quantity;
+            prod.soldCount = Math.max(0, prod.soldCount - item.quantity);
+            if (item.selectedVariantId && prod.variants) {
+              const variant = prod.variants.find((v: any) => v.id === item.selectedVariantId || v.sku === item.selectedVariantId);
+              if (variant) {
+                variant.stock += item.quantity;
+              }
+            }
+          }
+        }
+      }
+    }
+
     order.lastUpdatedByAdmin = new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit' }).format(new Date());
 
     // Add notification to admin log
@@ -1675,6 +1732,7 @@ class DatabaseManager {
     });
 
     this.saveToDisk(this.db);
+    mySQLService.saveOrder(order).catch(e => console.warn('[MySQL] saveOrder deferred:', e.message));
     return order;
   }
 
@@ -1701,6 +1759,7 @@ class DatabaseManager {
 
     const newOrder = {
       id,
+      userId: orderData.userId || null,
       date: orderData.date || dateFa,
       timestamp: Date.now(),
       customer: orderData.shippingAddress || orderData.customer || { name: 'کاربر لومینا', phone: '۰۹۱۲۰۰۰۰۰۰۰' },
@@ -1726,7 +1785,27 @@ class DatabaseManager {
         if (prod) {
           prod.stock = Math.max(0, prod.stock - item.quantity);
           prod.soldCount += item.quantity;
+          if (item.selectedVariantId && prod.variants) {
+            const variant = prod.variants.find((v: any) => v.id === item.selectedVariantId || v.sku === item.selectedVariantId);
+            if (variant) {
+              variant.stock = Math.max(0, variant.stock - item.quantity);
+            }
+          }
         }
+      }
+    }
+
+    // Update user stats if matching user found
+    if (Array.isArray(this.db.users)) {
+      const matchingUser = this.db.users.find(u =>
+        (orderData.userId && u.id === orderData.userId) ||
+        (u.email && newOrder.customer?.email && u.email.toLowerCase() === newOrder.customer.email.toLowerCase()) ||
+        (u.phone && newOrder.customer?.phone && u.phone === newOrder.customer.phone)
+      );
+      if (matchingUser) {
+        matchingUser.ordersCount = (matchingUser.ordersCount || 0) + 1;
+        matchingUser.totalSpent = (matchingUser.totalSpent || 0) + newOrder.total;
+        matchingUser.lastActive = 'هم‌اکنون';
       }
     }
 
@@ -1740,7 +1819,23 @@ class DatabaseManager {
     });
 
     this.saveToDisk(this.db);
+    mySQLService.saveOrder(newOrder).catch(e => console.warn('[MySQL] saveOrder deferred:', e.message));
     return newOrder;
+  }
+
+  public getUserOrders(criteria: { userId?: string; email?: string; phone?: string }) {
+    const { userId, email, phone } = criteria;
+    if (!userId && !email && !phone) return [];
+    const cleanEmail = email ? email.trim().toLowerCase() : '';
+    const cleanPhone = phone ? phone.trim() : '';
+
+    return (this.db.orders || []).filter(order => {
+      if (userId && (order as any).userId === userId) return true;
+      const cust = order.customer || {};
+      if (cleanEmail && cust.email && cust.email.trim().toLowerCase() === cleanEmail) return true;
+      if (cleanPhone && cust.phone && cust.phone.trim() === cleanPhone) return true;
+      return false;
+    });
   }
 
   // --- Users ---
@@ -1756,6 +1851,149 @@ class DatabaseManager {
       );
     }
     return result;
+  }
+
+  public getUserById(id: string) {
+    return (this.db.users || []).find(u => u.id === id) || null;
+  }
+
+  public findUserByIdentifier(identifier: string) {
+    if (!identifier) return null;
+    const clean = identifier.trim().toLowerCase();
+    return (this.db.users || []).find(u =>
+      u.id === clean ||
+      (u.email && u.email.toLowerCase() === clean) ||
+      (u.phone && u.phone.replace(/\s+/g, '') === clean.replace(/\s+/g, ''))
+    ) || null;
+  }
+
+  public createUser(userData: {
+    name: string;
+    email: string;
+    phone: string;
+    password?: string;
+    avatar?: string;
+    role?: string;
+  }) {
+    if (!this.db.users) this.db.users = [];
+
+    const existing = this.findUserByIdentifier(userData.email) || this.findUserByIdentifier(userData.phone);
+    if (existing) {
+      throw new Error('این ایمیل یا شماره موبایل قبلاً در سیستم ثبت شده است.');
+    }
+
+    const id = `usr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+    const nowFa = new Intl.DateTimeFormat('fa-IR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(new Date());
+
+    const newUser: any = {
+      id,
+      name: userData.name.trim(),
+      email: userData.email.trim().toLowerCase(),
+      phone: userData.phone.trim(),
+      password: userData.password || 'password123',
+      avatar: userData.avatar || '/images/products/photo-1535713875002-d1d0cf377fde.jpg',
+      role: userData.role || 'regular',
+      joinedDate: nowFa,
+      ordersCount: 0,
+      totalSpent: 0,
+      status: 'active',
+      lastActive: 'هم‌اکنون',
+      addresses: [
+        {
+          id: `addr-${Date.now()}`,
+          title: 'آدرس پیش‌فرض',
+          city: 'تهران',
+          address: 'تهران، میدان ونک، خیابان ملاصدرا',
+          postalCode: '۱۹۹۱۸۵۴۳۲۱',
+          isDefault: true
+        }
+      ]
+    };
+
+    this.db.users.unshift(newUser);
+
+    this.addNotification({
+      title: 'کاربر جدید عضو شد',
+      message: `کاربر «${newUser.name}» با شماره ${newUser.phone} در سامانه ثبت‌نام نمود.`,
+      type: 'user',
+      linkTab: 'users'
+    });
+
+    this.saveToDisk(this.db);
+    mySQLService.saveUser(newUser).catch(e => console.warn('[MySQL] saveUser deferred:', e.message));
+    return newUser;
+  }
+
+  public updateUserProfile(id: string, updates: { name?: string; phone?: string; email?: string; avatar?: string }) {
+    const user = this.getUserById(id);
+    if (!user) return null;
+    if (updates.name) user.name = updates.name.trim();
+    if (updates.phone) user.phone = updates.phone.trim();
+    if (updates.email) user.email = updates.email.trim().toLowerCase();
+    if (updates.avatar) user.avatar = updates.avatar;
+    user.lastActive = 'هم‌اکنون';
+    this.saveToDisk(this.db);
+    mySQLService.saveUser(user).catch(e => console.warn('[MySQL] saveUser deferred:', e.message));
+    return user;
+  }
+
+  public addUserAddress(userId: string, address: { title: string; city: string; address: string; postalCode: string; isDefault?: boolean }) {
+    const user: any = this.getUserById(userId);
+    if (!user) return null;
+    if (!Array.isArray(user.addresses)) {
+      user.addresses = [];
+    }
+    const isDefault = address.isDefault || user.addresses.length === 0;
+    if (isDefault) {
+      user.addresses.forEach((a: any) => { a.isDefault = false; });
+    }
+    const newAddr = {
+      id: `addr-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+      title: address.title || 'آدرس تحویل',
+      city: address.city || 'تهران',
+      address: address.address,
+      postalCode: address.postalCode || '',
+      isDefault
+    };
+    user.addresses.push(newAddr);
+    this.saveToDisk(this.db);
+    return newAddr;
+  }
+
+  public removeUserAddress(userId: string, addressId: string) {
+    const user: any = this.getUserById(userId);
+    if (!user || !Array.isArray(user.addresses)) return false;
+    user.addresses = user.addresses.filter((a: any) => a.id !== addressId);
+    if (user.addresses.length > 0 && !user.addresses.some((a: any) => a.isDefault)) {
+      user.addresses[0].isDefault = true;
+    }
+    this.saveToDisk(this.db);
+    return true;
+  }
+
+  public setDefaultAddress(userId: string, addressId: string) {
+    const user: any = this.getUserById(userId);
+    if (!user || !Array.isArray(user.addresses)) return false;
+    user.addresses.forEach((a: any) => {
+      a.isDefault = (a.id === addressId);
+    });
+    this.saveToDisk(this.db);
+    return true;
+  }
+
+  public changeUserPassword(userId: string, oldPass: string, newPass: string) {
+    const user: any = this.getUserById(userId);
+    if (!user) throw new Error('کاربر یافت نشد.');
+    if (user.password && user.password !== oldPass) {
+      throw new Error('رمز عبور فعلی نادرست است.');
+    }
+    user.password = newPass;
+    this.saveToDisk(this.db);
+    return true;
   }
 
   public toggleUserStatus(id: string) {

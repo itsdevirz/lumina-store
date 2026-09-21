@@ -29,17 +29,16 @@ import {
 import { useStore } from '../context/StoreContext';
 import { CATEGORIES } from '../data/products';
 import { LuminaLogo } from './LuminaLogo';
+import { playTactileClick } from '../utils/sound';
 
 interface ModernHeaderProps {
   onGoToAdmin?: () => void;
   onOpenSearchModal: () => void;
-  onOpenSeoInspector?: () => void;
 }
 
 export const ModernHeader: React.FC<ModernHeaderProps> = ({
   onGoToAdmin,
-  onOpenSearchModal,
-  onOpenSeoInspector
+  onOpenSearchModal
 }) => {
   const {
     cart,
@@ -243,8 +242,11 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
 
               {/* Theme Toggle Button */}
               <button
-                onClick={toggleDarkMode}
-                className="p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
+                onClick={() => {
+                  playTactileClick(1500);
+                  toggleDarkMode();
+                }}
+                className="p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors cursor-pointer tactile-press"
                 title={darkMode ? 'حالت روشن' : 'حالت تاریک'}
                 aria-label="Toggle theme"
               >
@@ -257,8 +259,11 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
 
               {/* Wishlist Button */}
               <button
-                onClick={() => setActiveTab('wishlist')}
-                className="relative p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
+                onClick={() => {
+                  playTactileClick(1300);
+                  setActiveTab('wishlist');
+                }}
+                className="relative p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors cursor-pointer tactile-press"
                 aria-label="Wishlist"
                 title={lang === 'fa' ? 'علاقه‌مندی‌ها' : 'Wishlist'}
               >
@@ -277,8 +282,11 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
               {/* Shopping Cart Button */}
               <button
                 id="shopping-cart-button"
-                onClick={() => setIsCartDrawerOpen(true)}
-                className="relative flex items-center gap-2 p-2 sm:px-3 sm:py-2 rounded-xl bg-zinc-100/90 dark:bg-zinc-900 hover:border-[#62DB00]/60 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-800 transition-all duration-150 cursor-pointer group"
+                onClick={() => {
+                  playTactileClick(1100);
+                  setIsCartDrawerOpen(true);
+                }}
+                className="relative flex items-center gap-2 p-2 sm:px-3 sm:py-2 rounded-xl bg-zinc-100/90 dark:bg-zinc-900 hover:border-[#62DB00]/60 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-800 transition-all duration-150 cursor-pointer group tactile-press"
                 aria-label="Shopping Cart"
               >
                 <div className="relative shrink-0">
@@ -478,12 +486,7 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
                   <button
                     key={link.id}
                     onClick={() => {
-                      if (link.id === 'bestsellers') {
-                        setFilters(prev => ({ ...prev, sortBy: 'popularity', selectedCategory: 'all' }));
-                        setActiveTab('shop');
-                      } else {
-                        setActiveTab(link.id as any);
-                      }
+                      setActiveTab(link.id as any);
                     }}
                     className={`relative py-1 transition-colors cursor-pointer flex items-center gap-1.5 ${
                       isActive

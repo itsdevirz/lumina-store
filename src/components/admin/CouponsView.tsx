@@ -164,12 +164,12 @@ export const CouponsView: React.FC = () => {
       {/* Create Coupon Modal */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-md w-full p-6 space-y-4 animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-[#121215] rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-2xl max-w-md w-full p-6 space-y-4 animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between">
-              <h3 className="font-black text-sm text-slate-900 dark:text-white">تعریف کوپن تخفیف</h3>
+              <h3 className="font-black text-sm text-zinc-900 dark:text-white">تعریف کوپن تخفیف</h3>
               <button
                 onClick={() => setIsCreateOpen(false)}
-                className="p-1 rounded-xl text-slate-400 hover:text-slate-600"
+                className="p-1 rounded-xl text-zinc-400 hover:text-zinc-600 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -177,7 +177,7 @@ export const CouponsView: React.FC = () => {
 
             <form onSubmit={handleCreate} className="space-y-3.5 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                   کد کوپن (حروف انگلیسی یا عدد) *
                 </label>
                 <input
@@ -186,13 +186,13 @@ export const CouponsView: React.FC = () => {
                   value={code}
                   onChange={e => setCode(e.target.value.toUpperCase())}
                   placeholder="مثال: SPRING1404"
-                  className="w-full px-3 py-2 rounded-xl font-mono uppercase bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                  className="w-full px-3 py-2 rounded-xl font-mono uppercase bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     درصد تخفیف *
                   </label>
                   <input
@@ -202,36 +202,36 @@ export const CouponsView: React.FC = () => {
                     max="100"
                     value={discountPercent}
                     onChange={e => setDiscountPercent(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     حداکثر سقف استفاده
                   </label>
                   <input
                     type="number"
                     value={maxUsage}
                     onChange={e => setMaxUsage(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                   حداقل مبلغ خرید (تومان)
                 </label>
                 <input
                   type="number"
                   value={minPurchase}
                   onChange={e => setMinPurchase(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden font-mono"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                   تاریخ انقضا (شمسی)
                 </label>
                 <input
@@ -239,21 +239,21 @@ export const CouponsView: React.FC = () => {
                   value={expiresAt}
                   onChange={e => setExpiresAt(e.target.value)}
                   placeholder="۱۴۰۴/۰۸/۳۰"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
                 />
               </div>
 
-              <div className="pt-3 flex justify-end gap-2 border-t border-slate-200 dark:border-slate-800">
+              <div className="pt-3 flex justify-end gap-2 border-t border-zinc-200 dark:border-zinc-800">
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
-                  className="px-4 py-2 rounded-xl text-slate-600 font-bold hover:bg-slate-100"
+                  className="px-4 py-2 rounded-xl text-zinc-600 dark:text-zinc-400 font-bold hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
                 >
                   انصراف
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black font-black shadow-md shadow-[#62DB00]/15 cursor-pointer"
                 >
                   ثبت کد تخفیف
                 </button>

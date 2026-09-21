@@ -5,8 +5,12 @@ import { Hero } from './components/Hero';
 import { TrustBadges } from './components/TrustBadges';
 import { FestivalBanner } from './components/FestivalBanner';
 import { FestivalPage } from './components/FestivalPage';
+import { BestsellersPage } from './components/BestsellersPage';
 import { ProductSlider } from './components/ProductSlider';
 import { FlashSale } from './components/FlashSale';
+import { EditorialShowcase } from './components/EditorialShowcase';
+import { NewArrivalsSection } from './components/NewArrivalsSection';
+import { CompactAccessoriesRack } from './components/CompactAccessoriesRack';
 import { PromotionalBanners } from './components/PromotionalBanners';
 import { DiscountSection } from './components/DiscountSection';
 import { BestSellers } from './components/BestSellers';
@@ -18,13 +22,13 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutView } from './components/CheckoutView';
 import { UserDashboard } from './components/UserDashboard';
 import { WishlistView } from './components/WishlistView';
+import { CategoriesPage } from './components/CategoriesPage';
 import { QuickViewModal } from './components/QuickViewModal';
 import { Footer } from './components/Footer';
 import { ToastContainer } from './components/ToastContainer';
 import { AuthModal } from './components/AuthModal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { DynamicSEO } from './components/DynamicSEO';
-import { SeoInspectorModal } from './components/SeoInspectorModal';
 import { SupportChatWidget } from './components/SupportChatWidget';
 import { SiteLoadingScreen } from './components/SiteLoadingScreen';
 
@@ -34,7 +38,6 @@ interface MainContentProps {
 
 const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
   const { activeTab, selectedProduct } = useStore();
-  const [isSeoModalOpen, setIsSeoModalOpen] = useState<boolean>(false);
 
   // Scroll to top on view change
   useEffect(() => {
@@ -49,7 +52,6 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
       {/* Linear + Vercel inspired modern AppShell */}
       <AppShell
         onGoToAdmin={onGoToAdmin}
-        onOpenSeoInspector={() => setIsSeoModalOpen(true)}
       >
         {/* Dynamic View rendering */}
         {activeTab === 'home' && (
@@ -57,16 +59,30 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
             <FestivalBanner />
             <Hero />
             <TrustBadges />
+            {/* 1. Asymmetric Flagship Editorial Bento (Featured + Recommended) */}
+            <EditorialShowcase />
+            {/* 2. Urgent Limited Inventory Flash Drops (Discount Composition) */}
             <FlashSale />
-            <ProductSlider />
+            {/* 3. Editorial Seasonal Releases & Minimalist Silhouettes (New Arrival Composition) */}
+            <NewArrivalsSection />
+            {/* 4. Architectural Hardware Banners */}
             <PromotionalBanners />
-            <DiscountSection />
+            {/* 5. Prestige Hardware Ranking (Bestseller Composition with #01-#04) */}
             <BestSellers />
+            {/* 6. High-Density Executive Accessories Rack (Compact Composition) */}
+            <CompactAccessoriesRack />
+            {/* 7. Promotional Coupon Vault */}
+            <DiscountSection />
+            {/* 8. Recently Viewed */}
             <RecentlyViewed />
           </>
         )}
 
         {activeTab === 'festival' && <FestivalPage />}
+
+        {activeTab === 'bestsellers' && <BestsellersPage />}
+
+        {activeTab === 'categories' && <CategoriesPage />}
 
         {activeTab === 'shop' && <ProductListing />}
 
@@ -81,7 +97,7 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
         {activeTab === 'wishlist' && <WishlistView />}
 
         {/* Developer-Tool Minimal Footer */}
-        <Footer onGoToAdmin={onGoToAdmin} onOpenSeoInspector={() => setIsSeoModalOpen(true)} />
+        <Footer onGoToAdmin={onGoToAdmin} />
       </AppShell>
 
       {/* Modern Lumina Studio Loading Screen */}
@@ -95,11 +111,6 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
       <QuickViewModal />
       <AuthModal />
       <ToastContainer />
-      <SeoInspectorModal
-        isOpen={isSeoModalOpen}
-        onClose={() => setIsSeoModalOpen(false)}
-        isAdmin={false}
-      />
     </div>
   );
 };

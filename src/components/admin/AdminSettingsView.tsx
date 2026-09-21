@@ -1,10 +1,37 @@
-import React, { useState } from 'react';
-import { Settings, User, Store, Shield, CheckCircle2, Save, Bell, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, User, Store, Shield, CheckCircle2, Save, Bell, RefreshCw, Database, Download, AlertCircle, HardDrive, Server, Check } from 'lucide-react';
 import { AdminUser } from '../../types/admin';
 
 interface AdminSettingsViewProps {
   adminUser: AdminUser | null;
   onUpdateAdminUser: (user: AdminUser) => void;
+}
+
+interface DatabaseStatus {
+  connected: boolean;
+  database: string;
+  host: string;
+  port: number;
+  user: string;
+  memoryCounts: {
+    products: number;
+    orders: number;
+    users: number;
+    categories: number;
+    reviews: number;
+    coupons: number;
+  };
+  mysqlCounts: {
+    products: number;
+    orders: number;
+    users: number;
+    categories: number;
+    reviews: number;
+    coupons: number;
+    festivals: number;
+    supportSessions: number;
+  } | null;
+  statusMessage: string;
 }
 
 export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
@@ -23,6 +50,69 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [freeShippingLimit, setFreeShippingLimit] = useState('2000000');
   const [taxRate, setTaxRate] = useState('0');
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  // Database status state
+  const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);
+  const [isLoadingDb, setIsLoadingDb] = useState(false);
+  const [isSyncingDb, setIsSyncingDb] = useState(false);
+  const [dbActionMessage, setDbActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const fetchDbStatus = async () => {
+    setIsLoadingDb(true);
+    try {
+      const res = await fetch('/api/database/status');
+      if (res.ok) {
+        const data = await res.json();
+        setDbStatus(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch DB status:', err);
+    } finally {
+      setIsLoadingDb(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDbStatus();
+  }, []);
+
+  const handleTestConnection = async () => {
+    setIsLoadingDb(true);
+    setDbActionMessage(null);
+    try {
+      const res = await fetch('/api/database/test-connection', { method: 'POST' });
+      const data = await res.json();
+      if (data.connected) {
+        setDbActionMessage({ type: 'success', text: data.message });
+      } else {
+        setDbActionMessage({ type: 'error', text: data.message });
+      }
+      fetchDbStatus();
+    } catch (err: any) {
+      setDbActionMessage({ type: 'error', text: 'خطا در برقراری ارتباط با سرور: ' + err.message });
+    } finally {
+      setIsLoadingDb(false);
+    }
+  };
+
+  const handleSyncToMySQL = async () => {
+    setIsSyncingDb(true);
+    setDbActionMessage(null);
+    try {
+      const res = await fetch('/api/database/sync-to-mysql', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setDbActionMessage({ type: 'success', text: data.message });
+        fetchDbStatus();
+      } else {
+        setDbActionMessage({ type: 'error', text: data.message });
+      }
+    } catch (err: any) {
+      setDbActionMessage({ type: 'error', text: 'خطا در همگام‌سازی: ' + err.message });
+    } finally {
+      setIsSyncingDb(false);
+    }
+  };
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,10 +134,10 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 font-sans max-w-4xl">
       {/* View Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white">
           تنظیمات عمومی و پروفایل مدیریت
         </h1>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-zinc-400 mt-1">
           پیکربندی پارامترهای پایه‌ای فروشگاه، اطلاعات حساب مدیر و تماس با پشتیبانی
         </p>
       </div>
@@ -61,9 +151,9 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* Admin Profile Section */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-          <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <User className="w-4 h-4 text-indigo-500" />
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-4">
+          <h3 className="text-sm font-black text-zinc-900 dark:text-white flex items-center gap-2">
+            <User className="w-4 h-4 text-[#62DB00]" />
             <span>اطلاعات پروفایل مدیر سامانه</span>
           </h3>
 
@@ -71,24 +161,24 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
             <img
               src={avatar}
               alt=""
-              className="w-16 h-16 rounded-2xl object-cover ring-2 ring-indigo-500/30"
+              className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#62DB00]/40"
             />
             <div className="flex-1 max-w-md">
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block text-xs font-bold text-zinc-600 dark:text-zinc-400 mb-1">
                 آدرس تصویر آواتار (URL)
               </label>
               <input
                 type="text"
                 value={avatar}
                 onChange={e => setAvatar(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden font-mono"
+                className="w-full px-3 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block font-bold text-zinc-600 dark:text-zinc-400 mb-1">
                 نام نمایشی مدیر
               </label>
               <input
@@ -96,12 +186,12 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                 required
                 value={name}
                 onChange={e => setName(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00]"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block font-bold text-zinc-600 dark:text-zinc-400 mb-1">
                 پست الکترونیک (Email)
               </label>
               <input
@@ -109,66 +199,189 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
               />
             </div>
           </div>
         </div>
 
         {/* Store Settings Section */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-          <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <Store className="w-4 h-4 text-indigo-500" />
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-4">
+          <h3 className="text-sm font-black text-zinc-900 dark:text-white flex items-center gap-2">
+            <Store className="w-4 h-4 text-[#62DB00]" />
             <span>پیکربندی فروشگاه آنلاین</span>
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block font-bold text-zinc-600 dark:text-zinc-400 mb-1">
                 نام رسمی فروشگاه
               </label>
               <input
                 type="text"
                 value={storeName}
                 onChange={e => setStoreName(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00]"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block font-bold text-zinc-600 dark:text-zinc-400 mb-1">
                 شماره تماس پشتیبانی
               </label>
               <input
                 type="text"
                 value={supportPhone}
                 onChange={e => setSupportPhone(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block font-bold text-zinc-600 dark:text-zinc-400 mb-1">
                 سقف خرید جهت ارسال رایگان (تومان)
               </label>
               <input
                 type="number"
                 value={freeShippingLimit}
                 onChange={e => setFreeShippingLimit(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-hidden font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 outline-hidden focus:border-[#62DB00] font-mono"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block font-bold text-zinc-600 dark:text-zinc-400 mb-1">
                 واحد پول اصلی
               </label>
               <input
                 type="text"
                 disabled
                 value="تومان ایران (ریال شاپرک)"
-                className="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-400 outline-hidden"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 text-zinc-400 outline-hidden"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* MySQL Database Configuration & Management Section */}
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-100 dark:border-zinc-800 pb-4">
+            <div className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${dbStatus?.connected ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+                <Database className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-black text-zinc-900 dark:text-white flex items-center gap-2">
+                  <span>پایگاه داده MySQL اختصاصی</span>
+                  <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-normal">
+                    online_shop_db
+                  </span>
+                </h3>
+                <p className="text-[11px] text-zinc-400">
+                  اتصال به پایگاه داده MySQL روی هاست شخصی (سی‌پنل، دایرکت‌ادمین یا سرور لینوکس)
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${
+                dbStatus?.connected
+                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                  : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+              }`}>
+                <span className={`w-2 h-2 rounded-full ${dbStatus?.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+                {dbStatus?.connected ? 'متصل به MySQL (آنلاین)' : 'حالت ذخیره‌سازی محلی (فالبک)'}
+              </span>
+            </div>
+          </div>
+
+          {dbActionMessage && (
+            <div className={`p-3.5 rounded-xl text-xs font-bold flex items-center gap-2 ${
+              dbActionMessage.type === 'success'
+                ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+            }`}>
+              {dbActionMessage.type === 'success' ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+              <span>{dbActionMessage.text}</span>
+            </div>
+          )}
+
+          {/* Database Info Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+              <span className="text-[11px] text-zinc-400 block mb-1">نام دیتابیس</span>
+              <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200">
+                {dbStatus?.database || 'online_shop_db'}
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+              <span className="text-[11px] text-zinc-400 block mb-1">میزبان سرور (Host)</span>
+              <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200">
+                {dbStatus?.host || 'localhost'}:{dbStatus?.port || 3306}
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+              <span className="text-[11px] text-zinc-400 block mb-1">تعداد محصولات</span>
+              <span className="font-bold text-zinc-800 dark:text-zinc-200">
+                {dbStatus?.mysqlCounts ? `${dbStatus.mysqlCounts.products} در MySQL` : `${dbStatus?.memoryCounts.products || 12} قلم`}
+              </span>
+            </div>
+            <div className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
+              <span className="text-[11px] text-zinc-400 block mb-1">سفارشات و مشتریان</span>
+              <span className="font-bold text-zinc-800 dark:text-zinc-200">
+                {dbStatus?.memoryCounts.orders || 3} سفارش / {dbStatus?.memoryCounts.users || 5} کاربر
+              </span>
+            </div>
+          </div>
+
+          {/* Quick Actions Bar */}
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleTestConnection}
+              disabled={isLoadingDb}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoadingDb ? 'animate-spin' : ''}`} />
+              <span>تست و اتصال مجدد</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSyncToMySQL}
+              disabled={isSyncingDb}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#62DB00]/15 hover:bg-[#62DB00]/25 text-[#62DB00] border border-[#62DB00]/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+            >
+              <HardDrive className={`w-3.5 h-3.5 ${isSyncingDb ? 'animate-pulse' : ''}`} />
+              <span>{isSyncingDb ? 'در حال ارسال داده‌ها...' : 'همگام‌سازی کامل داده‌ها به MySQL'}</span>
+            </button>
+
+            <a
+              href="/api/database/export-sql"
+              download="online_shop_db.sql"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/80 text-xs font-bold transition-all cursor-pointer ml-auto"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>دانلود فایل SQL آماده (online_shop_db.sql)</span>
+            </a>
+          </div>
+
+          {/* Host Setup Instructions Helper Box */}
+          <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/80 dark:border-zinc-800/60 text-xs space-y-2">
+            <h4 className="font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
+              <Server className="w-3.5 h-3.5 text-[#62DB00]" />
+              <span>راهنمای اتصال به هاست شخصی شما:</span>
+            </h4>
+            <p className="text-zinc-500 leading-relaxed text-[11px]">
+              ۱. در هاست خود (سی‌پنل یا دایرکت‌ادمین) وارد <strong>phpMyAdmin</strong> شوید و فایل <strong>online_shop_db.sql</strong> را با دکمه Import وارد کنید.<br />
+              ۲. متغیرهای اتصال را در فایل <strong>.env</strong> هاست تنظیم نمایید:
+            </p>
+            <div className="p-2.5 rounded-lg bg-zinc-900 text-zinc-200 font-mono text-[11px] leading-tight space-y-1">
+              <div>DB_HOST=localhost</div>
+              <div>DB_PORT=3306</div>
+              <div>DB_USER=نام_کاربری_دیتابیس_شما</div>
+              <div>DB_PASSWORD=رمز_عبور_دیتابیس_شما</div>
+              <div>DB_NAME=online_shop_db</div>
             </div>
           </div>
         </div>
@@ -176,7 +389,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
         <div className="flex justify-end">
           <button
             type="submit"
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all"
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-black shadow-lg shadow-[#62DB00]/15 transition-all cursor-pointer"
           >
             <Save className="w-4 h-4" />
             <span>ذخیره کلیه تنظیمات</span>

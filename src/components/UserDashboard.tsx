@@ -89,39 +89,39 @@ export const UserDashboard: React.FC = () => {
   // Unauthenticated State
   if (!isAuthenticated) {
     return (
-      <div className="py-16">
+      <div className="py-20">
         <div className="max-w-md mx-auto px-4 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 flex items-center justify-center mx-auto mb-4 shadow-xs border border-rose-100 dark:border-rose-900/40">
-            <User className="w-8 h-8" />
+          <div className="w-14 h-14 rounded-2xl bg-zinc-100 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100 flex items-center justify-center mx-auto mb-4 border border-zinc-200 dark:border-zinc-700 shadow-2xs">
+            <User className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2">
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
             {lang === 'fa' ? 'برای مشاهده پنل کاربری وارد شوید' : 'Please Sign In to Access Dashboard'}
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed">
             {lang === 'fa'
               ? 'برای مشاهده تاریخچه سفارشات، پیگیری مرسولات و مدیریت آدرس‌های ذخیره‌شده، لطفاً وارد حساب خود شوید.'
               : 'Sign in or register to view your order history, track deliveries, and manage saved addresses.'}
           </p>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <button
               onClick={openLoginModal}
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs shadow-md shadow-rose-900/20 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-zinc-900 hover:bg-black text-white dark:bg-[#62DB00] dark:hover:bg-[#52B800] dark:text-black font-bold text-xs shadow-xs transition-all cursor-pointer tactile-press"
             >
               <LogIn className="w-4 h-4" />
               <span>{lang === 'fa' ? 'ورود به حساب کاربری' : 'Sign In to Account'}</span>
             </button>
             <button
               onClick={openRegisterModal}
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 font-semibold text-xs hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-all cursor-pointer"
             >
               <span>{lang === 'fa' ? 'ایجاد حساب کاربری جدید' : 'Create New Account'}</span>
             </button>
             <button
               onClick={quickDemoLogin}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/30 text-[#E80645] dark:text-rose-300 font-bold text-xs hover:bg-rose-100/70 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 text-zinc-700 dark:text-zinc-300 font-medium text-xs hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all cursor-pointer"
             >
-              <Zap className="w-4 h-4 text-amber-500" />
+              <Zap className="w-3.5 h-3.5 text-[#62DB00]" />
               <span>{lang === 'fa' ? 'ورود سریع با حساب آزمایشی (VIP)' : 'Instant Demo Login'}</span>
             </button>
           </div>
@@ -133,18 +133,18 @@ export const UserDashboard: React.FC = () => {
   return (
     <div className="py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white mb-8">
           {lang === 'fa' ? 'حساب کاربری و سفارشات' : 'My Account & Orders'}
         </h1>
 
         {/* Mobile Tab Switcher */}
-        <div className="lg:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-4 no-scrollbar">
+        <div className="lg:hidden flex items-center gap-1.5 overflow-x-auto pb-4 mb-4 no-scrollbar">
           <button
             onClick={() => setActiveSection('overview')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               activeSection === 'overview'
-                ? 'bg-[#E80645] text-white shadow-xs'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs'
+                : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300'
             }`}
           >
             <User className="w-3.5 h-3.5" />
@@ -152,38 +152,38 @@ export const UserDashboard: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveSection('orders')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               activeSection === 'orders'
-                ? 'bg-[#E80645] text-white shadow-xs'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs'
+                : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300'
             }`}
           >
             <Package className="w-3.5 h-3.5" />
             <span>{lang === 'fa' ? 'سفارشات' : 'Orders'}</span>
-            <span className="text-[10px] bg-white/20 dark:bg-slate-800 px-1.5 py-0.2 rounded-full">
+            <span className="text-[10px] bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.2 rounded-full font-mono">
               {userOrders.length}
             </span>
           </button>
           <button
             onClick={() => setActiveSection('addresses')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               activeSection === 'addresses'
-                ? 'bg-[#E80645] text-white shadow-xs'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs'
+                : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300'
             }`}
           >
             <MapPin className="w-3.5 h-3.5" />
             <span>{lang === 'fa' ? 'آدرس‌ها' : 'Addresses'}</span>
-            <span className="text-[10px] bg-white/20 dark:bg-slate-800 px-1.5 py-0.2 rounded-full">
+            <span className="text-[10px] bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.2 rounded-full font-mono">
               {userProfile.addresses.length}
             </span>
           </button>
           <button
             onClick={() => setActiveSection('profile')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               activeSection === 'profile'
-                ? 'bg-[#E80645] text-white shadow-xs'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-xs'
+                : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300'
             }`}
           >
             <Settings className="w-3.5 h-3.5" />
@@ -194,9 +194,9 @@ export const UserDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Sidebar / Navigation Profile Pill */}
           <div className="lg:col-span-4">
-            <div className="rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 p-6 shadow-xs space-y-6">
+            <div className="rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/80 dark:border-zinc-800/80 p-6 shadow-xs space-y-6">
               {/* User Profile Card */}
-              <div className="flex items-center gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-4 pb-6 border-b border-zinc-100 dark:border-zinc-800">
                 <div 
                   onClick={() => setActiveSection('profile')}
                   className="relative group cursor-pointer shrink-0"
@@ -205,21 +205,21 @@ export const UserDashboard: React.FC = () => {
                   <img
                     src={userProfile.avatar}
                     alt={userProfile.name}
-                    className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#E80645]/20 shadow-xs group-hover:opacity-85 transition-opacity"
+                    className="w-16 h-16 rounded-2xl object-cover ring-1 ring-zinc-200 dark:ring-zinc-700 shadow-xs group-hover:opacity-85 transition-opacity"
                   />
                   <div className="absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
                     <Camera className="w-4 h-4" />
                   </div>
-                  <span className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-[#E80645] text-white shadow-2xs">
+                  <span className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-2xs">
                     <Camera className="w-2.5 h-2.5" />
                   </span>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-extrabold text-slate-900 dark:text-white text-base truncate">
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-100 text-base truncate">
                     {userProfile.name}
                   </h3>
-                  <p className="text-xs text-slate-400 truncate">{userProfile.email}</p>
-                  <span className="inline-block mt-1 text-[10px] bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 font-bold px-2 py-0.5 rounded-full">
+                  <p className="text-xs text-zinc-400 truncate">{userProfile.email}</p>
+                  <span className="inline-block mt-1 text-[10px] bg-[#62DB00]/10 text-[#62DB00] font-mono font-semibold px-2 py-0.5 rounded-full">
                     {userProfile.role === 'vip'
                       ? (lang === 'fa' ? 'عضو باشگاه مشتریان VIP' : 'VIP Member')
                       : (lang === 'fa' ? 'کاربر رسمی لومینا' : 'Verified Member')}
@@ -231,10 +231,10 @@ export const UserDashboard: React.FC = () => {
               <div className="space-y-1">
                 <button
                   onClick={() => setActiveSection('overview')}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                     activeSection === 'overview'
-                      ? 'bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -246,57 +246,57 @@ export const UserDashboard: React.FC = () => {
 
                 <button
                   onClick={() => setActiveSection('orders')}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                     activeSection === 'orders'
-                      ? 'bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <Package className="w-4 h-4" />
                     <span>{lang === 'fa' ? 'تاریخچه سفارشات' : 'My Orders'}</span>
                   </div>
-                  <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[11px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-2 py-0.5 rounded-full font-mono">
                     {userOrders.length}
                   </span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('wishlist')}
-                  className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2.5">
                     <Heart className="w-4 h-4" />
                     <span>{lang === 'fa' ? 'کالاهای مورد علاقه' : 'Wishlist'}</span>
                   </div>
-                  <span className="text-[11px] bg-rose-50 dark:bg-rose-950 text-[#E80645] px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[11px] bg-[#62DB00]/10 text-[#62DB00] px-2 py-0.5 rounded-full font-mono">
                     {wishlist.length}
                   </span>
                 </button>
 
                 <button
                   onClick={() => setActiveSection('addresses')}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                     activeSection === 'addresses'
-                      ? 'bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <MapPin className="w-4 h-4" />
                     <span>{lang === 'fa' ? 'آدرس‌های تحویل' : 'Saved Addresses'}</span>
                   </div>
-                  <span className="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[11px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-2 py-0.5 rounded-full font-mono">
                     {userProfile.addresses.length}
                   </span>
                 </button>
 
                 <button
                   onClick={() => setActiveSection('profile')}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                     activeSection === 'profile'
-                      ? 'bg-rose-50 dark:bg-rose-950/50 text-[#E80645] dark:text-rose-400'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
+                      : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -306,10 +306,10 @@ export const UserDashboard: React.FC = () => {
                   <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180" />
                 </button>
 
-                <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
+                <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
                   <button
                     onClick={logout}
-                    className="w-full flex items-center gap-2.5 p-3 rounded-xl text-xs font-bold text-[#E80645] dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+                    className="w-full flex items-center gap-2.5 p-3 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50/50 dark:hover:bg-rose-950/20 transition-colors cursor-pointer"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>{lang === 'fa' ? 'خروج از حساب' : 'Log Out'}</span>
@@ -326,34 +326,34 @@ export const UserDashboard: React.FC = () => {
               <div className="space-y-6">
                 {/* Highlights Stats */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
-                    <span className="text-xs text-slate-400 font-medium">{lang === 'fa' ? 'تعداد سفارش‌ها' : 'Total Orders'}</span>
-                    <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">
+                  <div className="p-5 rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs">
+                    <span className="text-xs text-zinc-400 font-medium">{lang === 'fa' ? 'تعداد سفارش‌ها' : 'Total Orders'}</span>
+                    <div className="text-2xl font-bold font-mono text-zinc-900 dark:text-white mt-1">
                       {userOrders.length}
                     </div>
                   </div>
-                  <div className="p-5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
-                    <span className="text-xs text-slate-400 font-medium">{lang === 'fa' ? 'علاقه‌مندی‌ها' : 'Wishlist Items'}</span>
-                    <div className="text-2xl font-black text-[#E80645] mt-1">
+                  <div className="p-5 rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs">
+                    <span className="text-xs text-zinc-400 font-medium">{lang === 'fa' ? 'علاقه‌مندی‌ها' : 'Wishlist Items'}</span>
+                    <div className="text-2xl font-bold font-mono text-zinc-900 dark:text-zinc-100 mt-1">
                       {wishlist.length}
                     </div>
                   </div>
-                  <div className="p-5 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs">
-                    <span className="text-xs text-slate-400 font-medium">{lang === 'fa' ? 'سطح کاربری' : 'Membership Level'}</span>
-                    <div className="text-2xl font-black text-[#E80645] dark:text-rose-400 mt-1">
+                  <div className="p-5 rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs">
+                    <span className="text-xs text-zinc-400 font-medium">{lang === 'fa' ? 'سطح کاربری' : 'Membership Level'}</span>
+                    <div className="text-2xl font-bold font-mono text-[#62DB00] mt-1">
                       {userProfile.role === 'vip' ? 'VIP Platinum' : 'Standard'}
                     </div>
                   </div>
                 </div>
 
                 {/* Recent Orders Overview with Timeline Preview */}
-                <div className="p-6 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-5">
+                <div className="p-6 rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs space-y-5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold text-slate-900 dark:text-white text-base">
+                      <h3 className="font-bold text-zinc-900 dark:text-white text-base">
                         {lang === 'fa' ? 'آخرین وضعیت سفارش فعال' : 'Active Order Status'}
                       </h3>
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-zinc-400 mt-0.5">
                         {lang === 'fa'
                           ? 'رهگیری لحظه‌ای و مرحله‌بندی شده جدیدترین سفارش شما'
                           : 'Real-time step-by-step progress of your latest order'}
@@ -361,7 +361,7 @@ export const UserDashboard: React.FC = () => {
                     </div>
                     <button
                       onClick={() => setActiveSection('orders')}
-                      className="text-xs text-[#E80645] dark:text-rose-400 font-bold hover:underline cursor-pointer"
+                      className="text-xs text-zinc-900 dark:text-zinc-100 font-semibold hover:underline cursor-pointer"
                     >
                       {lang === 'fa' ? 'مشاهده همه سفارشات' : 'View all orders'}
                     </button>
@@ -377,7 +377,7 @@ export const UserDashboard: React.FC = () => {
 
                       {userOrders.length > 1 && (
                         <div className="pt-2">
-                          <span className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 block">
+                          <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-2 block">
                             {lang === 'fa' ? 'سایر سفارش‌های اخیر:' : 'Other Recent Orders:'}
                           </span>
                           <div className="space-y-2">
@@ -430,7 +430,7 @@ export const UserDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="flex items-center justify-between sm:justify-end gap-3">
-                                  <span className="text-xs font-black text-[#E80645] dark:text-rose-400">
+                                  <span className="text-xs font-mono font-bold text-zinc-900 dark:text-zinc-100">
                                     {formatPrice(order.total)}
                                   </span>
                                   <button
@@ -438,7 +438,7 @@ export const UserDashboard: React.FC = () => {
                                       setActiveSection('orders');
                                       setOrderStatusFilter(order.status as any);
                                     }}
-                                    className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px] font-semibold text-[#E80645] dark:text-rose-400 hover:bg-slate-50 cursor-pointer"
+                                    className="px-2.5 py-1 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
                                   >
                                     {lang === 'fa' ? 'جزئیات مرسوله' : 'Details'}
                                   </button>
@@ -456,25 +456,25 @@ export const UserDashboard: React.FC = () => {
 
             {/* ORDERS SECTION WITH TIMELINE COMPONENT */}
             {activeSection === 'orders' && (
-              <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-6">
+              <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-3">
-                      <h3 className="font-bold text-slate-900 dark:text-white text-lg">
+                      <h3 className="font-bold text-zinc-900 dark:text-white text-lg">
                         {lang === 'fa' ? 'پیگیری و تاریخچه سفارشات' : 'Order Tracking & History'}
                       </h3>
                       <button
                         type="button"
                         onClick={() => syncOrdersWithBackend()}
                         disabled={isSyncingOrders}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-600 dark:text-slate-300 hover:text-[#E80645] dark:hover:text-rose-400 text-[11px] font-bold transition-all disabled:opacity-50 cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-[11px] font-semibold transition-all disabled:opacity-50 cursor-pointer"
                         title={lang === 'fa' ? 'بروزرسانی وضعیت سفارشات از سرور' : 'Sync latest status from server'}
                       >
-                        <RefreshCw className={`w-3.5 h-3.5 ${isSyncingOrders ? 'animate-spin text-[#E80645]' : ''}`} />
+                        <RefreshCw className={`w-3.5 h-3.5 ${isSyncingOrders ? 'animate-spin text-[#62DB00]' : ''}`} />
                         <span>{lang === 'fa' ? (isSyncingOrders ? 'در حال دریافت...' : 'بروزرسانی وضعیت') : (isSyncingOrders ? 'Syncing...' : 'Sync Status')}</span>
                       </button>
                     </div>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-zinc-400 mt-0.5">
                       {lang === 'fa'
                         ? 'نمایش مرحله‌به‌مرحله فرآیند آماده‌سازی، ارسال و تحویل تعیین‌شده توسط مدیریت فروشگاه'
                         : 'Official delivery progress set and verified by site administration'}
@@ -482,53 +482,53 @@ export const UserDashboard: React.FC = () => {
                   </div>
 
                   {/* Status Filter Tabs */}
-                  <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl overflow-x-auto">
+                  <div className="flex items-center gap-1.5 p-1 bg-zinc-100 dark:bg-zinc-800/80 rounded-xl overflow-x-auto">
                     <button
                       onClick={() => setOrderStatusFilter('all')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                         orderStatusFilter === 'all'
-                          ? 'bg-white dark:bg-slate-900 text-[#E80645] dark:text-rose-400 shadow-xs'
-                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs'
+                          : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
                       }`}
                     >
                       {lang === 'fa' ? `همه (${userOrders.length})` : `All (${userOrders.length})`}
                     </button>
                     <button
                       onClick={() => setOrderStatusFilter('processing')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                         orderStatusFilter === 'processing'
-                          ? 'bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-400 shadow-xs'
-                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-white dark:bg-zinc-900 text-amber-600 dark:text-amber-400 shadow-xs'
+                          : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
                       }`}
                     >
                       {lang === 'fa' ? 'در حال پردازش' : 'Processing'}
                     </button>
                     <button
                       onClick={() => setOrderStatusFilter('shipped')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                         orderStatusFilter === 'shipped'
-                          ? 'bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400 shadow-xs'
-                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-white dark:bg-zinc-900 text-[#62DB00] shadow-xs'
+                          : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
                       }`}
                     >
                       {lang === 'fa' ? 'ارسال شده' : 'Shipped'}
                     </button>
                     <button
                       onClick={() => setOrderStatusFilter('delivered')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                         orderStatusFilter === 'delivered'
-                          ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-white dark:bg-zinc-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
+                          : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
                       }`}
                     >
                       {lang === 'fa' ? 'تحویل شده' : 'Delivered'}
                     </button>
                     <button
                       onClick={() => setOrderStatusFilter('cancelled')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                         orderStatusFilter === 'cancelled'
-                          ? 'bg-white dark:bg-slate-900 text-rose-600 dark:text-rose-400 shadow-xs'
-                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-white dark:bg-zinc-900 text-rose-600 dark:text-rose-400 shadow-xs'
+                          : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
                       }`}
                     >
                       {lang === 'fa' ? 'لغو شده' : 'Cancelled'}
@@ -543,25 +543,25 @@ export const UserDashboard: React.FC = () => {
                     .map(order => (
                       <div
                         key={order.id}
-                        className="rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 overflow-hidden space-y-4 p-5 sm:p-6 transition-all hover:border-slate-300 dark:hover:border-slate-700"
+                        className="rounded-2xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 overflow-hidden space-y-4 p-5 sm:p-6 transition-all hover:border-zinc-300 dark:hover:border-zinc-700"
                       >
                         {/* Order Header Meta */}
-                        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200/80 dark:border-slate-700/80">
+                        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-zinc-200/80 dark:border-zinc-800">
                           <div className="flex flex-wrap items-center gap-3">
-                            <span className="text-sm font-black text-slate-900 dark:text-white">
+                            <span className="text-sm font-mono font-bold text-zinc-900 dark:text-white">
                               {order.id}
                             </span>
-                            <span className="text-xs text-slate-400 flex items-center gap-1">
+                            <span className="text-xs text-zinc-400 flex items-center gap-1 font-mono">
                               <Clock className="w-3.5 h-3.5" />
                               <span>{order.date}</span>
                             </span>
                           </div>
 
                           <div className="flex items-center gap-3">
-                            <span className="text-xs text-slate-500 hidden sm:inline">
+                            <span className="text-xs text-zinc-500 hidden sm:inline">
                               {lang === 'fa' ? `مبلغ سفارش:` : `Total:`}
                             </span>
-                            <span className="text-base font-black text-[#E80645] dark:text-rose-400">
+                            <span className="text-base font-mono font-bold text-zinc-900 dark:text-white">
                               {formatPrice(order.total)}
                             </span>
                           </div>
@@ -575,31 +575,31 @@ export const UserDashboard: React.FC = () => {
 
                         {/* Order Items Summary */}
                         <div className="pt-2">
-                          <h5 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-3">
+                          <h5 className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-3">
                             {lang === 'fa' ? `اقلام سفارش (${order.items.length} قلم کالا):` : `Order Items:`}
                           </h5>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                             {order.items.map(item => (
                               <div
                                 key={item.id}
-                                className="flex items-center justify-between p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800 text-xs"
+                                className="flex items-center justify-between p-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 text-xs"
                               >
                                 <div className="flex items-center gap-2.5">
                                   <img
                                     src={item.image}
                                     alt=""
-                                    className="w-11 h-11 rounded-lg object-cover bg-slate-50 shrink-0"
+                                    className="w-11 h-11 rounded-lg object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/60 dark:border-zinc-700/60"
                                   />
                                   <div>
-                                    <p className="font-semibold text-slate-800 dark:text-slate-200 line-clamp-1">
+                                    <p className="font-semibold text-zinc-800 dark:text-zinc-200 line-clamp-1">
                                       {lang === 'fa' ? item.productNameFa : item.productName}
                                     </p>
-                                    <span className="text-slate-400 text-[11px]">
+                                    <span className="text-zinc-400 text-[11px] font-mono">
                                       {item.quantity} × {formatPrice(item.price)}
                                     </span>
                                   </div>
                                 </div>
-                                <span className="font-bold text-slate-900 dark:text-white shrink-0">
+                                <span className="font-mono font-bold text-zinc-900 dark:text-white shrink-0">
                                   {formatPrice(item.price * item.quantity)}
                                 </span>
                               </div>
@@ -608,20 +608,20 @@ export const UserDashboard: React.FC = () => {
                         </div>
 
                         {/* Shipping & Payment Footer */}
-                        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-700/80 text-xs text-slate-500">
+                        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-zinc-200/80 dark:border-zinc-800 text-xs text-zinc-500">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-slate-700 dark:text-slate-300">
+                            <span className="font-semibold text-zinc-700 dark:text-zinc-300">
                               {lang === 'fa' ? 'روش پرداخت:' : 'Payment:'}
                             </span>
                             <span>{order.paymentMethod}</span>
                           </div>
 
                           <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-slate-700 dark:text-slate-300">
+                            <span className="font-semibold text-zinc-700 dark:text-zinc-300">
                               {lang === 'fa' ? 'تحویل‌گیرنده:' : 'Recipient:'}
                             </span>
                             <span>{order.shippingAddress?.fullName || userProfile.name}</span>
-                            <span className="text-slate-400">({order.shippingAddress?.city})</span>
+                            <span className="text-zinc-400">({order.shippingAddress?.city})</span>
                           </div>
                         </div>
                       </div>
@@ -630,7 +630,7 @@ export const UserDashboard: React.FC = () => {
                   {userOrders.filter(
                     order => orderStatusFilter === 'all' || order.status === orderStatusFilter
                   ).length === 0 && (
-                    <div className="py-12 text-center text-slate-400">
+                    <div className="py-12 text-center text-zinc-400">
                       <p className="text-sm">
                         {lang === 'fa'
                           ? 'هیچ سفارشی با این وضعیت یافت نشد.'
@@ -644,14 +644,14 @@ export const UserDashboard: React.FC = () => {
 
             {/* ADDRESSES SECTION */}
             {activeSection === 'addresses' && (
-              <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-4">
+              <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs space-y-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-slate-900 dark:text-white text-lg">
+                  <h3 className="font-bold text-zinc-900 dark:text-white text-lg">
                     {lang === 'fa' ? 'آدرس‌های ذخیره‌شده' : 'Saved Addresses'}
                   </h3>
                   <button
                     onClick={() => setIsAddingAddress(!isAddingAddress)}
-                    className="flex items-center gap-1.5 text-xs font-bold text-[#E80645] dark:text-rose-400 hover:underline cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:text-[#62DB00] dark:hover:text-[#62DB00] transition-colors cursor-pointer"
                   >
                     {isAddingAddress ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                     <span>{isAddingAddress ? (lang === 'fa' ? 'انصراف' : 'Cancel') : (lang === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address')}</span>
@@ -659,8 +659,8 @@ export const UserDashboard: React.FC = () => {
                 </div>
 
                 {isAddingAddress && (
-                  <form onSubmit={handleCreateAddress} className="p-4 rounded-xl bg-rose-50/40 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/40 mb-4 space-y-3">
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                  <form onSubmit={handleCreateAddress} className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 mb-4 space-y-3">
+                    <h4 className="text-xs font-bold text-zinc-900 dark:text-white">
                       {lang === 'fa' ? 'مشخصات آدرس جدید' : 'New Address Details'}
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -669,14 +669,14 @@ export const UserDashboard: React.FC = () => {
                         placeholder={lang === 'fa' ? 'عنوان (مثال: محل کار، منزل پدری)' : 'Label (e.g. Home, Office)'}
                         value={newAddrTitle}
                         onChange={e => setNewAddrTitle(e.target.value)}
-                        className="text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 outline-hidden"
+                        className="text-xs p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white outline-hidden focus:border-zinc-400"
                       />
                       <input
                         type="text"
                         placeholder={lang === 'fa' ? 'شهر (مثال: تهران)' : 'City'}
                         value={newAddrCity}
                         onChange={e => setNewAddrCity(e.target.value)}
-                        className="text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 outline-hidden"
+                        className="text-xs p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white outline-hidden focus:border-zinc-400"
                       />
                     </div>
                     <textarea
@@ -684,7 +684,7 @@ export const UserDashboard: React.FC = () => {
                       value={newAddrText}
                       onChange={e => setNewAddrText(e.target.value)}
                       rows={2}
-                      className="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 outline-hidden"
+                      className="w-full text-xs p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white outline-hidden focus:border-zinc-400"
                     />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
                       <input
@@ -692,11 +692,11 @@ export const UserDashboard: React.FC = () => {
                         placeholder={lang === 'fa' ? 'کد پستی ۱۰ رقمی' : 'Postal code'}
                         value={newAddrPostal}
                         onChange={e => setNewAddrPostal(e.target.value)}
-                        className="text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 outline-hidden"
+                        className="text-xs p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white outline-hidden focus:border-zinc-400 font-mono"
                       />
                       <button
                         type="submit"
-                        className="py-2.5 px-4 rounded-xl bg-[#E80645] text-white font-bold text-xs hover:bg-[#c7053b] transition-colors cursor-pointer"
+                        className="py-2.5 px-4 rounded-lg bg-zinc-900 hover:bg-black text-white dark:bg-[#62DB00] dark:hover:bg-[#52B800] dark:text-black font-bold text-xs transition-colors cursor-pointer tactile-press"
                       >
                         {lang === 'fa' ? 'ذخیره آدرس جدید' : 'Save Address'}
                       </button>
@@ -708,20 +708,20 @@ export const UserDashboard: React.FC = () => {
                   {userProfile.addresses.map(addr => (
                     <div
                       key={addr.id}
-                      className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 relative"
+                      className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 relative"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white">{addr.title}</span>
+                        <span className="text-xs font-bold text-zinc-900 dark:text-white">{addr.title}</span>
                         {addr.isDefault && (
-                          <span className="text-[10px] bg-rose-50 dark:bg-rose-950/80 text-[#E80645] dark:text-rose-400 px-2 py-0.5 rounded-full font-bold">
+                          <span className="text-[10px] bg-[#62DB00]/10 text-[#62DB00] px-2 py-0.5 rounded-full font-mono font-semibold">
                             {lang === 'fa' ? 'پیش‌فرض' : 'Default'}
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
+                      <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed mb-2">
                         {addr.address}
                       </p>
-                      <div className="text-[11px] text-slate-400">
+                      <div className="text-[11px] text-zinc-400 font-mono">
                         {lang === 'fa' ? `کد پستی: ${addr.postalCode}` : `Postal code: ${addr.postalCode}`}
                       </div>
                     </div>
@@ -732,12 +732,12 @@ export const UserDashboard: React.FC = () => {
 
             {/* EDIT PROFILE SECTION */}
             {activeSection === 'profile' && (
-              <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-8">
+              <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#121214] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs space-y-8">
                 <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-1">
+                  <h3 className="font-bold text-zinc-900 dark:text-white text-lg mb-1">
                     {lang === 'fa' ? 'مدیریت حساب کاربری و تصویر پروفایل' : 'Account & Profile Management'}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     {lang === 'fa'
                       ? 'تصویر پروفایل خود را آپلود کنید، از آواتارهای آماده استفاده نمایید یا مشخصات فردی را ویرایش کنید.'
                       : 'Upload your custom profile photo, select preset avatars, or update personal information.'}
@@ -748,51 +748,51 @@ export const UserDashboard: React.FC = () => {
                 <AvatarUploadManager />
 
                 {/* Personal Information Form */}
-                <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
-                  <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-4">
+                <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800">
+                  <h4 className="font-bold text-zinc-900 dark:text-white text-sm mb-4">
                     {lang === 'fa' ? 'ویرایش اطلاعات فردی' : 'Personal Information'}
                   </h4>
 
                   <form onSubmit={handleSaveProfile} className="space-y-4 max-w-lg">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                         {lang === 'fa' ? 'نام و نام خانوادگی' : 'Full Name'}
                       </label>
                       <input
                         type="text"
                         value={profileName}
                         onChange={e => setProfileName(e.target.value)}
-                        className="w-full text-xs p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden focus:ring-2 focus:ring-[#E80645]/20 focus:border-[#E80645]"
+                        className="w-full text-xs p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white outline-hidden focus:border-zinc-400"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                         {lang === 'fa' ? 'شماره موبایل' : 'Phone'}
                       </label>
                       <input
                         type="tel"
                         value={profilePhone}
                         onChange={e => setProfilePhone(e.target.value)}
-                        className="w-full text-xs p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden focus:ring-2 focus:ring-[#E80645]/20 focus:border-[#E80645]"
+                        className="w-full text-xs p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-white outline-hidden focus:border-zinc-400 font-mono"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                      <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                         {lang === 'fa' ? 'ایمیل (غیرقابل تغییر)' : 'Email (Read only)'}
                       </label>
                       <input
                         type="email"
                         value={userProfile.email}
                         disabled
-                        className="w-full text-xs p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/40 text-slate-400 outline-hidden cursor-not-allowed"
+                        className="w-full text-xs p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800/40 text-zinc-400 outline-hidden cursor-not-allowed font-mono"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="flex items-center gap-2 py-2.5 px-5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white font-bold text-xs shadow-md shadow-rose-900/20 transition-all cursor-pointer"
+                      className="flex items-center gap-2 py-2.5 px-5 rounded-lg bg-zinc-900 hover:bg-black text-white dark:bg-[#62DB00] dark:hover:bg-[#52B800] dark:text-black font-bold text-xs shadow-xs transition-all cursor-pointer tactile-press"
                     >
                       <Save className="w-4 h-4" />
                       <span>{lang === 'fa' ? 'ذخیره اطلاعات کاربری' : 'Save Changes'}</span>
@@ -801,15 +801,15 @@ export const UserDashboard: React.FC = () => {
                 </div>
 
                 {/* Appearance & Theme Customization */}
-                <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                <div className="pt-6 border-t border-zinc-100 dark:border-zinc-800">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <Palette className="w-5 h-5 text-[#E80645] dark:text-rose-400" />
+                      <Palette className="w-4 h-4 text-[#62DB00]" />
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                        <h4 className="text-sm font-bold text-zinc-900 dark:text-white">
                           {lang === 'fa' ? 'تنظیمات تم و حالت نمایشی فروشگاه' : 'Appearance & Theme'}
                         </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
                           {lang === 'fa'
                             ? 'پوسته ظاهری لومینا را مطابق سلیقه یا نور محیط خود تنظیم کنید'
                             : 'Customize Lumina color scheme to suit your preference or ambient light'}
@@ -823,19 +823,19 @@ export const UserDashboard: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setThemeMode('light')}
-                      className={`p-4 rounded-2xl border text-start transition-all cursor-pointer ${
+                      className={`p-4 rounded-xl border text-start transition-all cursor-pointer ${
                         themeMode === 'light'
-                          ? 'bg-rose-50/70 dark:bg-rose-950/40 border-[#E80645] ring-2 ring-[#E80645]/20 shadow-xs'
-                          : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                          ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-900 dark:border-white ring-1 ring-zinc-900 dark:ring-white shadow-xs'
+                          : 'bg-zinc-50 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300'
                       }`}
                     >
-                      <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-3 shadow-xs">
-                        <Sun className="w-5 h-5" />
+                      <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-3 shadow-2xs">
+                        <Sun className="w-4 h-4" />
                       </div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">
+                      <p className="text-xs font-bold text-zinc-900 dark:text-white">
                         {lang === 'fa' ? 'حالت روز (روشن)' : 'Light Theme'}
                       </p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                         {lang === 'fa'
                           ? 'پس‌زمینه تمیز و سفید با بیشترین شفافیت و کنتراست متنی'
                           : 'Crisp white canvas with high contrast and readability'}
@@ -846,22 +846,22 @@ export const UserDashboard: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setThemeMode('dark')}
-                      className={`p-4 rounded-2xl border text-start transition-all cursor-pointer ${
+                      className={`p-4 rounded-xl border text-start transition-all cursor-pointer ${
                         themeMode === 'dark'
-                          ? 'bg-rose-50/70 dark:bg-rose-950/40 border-[#E80645] ring-2 ring-[#E80645]/20 shadow-xs'
-                          : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                          ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-900 dark:border-white ring-1 ring-zinc-900 dark:ring-white shadow-xs'
+                          : 'bg-zinc-50 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300'
                       }`}
                     >
-                      <div className="w-9 h-9 rounded-xl bg-rose-100 dark:bg-rose-900/60 text-[#E80645] dark:text-rose-400 flex items-center justify-center mb-3 shadow-xs">
-                        <Moon className="w-5 h-5" />
+                      <div className="w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-3 shadow-2xs">
+                        <Moon className="w-4 h-4" />
                       </div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">
+                      <p className="text-xs font-bold text-zinc-900 dark:text-white">
                         {lang === 'fa' ? 'حالت شب (تاریک)' : 'Dark Theme'}
                       </p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                         {lang === 'fa'
-                          ? 'مشکی ملایم با هایلایت‌های روبی بدون خستگی چشم'
-                          : 'Ergonomic deep slate with ruby accents for low eye strain'}
+                          ? 'مشکی ملایم با هایلایت‌های خاکستری تیره و ارگونومیک'
+                          : 'Ergonomic deep slate with minimalist neutral accents'}
                       </p>
                     </button>
 
@@ -869,19 +869,19 @@ export const UserDashboard: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setThemeMode('system')}
-                      className={`p-4 rounded-2xl border text-start transition-all cursor-pointer ${
+                      className={`p-4 rounded-xl border text-start transition-all cursor-pointer ${
                         themeMode === 'system'
-                          ? 'bg-rose-50/70 dark:bg-rose-950/40 border-[#E80645] ring-2 ring-[#E80645]/20 shadow-xs'
-                          : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                          ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-900 dark:border-white ring-1 ring-zinc-900 dark:ring-white shadow-xs'
+                          : 'bg-zinc-50 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300'
                       }`}
                     >
-                      <div className="w-9 h-9 rounded-xl bg-teal-100 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-3 shadow-xs">
-                        <Laptop className="w-5 h-5" />
+                      <div className="w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-3 shadow-2xs">
+                        <Laptop className="w-4 h-4" />
                       </div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">
+                      <p className="text-xs font-bold text-zinc-900 dark:text-white">
                         {lang === 'fa' ? 'خودکار / سیستم' : 'System Match'}
                       </p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                         {lang === 'fa'
                           ? 'هماهنگی هوشمند و خودکار با تم ویندوز، مکینتاش یا موبایل شما'
                           : 'Automatically syncs with your OS light/dark schedule'}

@@ -323,6 +323,22 @@ export function generateSeoMetadata(params: {
     };
   }
 
+  // 6.5. BEST SELLERS
+  if (activeTab === 'bestsellers') {
+    return {
+      title: lang === 'fa' ? 'پرفروش‌ترین‌ها و محبوب‌ترین محصولات دیجیتال | فروشگاه لومینا' : 'Best Sellers & Top-Selling Gadgets | Lumina Store',
+      description:
+        lang === 'fa'
+          ? 'مشاهده لیست برترین و پرفروش‌ترین تجهیزات صوتی، ساعت هوشمند و لوازم مدرن کار با بالاترین امتیاز رضایت و تضمین اصالت در لومینا.'
+          : 'Explore Lumina top-selling gadgets, highest-rated headphones, smartwatches, and desk accessories chosen by thousands of satisfied customers.',
+      canonicalUrl: `${origin}/bestsellers`,
+      ogType: 'website',
+      keywords: lang === 'fa'
+        ? ['پرفروش‌ترین کالاها', 'محبوب‌ترین هدفون', 'خرید پرفروش‌های لومینا', 'برترین ساعت هوشمند']
+        : ['best sellers', 'top tech gadgets', 'popular audio', 'lumina bestsellers']
+    };
+  }
+
   // 7. USER ACCOUNT
   if (activeTab === 'account') {
     return {

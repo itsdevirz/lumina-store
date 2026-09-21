@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useRef, ReactNode } from 'react';
-import { Product, ProductVariant, CartItem, Order, FilterState, ToastMessage, UserProfile, StoredUser, Language, ThemeMode, AccentColor, Festival, FestivalProduct } from '../types';
-import { PRODUCTS } from '../data/products';
+import { Product, ProductVariant, CartItem, Order, FilterState, ToastMessage, UserProfile, StoredUser, Language, ThemeMode, AccentColor, Festival, FestivalProduct, Category } from '../types';
+import { PRODUCTS, CATEGORIES } from '../data/products';
 import { playNotificationChime } from '../utils/sound';
 
 export const ACCENT_PALETTES: Record<AccentColor, {
@@ -201,10 +201,11 @@ interface StoreContextType {
     selectedAttributes?: { [key: string]: string },
     selectedColorHex?: string
   ) => void;
-  removeFromCart: (cartItemIndexOrProductId: number | string) => void;
-  updateCartQuantity: (cartItemIndexOrProductId: number | string, delta: number) => void;
+  removeFromCart: (cartItemIndexOrProductId: number | string, selectedColor?: string, selectedSize?: string) => void;
+  updateCartQuantity: (cartItemIndexOrProductId: number | string, quantity: number, selectedColor?: string, selectedSize?: string) => void;
   clearCart: () => void;
   toggleWishlist: (productId: string) => void;
+  clearWishlist: () => void;
   isInWishlist: (productId: string) => boolean;
   appliedCoupon: { code: string; percent: number; maxDiscount?: number; minPurchase?: number } | null;
   applyCoupon: (code: string) => Promise<boolean> | boolean;
@@ -249,6 +250,8 @@ interface StoreContextType {
   openFestivalPage: (f?: Festival) => void;
   refetchFestivals: () => Promise<void>;
   addFestivalProductToCart: (product: Product, festivalPrice: number, festivalStock?: number) => void;
+  categories: Category[];
+  refetchCategories: () => Promise<void>;
 }
 
 
@@ -343,6 +346,9 @@ function parseRouteFromUrl(availableProducts: Product[]) {
   }
   if (pathname.endsWith('/wishlist') || searchParams.get('tab') === 'wishlist') {
     return { tab: 'wishlist', product: null, category: 'all' };
+  }
+  if (pathname.endsWith('/bestsellers') || searchParams.get('tab') === 'bestsellers') {
+    return { tab: 'bestsellers', product: null, category: 'all' };
   }
   if (pathname.endsWith('/account') || searchParams.get('tab') === 'account') {
     return { tab: 'account', product: null, category: 'all' };
@@ -509,7 +515,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         } else {
           window.history.pushState({ tab: 'shop' }, '', '/shop');
         }
-      } else if (['cart', 'checkout', 'wishlist', 'account', 'festival'].includes(resolvedTab)) {
+      } else if (['cart', 'checkout', 'wishlist', 'account', 'festival', 'bestsellers'].includes(resolvedTab)) {
         window.history.pushState({ tab: resolvedTab }, '', `/${resolvedTab}`);
       }
     }
@@ -532,8 +538,26 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   };
 
+  // Categories state with database sync
+  const [categoriesList, setCategoriesList] = useState<Category[]>(CATEGORIES);
+
+  const fetchCategoriesFromApi = async () => {
+    try {
+      const res = await fetch('/api/categories');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setCategoriesList(data);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching live categories:', err);
+    }
+  };
+
   useEffect(() => {
     fetchProductsFromApi();
+    fetchCategoriesFromApi();
   }, []);
 
   // Cart state
@@ -926,9 +950,45 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   const login = async (identifier: string, password?: string): Promise<{ success: boolean; error?: string }> => {
-    const trimmed = identifier.trim().toLowerCase();
+    const trimmed = identifier.trim();
+
+    // 1. Try backend authentication API first
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: trimmed, password })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success && data.user) {
+        setCurrentUser(data.user);
+        localStorage.setItem('lumina_current_user', JSON.stringify(data.user));
+        if (data.token) {
+          localStorage.setItem('lumina_user_token', data.token);
+        }
+        setIsAuthModalOpen(false);
+        addToast({
+          title: lang === 'fa' ? 'خوش آمدید!' : 'Welcome back!',
+          description: lang === 'fa' ? `${data.user.name} گرامی، به لومینا خوش آمدید.` : `Welcome back, ${data.user.name}.`,
+          type: 'success'
+        });
+        setTimeout(() => syncOrdersWithBackend(), 100);
+        return { success: true };
+      } else if (!res.ok) {
+        return {
+          success: false,
+          error: data.error || (lang === 'fa' ? 'اطلاعات ورود نادرست است.' : 'Invalid credentials.')
+        };
+      }
+    } catch (err) {
+      console.warn('Backend login endpoint unavailable, trying local fallback:', err);
+    }
+
+    // 2. Fallback to local stored registered users if offline / static
+    const trimmedLower = trimmed.toLowerCase();
     const userMatch = registeredUsers.find(
-      u => u.email.toLowerCase() === trimmed || u.phone.replace(/\s+/g, '') === trimmed.replace(/\s+/g, '')
+      u => u.email.toLowerCase() === trimmedLower || u.phone.replace(/\s+/g, '') === trimmedLower.replace(/\s+/g, '')
     );
 
     if (!userMatch) {
@@ -948,6 +1008,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     // Set user profile without sensitive password
     const { password: _, ...cleanProfile } = userMatch;
     setCurrentUser(cleanProfile);
+    localStorage.setItem('lumina_current_user', JSON.stringify(cleanProfile));
     setIsAuthModalOpen(false);
 
     addToast({
@@ -968,7 +1029,44 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const trimmedEmail = data.email.trim().toLowerCase();
     const trimmedPhone = data.phone.trim();
 
-    // Check duplicate
+    // 1. Try backend registration API first
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name.trim(),
+          email: trimmedEmail,
+          phone: trimmedPhone,
+          password: data.password || 'password123'
+        })
+      });
+
+      const result = await res.json();
+      if (res.ok && result.success && result.user) {
+        setCurrentUser(result.user);
+        localStorage.setItem('lumina_current_user', JSON.stringify(result.user));
+        if (result.token) {
+          localStorage.setItem('lumina_user_token', result.token);
+        }
+        setIsAuthModalOpen(false);
+        addToast({
+          title: lang === 'fa' ? 'ثبت‌نام با موفقیت انجام شد' : 'Registration Successful',
+          description: lang === 'fa' ? `خوش آمدید ${result.user.name}، حساب شما فعال گردید.` : `Welcome ${result.user.name}, your account is ready.`,
+          type: 'success'
+        });
+        return { success: true };
+      } else if (!res.ok) {
+        return {
+          success: false,
+          error: result.error || (lang === 'fa' ? 'خطا در ثبت‌نام کاربر.' : 'Registration failed.')
+        };
+      }
+    } catch (err) {
+      console.warn('Backend register endpoint unavailable, trying local fallback:', err);
+    }
+
+    // 2. Fallback to local stored registered users if offline / static
     const exists = registeredUsers.some(
       u => u.email.toLowerCase() === trimmedEmail || u.phone === trimmedPhone
     );
@@ -1004,6 +1102,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setRegisteredUsers(prev => [...prev, newUser]);
     const { password: _, ...cleanProfile } = newUser;
     setCurrentUser(cleanProfile);
+    localStorage.setItem('lumina_current_user', JSON.stringify(cleanProfile));
     setIsAuthModalOpen(false);
 
     addToast({
@@ -1017,6 +1116,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const logout = () => {
     setCurrentUser(null);
+    localStorage.removeItem('lumina_current_user');
+    localStorage.removeItem('lumina_user_token');
     addToast({
       title: lang === 'fa' ? 'خروج از حساب' : 'Signed Out',
       description: lang === 'fa' ? 'با موفقیت از حساب کاربری خود خارج شدید.' : 'You have signed out successfully.',
@@ -1027,26 +1128,40 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const quickDemoLogin = () => {
     const { password: _, ...cleanProfile } = DEMO_USER;
     setCurrentUser(cleanProfile);
+    localStorage.setItem('lumina_current_user', JSON.stringify(cleanProfile));
     setIsAuthModalOpen(false);
     addToast({
       title: lang === 'fa' ? 'ورود با حساب کاربری آزمایشی' : 'Logged in with Demo Account',
       description: lang === 'fa' ? 'خوش آمدید کیان مهرآذر (عضو VIP)' : 'Welcome Kian Mehrazar (VIP)',
       type: 'success'
     });
+    setTimeout(() => syncOrdersWithBackend(), 100);
   };
 
-  const updateUserProfile = (data: Partial<UserProfile>) => {
+  const updateUserProfile = async (data: Partial<UserProfile>) => {
     if (!currentUser) return;
     const updated = { ...currentUser, ...data };
     setCurrentUser(updated);
+    localStorage.setItem('lumina_current_user', JSON.stringify(updated));
     setRegisteredUsers(prev => prev.map(u => (u.id === updated.id ? { ...u, ...data } : u)));
+
+    try {
+      await fetch('/api/auth/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUser.id, ...data })
+      });
+    } catch (err) {
+      console.warn('Failed to sync profile to server:', err);
+    }
+
     addToast({
       title: lang === 'fa' ? 'پروفایل به‌روزرسانی شد' : 'Profile Updated',
       type: 'success'
     });
   };
 
-  const addAddress = (addr: Omit<UserProfile['addresses'][0], 'id'>) => {
+  const addAddress = async (addr: Omit<UserProfile['addresses'][0], 'id'>) => {
     if (!currentUser) return;
     const newAddress = {
       ...addr,
@@ -1057,6 +1172,16 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       : [...currentUser.addresses, newAddress];
 
     updateUserProfile({ addresses: updatedAddresses });
+
+    try {
+      await fetch('/api/auth/addresses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUser.id, ...addr })
+      });
+    } catch (err) {
+      console.warn('Failed to sync address to server:', err);
+    }
   };
 
   const addToCart = (
@@ -1123,12 +1248,19 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     });
   };
 
-  const removeFromCart = (cartItemIndexOrProductId: number | string) => {
+  const removeFromCart = (
+    cartItemIndexOrProductId: number | string,
+    selectedColor?: string,
+    selectedSize?: string
+  ) => {
     setCart(prev => prev.filter((item, idx) => {
       if (typeof cartItemIndexOrProductId === 'number') {
         return idx !== cartItemIndexOrProductId;
       }
-      return item.product.id !== cartItemIndexOrProductId;
+      if (item.product.id !== cartItemIndexOrProductId) return true;
+      if (selectedColor && item.selectedColor && item.selectedColor !== selectedColor) return true;
+      if (selectedSize && item.selectedSize && item.selectedSize !== selectedSize) return true;
+      return false;
     }));
     addToast({
       title: lang === 'fa' ? 'حذف از سبد' : 'Removed from cart',
@@ -1137,15 +1269,22 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     });
   };
 
-  const updateCartQuantity = (cartItemIndexOrProductId: number | string, delta: number) => {
+  const updateCartQuantity = (
+    cartItemIndexOrProductId: number | string,
+    quantity: number,
+    selectedColor?: string,
+    selectedSize?: string
+  ) => {
     setCart(prev =>
       prev
         .map((item, idx) => {
           const isTarget = typeof cartItemIndexOrProductId === 'number'
             ? idx === cartItemIndexOrProductId
-            : item.product.id === cartItemIndexOrProductId;
+            : item.product.id === cartItemIndexOrProductId &&
+              (!selectedColor || !item.selectedColor || item.selectedColor === selectedColor) &&
+              (!selectedSize || !item.selectedSize || item.selectedSize === selectedSize);
           if (isTarget) {
-            const newQty = item.quantity + delta;
+            const newQty = quantity;
             if (newQty <= 0) return null;
             const maxStock = item.selectedVariant?.stock ?? item.product.stock;
             if (newQty > maxStock) {
@@ -1154,7 +1293,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                 description: lang === 'fa' ? 'تعداد انتخابی بیش از موجودی انبار این تنوع است.' : 'Maximum stock reached.',
                 type: 'warning'
               });
-              return item;
+              return { ...item, quantity: maxStock };
             }
             return { ...item, quantity: newQty };
           }
@@ -1168,7 +1307,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const toggleWishlist = (productId: string) => {
     const exists = wishlist.includes(productId);
-    const prod = PRODUCTS.find(p => p.id === productId);
+    const prod = productsList.find(p => p.id === productId) || PRODUCTS.find(p => p.id === productId);
     if (exists) {
       setWishlist(prev => prev.filter(id => id !== productId));
       addToast({
@@ -1185,6 +1324,15 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   };
 
+  const clearWishlist = () => {
+    setWishlist([]);
+    localStorage.removeItem('lumina_wishlist');
+    addToast({
+      title: lang === 'fa' ? 'لیست علاقه‌مندی‌ها خالی شد' : 'Wishlist Cleared',
+      type: 'info'
+    });
+  };
+
   const isInWishlist = (productId: string) => wishlist.includes(productId);
 
   const applyCoupon = async (code: string): Promise<boolean> => {
@@ -1196,6 +1344,50 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         type: 'warning'
       });
       return false;
+    }
+
+    const subtotal = cart.reduce((acc, item) => {
+      const itemPrice = item.selectedVariant?.price ?? item.product.price;
+      return acc + itemPrice * item.quantity;
+    }, 0);
+
+    // Try backend validation first
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: trimmed, subtotal, items: cart })
+      });
+
+      if (res.ok) {
+        const valData = await res.json();
+        if (valData.valid && valData.coupon) {
+          setAppliedCoupon({
+            code: valData.coupon.code,
+            percent: valData.coupon.discountPercent,
+            maxDiscount: valData.coupon.maxDiscount,
+            minPurchase: valData.coupon.minPurchase
+          });
+
+          addToast({
+            title: lang === 'fa' ? 'کد تخفیف با موفقیت اعمال شد' : 'Coupon Applied',
+            description: valData.coupon.festivalTitle
+              ? (lang === 'fa' ? `تخفیف جشنواره «${valData.coupon.festivalTitle}» با موفقیت فعال شد.` : 'Festival coupon activated.')
+              : (lang === 'fa' ? `${valData.coupon.discountPercent}٪ تخفیف برای سفارش شما اعمال شد.` : 'Coupon activated.'),
+            type: 'success'
+          });
+          return true;
+        } else if (valData.error) {
+          addToast({
+            title: lang === 'fa' ? 'کد تخفیف نامعتبر است' : 'Invalid Coupon Code',
+            description: valData.error,
+            type: 'warning'
+          });
+          return false;
+        }
+      }
+    } catch {
+      // Backend unavailable, fallback to local coupons
     }
 
     // Try fetching fresh coupons list from backend
@@ -1241,7 +1433,6 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
 
     // Check minimum purchase amount requirement
-    const subtotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
     if (found.minPurchase && subtotal < found.minPurchase) {
       addToast({
         title: lang === 'fa' ? 'شرط حداقل خرید رعایت نشده' : 'Minimum Purchase Required',
@@ -1320,7 +1511,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         productName: item.product.name,
         productNameFa: item.product.nameFa,
         image: item.selectedVariant?.image || item.product.images[0],
-        price: item.product.price,
+        price: item.selectedVariant?.price ?? item.product.price,
         quantity: item.quantity,
         selectedColor: item.selectedColor,
         selectedColorHex: item.selectedColorHex,
@@ -1352,6 +1543,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: orderId,
+          userId: currentUser?.id,
           customer: {
             name: shippingDetails.fullName || userProfile.name,
             phone: shippingDetails.phone || userProfile.phone,
@@ -1381,7 +1573,10 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const syncOrdersWithBackend = async () => {
     setIsSyncingOrders(true);
     try {
-      const res = await fetch('/api/orders');
+      const url = currentUser?.id
+        ? `/api/orders?userId=${encodeURIComponent(currentUser.id)}&email=${encodeURIComponent(currentUser.email || '')}`
+        : '/api/orders';
+      const res = await fetch(url);
       if (res.ok) {
         const serverOrders = await res.json();
         if (Array.isArray(serverOrders) && serverOrders.length > 0) {
@@ -1691,6 +1886,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         updateCartQuantity,
         clearCart,
         toggleWishlist,
+        clearWishlist,
         isInWishlist,
         appliedCoupon,
         applyCoupon,
@@ -1730,6 +1926,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         openFestivalPage,
         refetchFestivals: fetchFestivalsFromApi,
         addFestivalProductToCart,
+        categories: categoriesList,
+        refetchCategories: fetchCategoriesFromApi,
       }}
 
     >

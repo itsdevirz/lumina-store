@@ -43,7 +43,6 @@ interface ModernSidebarProps {
   onOpenCommandPalette: () => void;
   onOpenShortcuts: () => void;
   onGoToAdmin: () => void;
-  onOpenSeoInspector?: () => void;
   mobileOpen: boolean;
   onCloseMobile: () => void;
 }
@@ -54,7 +53,6 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
   onOpenCommandPalette,
   onOpenShortcuts,
   onGoToAdmin,
-  onOpenSeoInspector,
   mobileOpen,
   onCloseMobile
 }) => {
@@ -127,11 +125,10 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
       icon: Trophy,
       hotkey: 'G B',
       action: () => {
-        setFilters(prev => ({ ...prev, sortBy: 'popular', selectedCategory: 'all', onSaleOnly: false }));
-        setActiveTab('shop');
+        setActiveTab('bestsellers');
         onCloseMobile();
       },
-      isActive: activeTab === 'shop' && filters.sortBy === 'popular' && !filters.onSaleOnly
+      isActive: activeTab === 'bestsellers'
     },
     {
       id: 'cart',
@@ -347,21 +344,6 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
                   </div>
                   <span className="text-[10px] font-mono text-zinc-400">/admin</span>
                 </button>
-
-                {onOpenSeoInspector && (
-                  <button
-                    onClick={() => {
-                      onOpenSeoInspector();
-                      onCloseMobile();
-                    }}
-                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 hover:text-zinc-900 dark:hover:text-zinc-200 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Layers className="w-3.5 h-3.5 text-emerald-500" />
-                      <span>{lang === 'fa' ? 'آنالیز سئو (SEO)' : 'SEO Engine'}</span>
-                    </div>
-                  </button>
-                )}
               </div>
             </div>
           )}

@@ -47,6 +47,7 @@ import { CATEGORIES } from '../../data/products';
 
 interface CategoryManagementViewProps {
   onNavigateToProducts?: (categoryId: string) => void;
+  onCategorySelected?: (categoryId: string) => void;
   onCategoryChanged?: () => void;
 }
 
@@ -72,8 +73,10 @@ const AVAILABLE_ICONS: { [key: string]: React.ComponentType<{ className?: string
 
 export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
   onNavigateToProducts,
+  onCategorySelected,
   onCategoryChanged
 }) => {
+  const navigateProducts = onNavigateToProducts || onCategorySelected;
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -513,16 +516,16 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
       {/* Toast Notification */}
       {toastMessage && (
         <div
-          className={`fixed bottom-6 left-6 z-50 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-bold border transition-all animate-in slide-in-from-bottom-5 ${
+          className={`fixed bottom-6 left-6 z-50 px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-xs font-bold border transition-all animate-in slide-in-from-bottom-5 ${
             toastMessage.type === 'success'
-              ? 'bg-slate-900 text-emerald-300 border-emerald-500/40 dark:bg-emerald-950/90 dark:text-emerald-200'
-              : 'bg-slate-900 text-rose-300 border-rose-500/40 dark:bg-rose-950/90 dark:text-rose-200'
+              ? 'bg-zinc-900 text-[#62DB00] border-[#62DB00]/40 dark:bg-zinc-900 dark:text-[#62DB00]'
+              : 'bg-zinc-900 text-rose-300 border-rose-500/40 dark:bg-zinc-900 dark:text-rose-200'
           }`}
         >
           {toastMessage.type === 'success' ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#62DB00] shrink-0" />
           ) : (
-            <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
           )}
           <span>{toastMessage.text}</span>
         </div>
@@ -532,19 +535,19 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900/60 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-              <FolderTree className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-900 dark:text-zinc-100">
+              <FolderTree className="w-4 h-4 text-[#62DB00]" />
             </div>
-            <h1 className="text-xl font-black text-slate-900 dark:text-slate-100">مدیریت دسته‌بندی‌ها</h1>
+            <h1 className="text-xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">مدیریت دسته‌بندی‌ها</h1>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
             سازماندهی دسته‌بندی‌های اصلی، زیرمجموعه‌ها، تصاویر شاخص و ارتباط با محصولات فروشگاه
           </p>
         </div>
 
         <button
           onClick={() => handleOpenCreate()}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm hover:shadow-md transition-all cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:bg-[#62DB00] hover:text-black dark:hover:bg-[#62DB00] dark:hover:text-black font-bold text-xs shadow-xs transition-colors cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>افزودن دسته‌بندی جدید</span>
@@ -553,92 +556,92 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">کل دسته‌بندی‌ها</span>
-            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+            <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">کل دسته‌بندی‌ها</span>
+            <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
               <Layers className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-slate-100">
+            <span className="text-2xl font-black text-zinc-900 dark:text-zinc-100 font-mono">
               {formatNumber(stats.total)}
             </span>
-            <span className="text-[11px] text-slate-400">شاخه</span>
+            <span className="text-[11px] text-zinc-400 font-sans">شاخه</span>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">دسته‌های فعال</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">دسته‌های فعال</span>
+            <div className="w-8 h-8 rounded-xl bg-[#62DB00]/10 flex items-center justify-center text-[#62DB00]">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+            <span className="text-2xl font-black text-[#62DB00] font-mono">
               {formatNumber(stats.activeCount)}
             </span>
-            <span className="text-[11px] text-slate-400">در فروشگاه</span>
+            <span className="text-[11px] text-zinc-400 font-sans">در فروشگاه</span>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">زیردسته‌بندی‌ها</span>
-            <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+            <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">زیردسته‌بندی‌ها</span>
+            <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
               <FolderTree className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
+            <span className="text-2xl font-black text-zinc-900 dark:text-zinc-100 font-mono">
               {formatNumber(stats.subCategoriesCount)}
             </span>
-            <span className="text-[11px] text-slate-400">وابسته</span>
+            <span className="text-[11px] text-zinc-400 font-sans">وابسته</span>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">محصولات منتسب</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/60 flex items-center justify-center text-amber-600 dark:text-amber-400">
+            <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">محصولات منتسب</span>
+            <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
               <Package className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-slate-100">
+            <span className="text-2xl font-black text-zinc-900 dark:text-zinc-100 font-mono">
               {formatNumber(stats.totalAssignedProducts)}
             </span>
-            <span className="text-[11px] text-slate-400">کالا</span>
+            <span className="text-[11px] text-zinc-400 font-sans">کالا</span>
           </div>
         </div>
       </div>
 
       {/* Control Bar: Search, Filters & View Mode */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
+      <div className="p-4 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800/80 shadow-xs space-y-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           {/* Search Input */}
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="جستجو در نام فارسی، انگلیسی یا نامک..."
-              className="w-full pr-9 pl-4 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-hidden focus:border-indigo-500"
+              className="w-full pr-9 pl-4 py-2 text-xs rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none focus:border-[#62DB00] focus:ring-1 focus:ring-[#62DB00]"
             />
           </div>
 
           {/* View Mode Toggle & Actions */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700">
+            <div className="flex items-center p-1 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
               <button
                 type="button"
                 onClick={() => setViewMode('tree')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   viewMode === 'tree'
-                    ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                    : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
                 }`}
               >
                 <FolderTree className="w-3.5 h-3.5" />
@@ -649,8 +652,8 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                 onClick={() => setViewMode('table')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   viewMode === 'table'
-                    ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-xs border border-zinc-200/80 dark:border-zinc-700'
+                    : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
                 }`}
               >
                 <Layers className="w-3.5 h-3.5" />
@@ -661,7 +664,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
             <button
               onClick={fetchCategories}
               title="تازه‌سازی لیست"
-              className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer"
+              className="p-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-500 hover:text-[#62DB00] cursor-pointer transition-colors"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
             </button>
@@ -669,8 +672,8 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
         </div>
 
         {/* Secondary Filters */}
-        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800/80 text-xs">
-          <div className="flex items-center gap-1.5 text-slate-500">
+        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-zinc-100 dark:border-zinc-800/80 text-xs">
+          <div className="flex items-center gap-1.5 text-zinc-500">
             <Filter className="w-3.5 h-3.5" />
             <span>فیلترها:</span>
           </div>
@@ -679,7 +682,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
           <select
             value={selectedParentFilter}
             onChange={e => setSelectedParentFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 outline-hidden text-xs"
+            className="px-2.5 py-1.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 outline-none text-xs focus:border-[#62DB00]"
           >
             <option value="all">همه شاخه‌ها (والد و زیردسته)</option>
             <option value="root_only">فقط دسته‌بندی‌های اصلی (بدون والد)</option>
@@ -694,7 +697,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
           <select
             value={selectedStatusFilter}
             onChange={e => setSelectedStatusFilter(e.target.value as any)}
-            className="px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 outline-hidden text-xs"
+            className="px-2.5 py-1.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 outline-none text-xs focus:border-[#62DB00]"
           >
             <option value="all">همه وضعیت‌ها</option>
             <option value="active">فقط فعال‌ها</option>
@@ -705,7 +708,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value as any)}
-            className="px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 outline-hidden text-xs mr-auto"
+            className="px-2.5 py-1.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 outline-none text-xs mr-auto focus:border-[#62DB00]"
           >
             <option value="order">مرتب‌سازی: اولویت چیدمان</option>
             <option value="products">مرتب‌سازی: بیشترین محصول</option>
@@ -716,26 +719,26 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
 
       {/* Main Content Area: Tree View or Table View */}
       {isLoading ? (
-        <div className="p-16 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-slate-400">
-          <Loader2 className="w-8 h-8 animate-spin mb-3 text-indigo-500" />
+        <div className="p-16 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800 flex flex-col items-center justify-center text-zinc-400">
+          <Loader2 className="w-8 h-8 animate-spin mb-3 text-[#62DB00]" />
           <span className="text-xs font-bold">در حال بارگذاری دسته‌بندی‌ها...</span>
         </div>
       ) : categories.length === 0 ? (
-        <div className="p-16 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-center">
-          <FolderTree className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-700" />
-          <h3 className="font-bold text-sm text-slate-800 dark:text-slate-200 mb-1">دسته‌بندی‌ای یافت نشد</h3>
-          <p className="text-xs text-slate-500 mb-4">می‌توانید اولین دسته‌بندی فروشگاه را اکنون ایجاد کنید.</p>
+        <div className="p-16 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800 text-center">
+          <FolderTree className="w-12 h-12 mx-auto mb-3 text-zinc-300 dark:text-zinc-700" />
+          <h3 className="font-bold text-sm text-zinc-800 dark:text-zinc-200 mb-1">دسته‌بندی‌ای یافت نشد</h3>
+          <p className="text-xs text-zinc-500 mb-4">می‌توانید اولین دسته‌بندی فروشگاه را اکنون ایجاد کنید.</p>
           <button
             onClick={() => handleOpenCreate()}
-            className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs"
+            className="px-4 py-2 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:bg-[#62DB00] hover:text-black dark:hover:bg-[#62DB00] dark:hover:text-black font-bold text-xs"
           >
             ایجاد اولین دسته‌بندی
           </button>
         </div>
       ) : viewMode === 'tree' && !searchQuery.trim() && selectedParentFilter === 'all' ? (
         /* --- HIERARCHICAL TREE VIEW --- */
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-500">
+        <div className="p-5 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800 shadow-xs space-y-3">
+          <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800 text-xs font-bold text-zinc-500">
             <span>ساختار درختی شاخه‌ها و زیرمجموعه‌ها</span>
             <div className="flex items-center gap-3">
               <button
@@ -744,7 +747,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                   const allParentIds = new Set(categories.map(c => c.id));
                   setExpandedIds(allParentIds);
                 }}
-                className="text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                className="text-[#62DB00] hover:underline cursor-pointer"
               >
                 باز کردن همه
               </button>
@@ -752,7 +755,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
               <button
                 type="button"
                 onClick={() => setExpandedIds(new Set())}
-                className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 cursor-pointer"
+                className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 cursor-pointer"
               >
                 بستن همه
               </button>
@@ -767,17 +770,17 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
               return (
                 <div
                   key={rootCat.id}
-                  className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 overflow-hidden transition-all"
+                  className="rounded-2xl border border-zinc-200/90 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 overflow-hidden transition-all"
                 >
                   {/* Root Category Row */}
-                  <div className="p-3.5 flex items-center justify-between gap-3 bg-white dark:bg-slate-800/80">
+                  <div className="p-3.5 flex items-center justify-between gap-3 bg-white dark:bg-zinc-900/80">
                     <div className="flex items-center gap-3 min-w-0">
                       {/* Expand / Collapse Button */}
                       {children.length > 0 ? (
                         <button
                           type="button"
                           onClick={() => toggleExpand(rootCat.id)}
-                          className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-transform cursor-pointer"
+                          className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-[#62DB00]/10 text-zinc-600 dark:text-zinc-300 flex items-center justify-center transition-transform cursor-pointer"
                         >
                           <ChevronDown
                             className={`w-4 h-4 transition-transform duration-200 ${
@@ -786,13 +789,13 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                           />
                         </button>
                       ) : (
-                        <div className="w-7 h-7 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600">
+                        <div className="w-7 h-7 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-300 dark:text-zinc-600">
                           •
                         </div>
                       )}
 
                       {/* Image Thumbnail */}
-                      <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-700 shrink-0 border border-slate-200/80 dark:border-slate-700">
+                      <div className="w-10 h-10 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/80 dark:border-zinc-700">
                         {rootCat.image ? (
                           <img
                             src={rootCat.image}
@@ -804,7 +807,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                             }}
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-slate-400">
+                          <div className="w-full h-full flex items-center justify-center text-zinc-400">
                             {renderCategoryIcon(rootCat.icon)}
                           </div>
                         )}
@@ -813,22 +816,22 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                       {/* Category Info */}
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
+                          <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 truncate">
                             {rootCat.nameFa}
                           </span>
-                          <span className="text-[11px] font-mono text-slate-400 dark:text-slate-500">
+                          <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500">
                             ({rootCat.slug})
                           </span>
                           {!rootCat.isActive && (
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                               غیرفعال
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        <div className="flex items-center gap-2 text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
                           <span>{children.length} زیردسته</span>
                           <span>•</span>
-                          <span className="font-medium">
+                          <span className="font-medium font-mono">
                             {formatNumber(rootCat.totalProductCount || rootCat.itemCount)} محصول
                           </span>
                           {rootCat.description && (
@@ -847,18 +850,18 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                         type="button"
                         onClick={() => handleOpenCreate(rootCat.id)}
                         title="افزودن زیردسته‌بندی به این شاخه"
-                        className="p-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 dark:bg-slate-700 dark:hover:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 transition-colors text-xs font-bold flex items-center gap-1 cursor-pointer"
+                        className="p-1.5 rounded-xl bg-zinc-100 hover:bg-[#62DB00]/10 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 hover:text-[#62DB00] transition-colors text-xs font-bold flex items-center gap-1 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" />
                         <span className="hidden sm:inline">افزودن زیردسته</span>
                       </button>
 
-                      {onNavigateToProducts && (
+                      {navigateProducts && (
                         <button
                           type="button"
-                          onClick={() => onNavigateToProducts(rootCat.slug || rootCat.id)}
+                          onClick={() => navigateProducts(rootCat.slug || rootCat.id)}
                           title="مشاهده محصولات این دسته‌بندی"
-                          className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                         >
                           <Package className="w-4 h-4" />
                         </button>
@@ -870,8 +873,8 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                         title={rootCat.isActive ? 'غیرفعال‌سازی دسته‌بندی' : 'فعال‌سازی دسته‌بندی'}
                         className={`p-1.5 rounded-xl transition-colors cursor-pointer ${
                           rootCat.isActive
-                            ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/60'
-                            : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
+                            ? 'text-[#62DB00] hover:bg-[#62DB00]/10'
+                            : 'text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
                         }`}
                       >
                         {rootCat.isActive ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
@@ -881,7 +884,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                         type="button"
                         onClick={() => handleOpenEdit(rootCat)}
                         title="ویرایش دسته‌بندی"
-                        className="p-1.5 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors cursor-pointer"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
@@ -899,19 +902,19 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
 
                   {/* Subcategories Container */}
                   {isExpanded && children.length > 0 && (
-                    <div className="p-3 pr-10 border-t border-slate-100 dark:border-slate-800/80 space-y-2 bg-slate-50/70 dark:bg-slate-900/40">
+                    <div className="p-3 pr-10 border-t border-zinc-100 dark:border-zinc-800/80 space-y-2 bg-zinc-50/70 dark:bg-zinc-900/40">
                       {children.map(subCat => {
                         const grandChildren = getChildrenOf(subCat.id);
 
                         return (
                           <div
                             key={subCat.id}
-                            className="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-3 shadow-2xs"
+                            className="p-2.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-zinc-200/80 dark:border-zinc-700/80 flex items-center justify-between gap-3 shadow-2xs"
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
-                              <span className="text-slate-300 dark:text-slate-600">└──</span>
+                              <span className="text-zinc-300 dark:text-zinc-600">└──</span>
 
-                              <div className="w-8 h-8 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-700 shrink-0 border border-slate-200 dark:border-slate-700">
+                              <div className="w-8 h-8 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-700 shrink-0 border border-zinc-200 dark:border-zinc-700">
                                 {subCat.image ? (
                                   <img
                                     src={subCat.image}
@@ -919,7 +922,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                  <div className="w-full h-full flex items-center justify-center text-zinc-400">
                                     {renderCategoryIcon(subCat.icon, 'w-3.5 h-3.5')}
                                   </div>
                                 )}
@@ -927,17 +930,17 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
 
                               <div className="min-w-0">
                                 <div className="flex items-center gap-1.5">
-                                  <span className="font-bold text-xs text-slate-800 dark:text-slate-200 truncate">
+                                  <span className="font-bold text-xs text-zinc-800 dark:text-zinc-200 truncate">
                                     {subCat.nameFa}
                                   </span>
-                                  <span className="text-[10px] font-mono text-slate-400">({subCat.slug})</span>
+                                  <span className="text-[10px] font-mono text-zinc-400">({subCat.slug})</span>
                                   {!subCat.isActive && (
-                                    <span className="px-1 py-0.2 rounded text-[9px] bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                                    <span className="px-1 py-0.2 rounded text-[9px] bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
                                       غیرفعال
                                     </span>
                                   )}
                                 </div>
-                                <div className="text-[10px] text-slate-500 dark:text-slate-400">
+                                <div className="text-[10px] text-zinc-500 dark:text-zinc-400 font-mono">
                                   {formatNumber(subCat.itemCount)} محصول مستقیم
                                   {grandChildren.length > 0 && ` • ${grandChildren.length} زیرشاخه`}
                                 </div>
@@ -949,17 +952,17 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                                 type="button"
                                 onClick={() => handleOpenCreate(subCat.id)}
                                 title="افزودن زیردسته سطح ۳"
-                                className="p-1 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                                className="p-1 rounded-lg text-zinc-400 hover:text-[#62DB00] hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer"
                               >
                                 <Plus className="w-3.5 h-3.5" />
                               </button>
 
-                              {onNavigateToProducts && (
+                              {navigateProducts && (
                                 <button
                                   type="button"
-                                  onClick={() => onNavigateToProducts(subCat.slug || subCat.id)}
+                                  onClick={() => navigateProducts(subCat.slug || subCat.id)}
                                   title="مشاهده محصولات"
-                                  className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                                  className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer"
                                 >
                                   <Package className="w-3.5 h-3.5" />
                                 </button>
@@ -969,7 +972,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                                 type="button"
                                 onClick={() => handleToggleStatus(subCat)}
                                 className={`p-1 rounded-lg transition-colors cursor-pointer ${
-                                  subCat.isActive ? 'text-emerald-500' : 'text-slate-400'
+                                  subCat.isActive ? 'text-[#62DB00]' : 'text-zinc-400'
                                 }`}
                               >
                                 {subCat.isActive ? (
@@ -982,7 +985,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleOpenEdit(subCat)}
-                                className="p-1 rounded-lg text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 cursor-pointer"
+                                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer"
                               >
                                 <Edit3 className="w-3.5 h-3.5" />
                               </button>
@@ -1007,10 +1010,10 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
         </div>
       ) : (
         /* --- TABLE / GRID VIEW --- */
-        <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs overflow-hidden">
+        <div className="rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800 shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-right text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800 text-slate-500 font-bold">
+              <thead className="bg-zinc-50 dark:bg-zinc-900/60 border-b border-zinc-200/80 dark:border-zinc-800 text-zinc-500 font-bold">
                 <tr>
                   <th className="py-3.5 pr-6 pl-3">نام و آیکون دسته‌بندی</th>
                   <th className="py-3.5 px-3">نامک (Slug)</th>
@@ -1021,10 +1024,10 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                   <th className="py-3.5 pl-6 text-center">عملیات</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
+              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80">
                 {filteredCategories.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-slate-400">
+                    <td colSpan={7} className="py-12 text-center text-zinc-400">
                       هیچ دسته‌بندی‌ای با فیلترهای انتخابی مطابقت ندارد.
                     </td>
                   </tr>
@@ -1033,10 +1036,10 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                     const parentCategory = categories.find(c => c.id === cat.parentId);
 
                     return (
-                      <tr key={cat.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
+                      <tr key={cat.id} className="hover:bg-zinc-50/70 dark:hover:bg-zinc-900/40 transition-colors">
                         <td className="py-3.5 pr-6 pl-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-200/80 dark:border-slate-700">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/80 dark:border-zinc-700">
                               {cat.image ? (
                                 <img
                                   src={cat.image}
@@ -1044,40 +1047,40 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                <div className="w-full h-full flex items-center justify-center text-zinc-400">
                                   {renderCategoryIcon(cat.icon)}
                                 </div>
                               )}
                             </div>
                             <div>
-                              <p className="font-bold text-slate-900 dark:text-slate-100 text-sm">{cat.nameFa}</p>
-                              <p className="text-[11px] text-slate-400 font-sans">{cat.name}</p>
+                              <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">{cat.nameFa}</p>
+                              <p className="text-[11px] text-zinc-400 font-sans">{cat.name}</p>
                             </div>
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-3 font-mono text-[11px] text-slate-600 dark:text-slate-400">
+                        <td className="py-3.5 px-3 font-mono text-[11px] text-zinc-600 dark:text-zinc-400">
                           {cat.slug}
                         </td>
 
                         <td className="py-3.5 px-3">
                           {parentCategory ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-400">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300">
                               <Folder className="w-3 h-3" />
                               <span>{parentCategory.nameFa}</span>
                             </span>
                           ) : (
-                            <span className="text-slate-400 text-[11px]">دسته‌بندی اصلی (والد)</span>
+                            <span className="text-zinc-400 text-[11px]">دسته‌بندی اصلی (والد)</span>
                           )}
                         </td>
 
                         <td className="py-3.5 px-3 text-center">
-                          <span className="font-bold text-slate-800 dark:text-slate-200">
+                          <span className="font-bold text-zinc-800 dark:text-zinc-200 font-mono">
                             {formatNumber(cat.itemCount)}
                           </span>
                         </td>
 
-                        <td className="py-3.5 px-3 text-center font-mono text-slate-600 dark:text-slate-400">
+                        <td className="py-3.5 px-3 text-center font-mono text-zinc-600 dark:text-zinc-400">
                           {formatNumber(cat.sortOrder)}
                         </td>
 
@@ -1087,8 +1090,8 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                             onClick={() => handleToggleStatus(cat)}
                             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all cursor-pointer ${
                               cat.isActive
-                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 hover:bg-emerald-200'
-                                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200'
+                                ? 'bg-[#62DB00]/15 text-[#62DB00] hover:bg-[#62DB00]/25'
+                                : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 hover:bg-zinc-200'
                             }`}
                           >
                             {cat.isActive ? (
@@ -1107,11 +1110,11 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
 
                         <td className="py-3.5 pl-6 text-center">
                           <div className="flex items-center justify-center gap-1">
-                            {onNavigateToProducts && (
+                            {navigateProducts && (
                               <button
-                                onClick={() => onNavigateToProducts(cat.slug || cat.id)}
+                                onClick={() => navigateProducts(cat.slug || cat.id)}
                                 title="مشاهده کالاها"
-                                className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 cursor-pointer"
+                                className="p-1.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 cursor-pointer"
                               >
                                 <Package className="w-4 h-4" />
                               </button>
@@ -1120,7 +1123,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                             <button
                               onClick={() => handleOpenEdit(cat)}
                               title="ویرایش دسته‌بندی"
-                              className="p-1.5 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 cursor-pointer"
+                              className="p-1.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer"
                             >
                               <Edit3 className="w-4 h-4" />
                             </button>
@@ -1147,14 +1150,14 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
       {/* --- ADD / EDIT CATEGORY MODAL --- */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="w-full max-w-2xl bg-white dark:bg-[#111113] rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="p-5 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
+            <div className="p-5 border-b border-zinc-200/80 dark:border-zinc-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-                  <FolderTree className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 flex items-center justify-center">
+                  <FolderTree className="w-4 h-4 text-[#62DB00]" />
                 </div>
-                <h3 className="font-black text-slate-900 dark:text-slate-100 text-base">
+                <h3 className="font-black text-zinc-900 dark:text-zinc-100 text-base">
                   {modalMode === 'create' ? 'افزودن دسته‌بندی جدید' : `ویرایش دسته‌بندی «${editingCategory?.nameFa}»`}
                 </h3>
               </div>
@@ -1162,7 +1165,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="w-8 h-8 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 flex items-center justify-center cursor-pointer"
+                className="w-8 h-8 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 flex items-center justify-center cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1180,7 +1183,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
               {/* Names */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     نام فارسی دسته‌بندی *
                   </label>
                   <input
@@ -1189,12 +1192,12 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                     value={formState.nameFa}
                     onChange={e => handleNameFaChange(e.target.value)}
                     placeholder="مثال: ساعت و گجت‌های پوشیدنی"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-indigo-500 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:border-[#62DB00] outline-none focus:ring-1 focus:ring-[#62DB00]"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     نام لاتین / انگلیسی (اختیاری)
                   </label>
                   <input
@@ -1202,7 +1205,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                     value={formState.name}
                     onChange={e => setFormState({ ...formState, name: e.target.value })}
                     placeholder="Smartwatches & Wearables"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-indigo-500 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:border-[#62DB00] outline-none focus:ring-1 focus:ring-[#62DB00]"
                   />
                 </div>
               </div>
@@ -1210,7 +1213,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
               {/* Slug & Parent */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     نامک یکتا (Slug) *
                   </label>
                   <input
@@ -1219,21 +1222,21 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                     value={formState.slug}
                     onChange={e => setFormState({ ...formState, slug: e.target.value.toLowerCase() })}
                     placeholder="smartwatches"
-                    className="w-full px-3 py-2 rounded-xl font-mono bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl font-mono bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 outline-none focus:border-[#62DB00] focus:ring-1 focus:ring-[#62DB00]"
                   />
-                  <span className="text-[10px] text-slate-400 mt-1 block">
+                  <span className="text-[10px] text-zinc-400 mt-1 block">
                     در آدرس URL صفحات و فیلتر محصولات استفاده می‌شود.
                   </span>
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                     دسته‌بندی والد (سلسله‌مراتب)
                   </label>
                   <select
                     value={formState.parentId || ''}
                     onChange={e => setFormState({ ...formState, parentId: e.target.value || null })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 outline-none focus:border-[#62DB00]"
                   >
                     <option value="">دسته‌بندی اصلی (بدون والد)</option>
                     {categories
@@ -1248,18 +1251,18 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
               </div>
 
               {/* Category Image Upload & Preview */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700 space-y-3">
-                <label className="block font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+              <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/80 dark:border-zinc-800 space-y-3">
+                <label className="block font-bold text-zinc-700 dark:text-zinc-300 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
-                    <ImageIcon className="w-3.5 h-3.5 text-indigo-500" />
+                    <ImageIcon className="w-3.5 h-3.5 text-[#62DB00]" />
                     <span>تصویر شاخص دسته‌بندی</span>
                   </span>
-                  <span className="text-[10px] text-slate-400 font-normal">آپلود مستقیم یا آدرس وب</span>
+                  <span className="text-[10px] text-zinc-400 font-normal">آپلود مستقیم یا آدرس وب</span>
                 </label>
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center">
                   {/* Thumbnail Preview */}
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-700 shrink-0 border border-slate-300 dark:border-slate-600 relative group">
+                  <div className="w-20 h-20 rounded-2xl overflow-hidden bg-zinc-200 dark:bg-zinc-800 shrink-0 border border-zinc-300 dark:border-zinc-700 relative group">
                     {formState.image ? (
                       <img
                         src={formState.image}
@@ -1271,7 +1274,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                         }}
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-400">
+                      <div className="w-full h-full flex items-center justify-center text-zinc-400">
                         <ImageIcon className="w-6 h-6" />
                       </div>
                     )}
@@ -1286,7 +1289,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                   <div className="flex-1 space-y-2 w-full">
                     {/* File Upload Input */}
                     <div className="flex items-center gap-2">
-                      <label className="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-dashed border-indigo-300 dark:border-indigo-800 hover:border-indigo-500 text-center cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-indigo-600 dark:text-indigo-400 font-bold">
+                      <label className="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-zinc-800 border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-[#62DB00] text-center cursor-pointer transition-colors flex items-center justify-center gap-1.5 text-zinc-800 dark:text-zinc-200 hover:text-[#62DB00] font-bold">
                         <Upload className="w-3.5 h-3.5" />
                         <span>{isUploadingImage ? 'در حال آپلود...' : 'انتخاب و آپلود تصویر از کامپیوتر'}</span>
                         <input
@@ -1309,7 +1312,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                       value={formState.image}
                       onChange={e => setFormState({ ...formState, image: e.target.value })}
                       placeholder="یا آدرس اینترنتی تصویر را اینجا وارد کنید: https://..."
-                      className="w-full px-3 py-1.5 rounded-xl text-[11px] font-mono bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                      className="w-full px-3 py-1.5 rounded-xl text-[11px] font-mono bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 outline-none focus:border-[#62DB00]"
                     />
 
                     {imageUploadError && (
@@ -1322,10 +1325,10 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
               {/* Icon Selector & Sort Order */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="sm:col-span-2">
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                     آیکون نماد دسته‌بندی
                   </label>
-                  <div className="grid grid-cols-8 gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <div className="grid grid-cols-8 gap-1.5 p-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700">
                     {Object.keys(AVAILABLE_ICONS).map(iconKey => {
                       const IconComp = AVAILABLE_ICONS[iconKey];
                       const isSelected = formState.icon === iconKey;
@@ -1338,8 +1341,8 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                           title={iconKey}
                           className={`p-2 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-indigo-600 text-white shadow-xs scale-105'
-                              : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-700'
+                              ? 'bg-[#62DB00] text-black shadow-xs scale-105'
+                              : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-200/60 dark:hover:bg-zinc-800'
                           }`}
                         >
                           <IconComp className="w-4 h-4" />
@@ -1350,21 +1353,21 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
                     ترتیب چیدمان (Sort Order)
                   </label>
                   <input
                     type="number"
                     value={formState.sortOrder}
                     onChange={e => setFormState({ ...formState, sortOrder: Number(e.target.value) || 1 })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-mono outline-hidden"
+                    className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 font-mono outline-none focus:border-[#62DB00]"
                   />
                 </div>
               </div>
 
               {/* Description */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block font-bold text-zinc-700 dark:text-zinc-300 mb-1">
                   توضیح کوتاه معرفی دسته‌بندی
                 </label>
                 <textarea
@@ -1372,15 +1375,15 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                   value={formState.description}
                   onChange={e => setFormState({ ...formState, description: e.target.value })}
                   placeholder="معرفی اجمالی کالاهای این شاخه برای نمایش به مشتریان..."
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-hidden"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 outline-none focus:border-[#62DB00]"
                 />
               </div>
 
               {/* Status Toggle */}
-              <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-700">
                 <div>
-                  <p className="font-bold text-slate-800 dark:text-slate-200">وضعیت انتشار در فروشگاه</p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="font-bold text-zinc-800 dark:text-zinc-200">وضعیت انتشار در فروشگاه</p>
+                  <p className="text-[11px] text-zinc-500">
                     در صورت غیرفعال بودن، این شاخه در منوی ناوبری و فیلترها نمایش داده نمی‌شود.
                   </p>
                 </div>
@@ -1392,16 +1395,16 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                     onChange={e => setFormState({ ...formState, isActive: e.target.checked })}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-hidden rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-emerald-600"></div>
+                  <div className="w-11 h-6 bg-zinc-200 peer-focus:outline-none rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-[#62DB00]"></div>
                 </label>
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-4 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-end gap-2">
+              <div className="pt-4 border-t border-zinc-200/80 dark:border-zinc-800 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-bold transition-colors cursor-pointer"
                 >
                   انصراف
                 </button>
@@ -1409,7 +1412,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="px-5 py-2 rounded-xl bg-[#62DB00] hover:bg-[#72e609] text-black font-black transition-all shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-60"
                 >
                   {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
                   <span>{modalMode === 'create' ? 'ایجاد دسته‌بندی' : 'ذخیره تغییرات'}</span>
@@ -1423,17 +1426,17 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
       {/* --- CONFIRMATION DIALOG (FOR SAFE DELETION) --- */}
       {deleteConfirmTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 text-center space-y-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#111113] rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl p-6 text-center space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 mx-auto flex items-center justify-center">
               <Trash2 className="w-6 h-6" />
             </div>
 
             <div>
-              <h3 className="font-black text-base text-slate-900 dark:text-slate-100 mb-1">
+              <h3 className="font-black text-base text-zinc-900 dark:text-zinc-100 mb-1">
                 تأیید حذف دسته‌بندی
               </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                آیا از حذف دسته‌بندی «<strong className="text-slate-800 dark:text-slate-200">{deleteConfirmTarget.nameFa}</strong>» اطمینان دارید؟ این عملیات غیرقابل بازگشت است.
+              <p className="text-xs text-zinc-500 leading-relaxed">
+                آیا از حذف دسته‌بندی «<strong className="text-zinc-800 dark:text-zinc-200">{deleteConfirmTarget.nameFa}</strong>» اطمینان دارید؟ این عملیات غیرقابل بازگشت است.
               </p>
             </div>
 
@@ -1442,7 +1445,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
                 type="button"
                 disabled={isDeleting}
                 onClick={() => setDeleteConfirmTarget(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-bold text-xs transition-colors cursor-pointer"
               >
                 انصراف
               </button>
@@ -1463,16 +1466,16 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
       {/* --- BLOCKED DELETION ALERT DIALOG --- */}
       {deleteBlockedReason && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl border border-amber-200 dark:border-amber-900/60 shadow-2xl p-6 text-center space-y-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#111113] rounded-2xl border border-amber-200 dark:border-amber-900/60 shadow-2xl p-6 text-center space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 mx-auto flex items-center justify-center">
               <AlertTriangle className="w-6 h-6" />
             </div>
 
             <div>
-              <h3 className="font-black text-base text-slate-900 dark:text-slate-100 mb-1">
+              <h3 className="font-black text-base text-zinc-900 dark:text-zinc-100 mb-1">
                 {deleteBlockedReason.title}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed px-2">
+              <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed px-2">
                 {deleteBlockedReason.message}
               </p>
             </div>
@@ -1481,7 +1484,7 @@ export const CategoryManagementView: React.FC<CategoryManagementViewProps> = ({
               <button
                 type="button"
                 onClick={() => setDeleteBlockedReason(null)}
-                className="px-5 py-2 rounded-xl bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold text-xs shadow-sm hover:opacity-90 transition-all cursor-pointer"
+                className="px-5 py-2 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-bold text-xs shadow-sm hover:opacity-90 transition-all cursor-pointer"
               >
                 متوجه شدم
               </button>

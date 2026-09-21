@@ -203,7 +203,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+      <div className={`flex-1 flex flex-col min-w-0 ${currentTab === 'support-chat' ? 'h-screen max-h-screen overflow-hidden' : 'min-h-screen'}`}>
         <AdminHeader
           onToggleMobileMenu={() => setIsMobileOpen(!isMobileOpen)}
           adminUser={adminUser}
@@ -218,7 +218,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           onToggleTheme={toggleDarkMode}
         />
 
-        <main className="flex-1 overflow-y-auto">
+        <main className={`flex-1 ${currentTab === 'support-chat' ? 'overflow-hidden flex flex-col min-h-0' : 'overflow-y-auto'}`}>
           {currentTab === 'dashboard' && (
             <DashboardOverview
               stats={stats}
@@ -256,6 +256,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 setSelectedCategoryFilter(catSlug);
                 setCurrentTab('products');
               }}
+              onCategoryChanged={handleProductChanged}
             />
           )}
 

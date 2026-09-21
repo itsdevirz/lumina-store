@@ -74,7 +74,7 @@ export const QuickViewModal: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
             {/* Image Preview with Thumbnails */}
             <div className="space-y-2">
-              <div className="relative aspect-square rounded-md border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-50 dark:bg-zinc-900/50">
+              <div className="relative aspect-square rounded-md overflow-hidden bg-zinc-50 dark:bg-zinc-900/50 img-outline">
                 <img
                   src={images[activeImgIdx]}
                   alt={quickViewProduct.name}
@@ -85,13 +85,13 @@ export const QuickViewModal: React.FC = () => {
                   <div className="absolute inset-x-2 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
                     <button
                       onClick={prevImg}
-                      className="p-1 rounded bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 pointer-events-auto cursor-pointer"
+                      className="p-1 rounded bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 pointer-events-auto cursor-pointer tactile-press"
                     >
                       <ChevronLeft className="w-3 h-3 rtl:rotate-180" />
                     </button>
                     <button
                       onClick={nextImg}
-                      className="p-1 rounded bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 pointer-events-auto cursor-pointer"
+                      className="p-1 rounded bg-white/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 pointer-events-auto cursor-pointer tactile-press"
                     >
                       <ChevronRight className="w-3 h-3 rtl:rotate-180" />
                     </button>
@@ -106,10 +106,10 @@ export const QuickViewModal: React.FC = () => {
                     <button
                       key={idx}
                       onClick={() => setActiveImgIdx(idx)}
-                      className={`w-10 h-10 rounded border overflow-hidden shrink-0 cursor-pointer ${
+                      className={`w-10 h-10 rounded overflow-hidden shrink-0 cursor-pointer tactile-press ${
                         activeImgIdx === idx
-                          ? 'border-indigo-500 ring-1 ring-indigo-500'
-                          : 'border-zinc-200 dark:border-zinc-800 opacity-60 hover:opacity-100'
+                          ? 'ring-2 ring-[#62DB00]'
+                          : 'opacity-60 hover:opacity-100 img-outline'
                       }`}
                     >
                       <img src={img} alt="" className="w-full h-full object-cover" />
@@ -125,7 +125,7 @@ export const QuickViewModal: React.FC = () => {
                 {lang === 'fa' ? quickViewProduct.nameFa : quickViewProduct.name}
               </h3>
 
-              <div className="flex items-center gap-2 text-zinc-500 font-mono text-[11px]">
+              <div className="flex items-center gap-2 text-zinc-500 font-mono tabular-nums text-[11px]">
                 <div className="flex items-center gap-1 text-amber-500">
                   <Star className="w-3 h-3 fill-current" />
                   <span className="font-semibold text-zinc-800 dark:text-zinc-200">{quickViewProduct.rating}</span>
@@ -145,11 +145,11 @@ export const QuickViewModal: React.FC = () => {
               {/* Price */}
               <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800">
                 {quickViewProduct.originalPrice && (
-                  <div className="text-[10px] font-mono text-zinc-400 line-through">
+                  <div className="text-[10px] font-mono tabular-nums text-zinc-400 line-through">
                     {formatPrice(quickViewProduct.originalPrice, quickViewProduct.originalPriceUSD)}
                   </div>
                 )}
-                <div className="text-base font-mono font-bold text-zinc-900 dark:text-zinc-100">
+                <div className="text-base font-mono tabular-nums font-bold text-zinc-900 dark:text-zinc-100">
                   {formatPrice(quickViewProduct.price, quickViewProduct.priceUSD)}
                 </div>
               </div>
@@ -161,7 +161,7 @@ export const QuickViewModal: React.FC = () => {
                     addToCart(quickViewProduct, 1);
                     setQuickViewProduct(null);
                   }}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors cursor-pointer"
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium hover:bg-[#62DB00] hover:text-black dark:hover:bg-[#62DB00] dark:hover:text-black transition-colors cursor-pointer tactile-press shadow-xs"
                 >
                   <ShoppingBag className="w-3.5 h-3.5" />
                   <span>{lang === 'fa' ? 'افزودن به سبد' : 'Add to Cart'}</span>
@@ -172,7 +172,7 @@ export const QuickViewModal: React.FC = () => {
                     openProductDetails(quickViewProduct);
                     setQuickViewProduct(null);
                   }}
-                  className="px-3 py-2 rounded-md border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  className="px-3 py-2 rounded-md border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer tactile-press"
                 >
                   {lang === 'fa' ? 'صفحه کامل' : 'Inspect'}
                 </button>

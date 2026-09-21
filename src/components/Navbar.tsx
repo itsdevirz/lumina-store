@@ -705,21 +705,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onGoToAdmin }) => {
 
             {/* "پرفروش‌ترین‌ها" with Flame icon */}
             <button
-              onClick={() => {
-                const el = document.getElementById('best-sellers-section');
-                if (activeTab !== 'home') {
-                  setActiveTab('home');
-                  setTimeout(
-                    () =>
-                      document
-                        .getElementById('best-sellers-section')
-                        ?.scrollIntoView({ behavior: 'smooth' }),
-                    100
-                  );
-                } else {
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
+              onClick={() => setActiveTab('bestsellers')}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer"
             >
               <Flame className="w-3.5 h-3.5 text-slate-500" />

@@ -180,22 +180,26 @@ export const AdminReviews: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <MessageSquare className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
-            <span>مدیریت نظرات و امتیازات خریداران</span>
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            بررسی، تأیید/رد و پاسخ‌دهی به دیدگاه‌های ثبت‌شده کاربران فروشگاه
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg sm:text-2xl font-black text-zinc-900 dark:text-white">
+              مدیریت نظرات و دیدگاه‌ها
+            </h1>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30">
+              REVIEWS
+            </span>
+          </div>
+          <p className="text-[11px] sm:text-xs text-zinc-400 mt-1">
+            بررسی دیدگاه‌های ثبت‌شده خریداران، تأیید کیفی، پاسخ‌دهی رسمی و رصد رضایت‌مندی
           </p>
         </div>
 
         <button
           onClick={fetchAdminReviews}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold hover:bg-slate-200 transition-colors cursor-pointer"
+          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 text-xs font-bold hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-700/60"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
           <span>بروزرسانی لیست</span>
@@ -203,84 +207,84 @@ export const AdminReviews: React.FC = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-4">
         {/* Total */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-medium">کل نظرات</span>
-            <MessageSquare className="w-4 h-4 text-indigo-500" />
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs">
+          <div className="flex items-center justify-between text-zinc-400 mb-2">
+            <span className="text-[11px] sm:text-xs font-bold">کل نظرات</span>
+            <MessageSquare className="w-4 h-4 text-[#62DB00]" />
           </div>
-          <span className="text-2xl font-black text-slate-900 dark:text-white">
+          <span className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white font-mono">
             {reviews.length}
           </span>
         </div>
 
         {/* Pending */}
-        <div className="p-4 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 shadow-2xs">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 shadow-xs">
           <div className="flex items-center justify-between text-amber-600 dark:text-amber-400 mb-2">
-            <span className="text-xs font-bold">در انتظار بررسی</span>
+            <span className="text-[11px] sm:text-xs font-bold">در انتظار بررسی</span>
             <Clock className="w-4 h-4" />
           </div>
-          <span className="text-2xl font-black text-amber-700 dark:text-amber-300">
+          <span className="text-xl sm:text-2xl font-black text-amber-700 dark:text-amber-300 font-mono">
             {stats.pendingReviewsCount}
           </span>
         </div>
 
         {/* Approved */}
-        <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-900/40 shadow-2xs">
-          <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 mb-2">
-            <span className="text-xs font-bold">تأییدشده</span>
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-[#62DB00]/5 dark:bg-[#62DB00]/10 border border-[#62DB00]/20 shadow-xs">
+          <div className="flex items-center justify-between text-emerald-600 dark:text-[#62DB00] mb-2">
+            <span className="text-[11px] sm:text-xs font-bold">تأییدشده</span>
             <CheckCircle2 className="w-4 h-4" />
           </div>
-          <span className="text-2xl font-black text-emerald-700 dark:text-emerald-300">
+          <span className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white font-mono">
             {stats.approvedReviewsCount}
           </span>
         </div>
 
         {/* Rejected */}
-        <div className="p-4 rounded-2xl bg-rose-50/60 dark:bg-rose-950/20 border border-rose-200/80 dark:border-rose-900/40 shadow-2xs">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/20 shadow-xs">
           <div className="flex items-center justify-between text-rose-600 dark:text-rose-400 mb-2">
-            <span className="text-xs font-bold">ردشده</span>
+            <span className="text-[11px] sm:text-xs font-bold">ردشده</span>
             <XCircle className="w-4 h-4" />
           </div>
-          <span className="text-2xl font-black text-rose-700 dark:text-rose-300">
+          <span className="text-xl sm:text-2xl font-black text-rose-700 dark:text-rose-300 font-mono">
             {stats.rejectedReviewsCount}
           </span>
         </div>
 
         {/* Average Rating */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-medium">میانگین امتیاز</span>
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs col-span-2 sm:col-span-1">
+          <div className="flex items-center justify-between text-zinc-400 mb-2">
+            <span className="text-[11px] sm:text-xs font-bold">میانگین امتیاز</span>
             <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
           </div>
-          <span className="text-2xl font-black text-slate-900 dark:text-white">
-            {stats.averageRating.toFixed(1)} <span className="text-xs text-slate-400 font-normal">/ ۵</span>
+          <span className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-white font-mono">
+            {stats.averageRating.toFixed(1)} <span className="text-xs text-zinc-400 font-normal">/ ۵</span>
           </span>
         </div>
       </div>
 
       {/* Filter & Search Toolbar */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xs space-y-3">
-        <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-2.5 sm:space-y-3">
+        <div className="flex items-center justify-between flex-wrap gap-2.5">
           {/* Status Filters */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
             {[
               { id: 'all', label: 'همه نظرات' },
-              { id: 'pending', label: 'در انتظار ⏳' },
-              { id: 'approved', label: 'تأییدشده ✅' },
-              { id: 'rejected', label: 'ردشده ❌' },
-              { id: 'no_reply', label: 'بدون پاسخ 💬' },
+              { id: 'pending', label: 'در انتظار' },
+              { id: 'approved', label: 'تأییدشده' },
+              { id: 'rejected', label: 'ردشده' },
+              { id: 'no_reply', label: 'بدون پاسخ' },
               { id: 'has_reply', label: 'پاسخ داده‌شده' },
-              { id: 'verified', label: 'خریداران واقعی 🛒' }
+              { id: 'verified', label: 'خریداران واقعی' }
             ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setStatusFilter(tab.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                   statusFilter === tab.id
-                    ? 'bg-indigo-600 text-white shadow-2xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-[#62DB00] text-black font-black shadow-xs'
+                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60'
                 }`}
               >
                 {tab.label}
@@ -290,11 +294,11 @@ export const AdminReviews: React.FC = () => {
 
           {/* Rating Filter */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-medium">امتیاز:</span>
+            <span className="text-xs text-zinc-400 font-medium">امتیاز:</span>
             <select
               value={ratingFilter}
               onChange={e => setRatingFilter(Number(e.target.value))}
-              className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold outline-hidden cursor-pointer"
+              className="px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 text-xs font-bold outline-hidden cursor-pointer focus:border-[#62DB00]"
             >
               <option value={0}>همه امتیازها</option>
               <option value={5}>۵ ستاره ⭐⭐⭐⭐⭐</option>
@@ -313,46 +317,41 @@ export const AdminReviews: React.FC = () => {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="جستجو بر اساس نام کاربر، نام محصول یا متن نظر..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-slate-900 dark:text-white text-xs outline-hidden focus:ring-2 focus:ring-indigo-500"
+            className="w-full pr-9 pl-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white text-xs outline-hidden focus:border-[#62DB00] transition-colors"
           />
-          <button
-            type="submit"
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-600 transition-colors"
-          >
-            <Search className="w-4 h-4" />
-          </button>
+          <Search className="w-4 h-4 text-zinc-400 absolute right-3 top-2.5" />
         </form>
       </div>
 
       {/* Reviews List */}
       {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2, 3, 4].map(n => (
-            <div key={n} className="p-5 rounded-2xl bg-slate-100 dark:bg-slate-800/40 animate-pulse h-32" />
+        <div className="space-y-3">
+          {[1, 2, 3].map(n => (
+            <div key={n} className="p-5 rounded-2xl bg-zinc-100 dark:bg-zinc-900/40 animate-pulse h-32 border border-zinc-200 dark:border-zinc-800" />
           ))}
         </div>
       ) : reviews.length === 0 ? (
-        <div className="text-center py-16 px-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-          <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">هیچ نظری مطابق با فیلترها یافت نشد</h4>
-          <p className="text-xs text-slate-400 mt-1">تنظیمات فیلتر یا واژه جستجو را تغییر دهید.</p>
+        <div className="text-center py-16 px-4 rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800">
+          <MessageSquare className="w-10 h-10 text-zinc-300 dark:text-zinc-600 mx-auto mb-3" />
+          <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">هیچ نظری مطابق با فیلترها یافت نشد</h4>
+          <p className="text-xs text-zinc-400 mt-1">تنظیمات فیلتر یا عبارت جستجو را تغییر دهید.</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {reviews.map(rev => (
             <div
               key={rev.id}
-              className={`p-5 rounded-2xl bg-white dark:bg-slate-900 border transition-all space-y-4 ${
+              className={`p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#121215] border transition-all space-y-3.5 shadow-xs ${
                 rev.status === 'pending'
-                  ? 'border-amber-300 dark:border-amber-900/60 shadow-xs'
-                  : 'border-slate-200 dark:border-slate-800'
+                  ? 'border-amber-500/40 ring-1 ring-amber-500/20'
+                  : 'border-zinc-200 dark:border-zinc-800/90'
               }`}
             >
               {/* Review Card Top Header */}
               <div className="flex items-start justify-between flex-wrap gap-3">
                 {/* User & Product Info */}
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 font-bold text-sm flex items-center justify-center overflow-hidden shrink-0 border border-indigo-200 dark:border-indigo-800">
+                  <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 font-bold text-sm flex items-center justify-center overflow-hidden shrink-0 border border-zinc-200 dark:border-zinc-700">
                     {rev.userAvatar ? (
                       <img src={rev.userAvatar} alt="" className="w-full h-full object-cover" />
                     ) : (
@@ -362,41 +361,41 @@ export const AdminReviews: React.FC = () => {
 
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">{rev.userName}</span>
+                      <span className="text-xs font-black text-zinc-900 dark:text-white">{rev.userName}</span>
                       {rev.userEmail && (
-                        <span className="text-[10px] text-slate-400 dir-ltr font-mono">{rev.userEmail}</span>
+                        <span className="text-[10px] text-zinc-400 dir-ltr font-mono">{rev.userEmail}</span>
                       )}
                       {rev.isVerifiedPurchase && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30 text-[10px] font-mono font-bold">
                           <ShoppingBag className="w-3 h-3" />
                           خریدار واقعی
                         </span>
                       )}
                     </div>
 
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
-                      مربوط به محصول: <span className="font-bold text-slate-800 dark:text-slate-200">{rev.productNameFa}</span>
+                    <div className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 font-medium">
+                      محصول: <span className="font-bold text-zinc-800 dark:text-zinc-200">{rev.productNameFa}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Rating & Date & Status Badge */}
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className="text-[11px] text-slate-400">{rev.createdAt}</span>
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <span className="text-[10px] sm:text-[11px] text-zinc-400 font-mono">{rev.createdAt}</span>
 
-                  <div className="flex items-center gap-1 dir-ltr bg-amber-50 dark:bg-amber-950/30 px-2.5 py-1 rounded-lg border border-amber-200/50">
-                    <span className="text-xs font-bold text-amber-700 dark:text-amber-400">{rev.rating}</span>
+                  <div className="flex items-center gap-1 dir-ltr bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20">
+                    <span className="text-xs font-bold text-amber-500 font-mono">{rev.rating}</span>
                     <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                   </div>
 
                   {/* Status Badge */}
                   <span
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold ${
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
                       rev.status === 'approved'
-                        ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400'
+                        ? 'bg-[#62DB00]/15 text-[#62DB00] border border-[#62DB00]/30'
                         : rev.status === 'rejected'
-                        ? 'bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-400'
-                        : 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400'
+                        ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
+                        : 'bg-amber-500/15 text-amber-500 border border-amber-500/30'
                     }`}
                   >
                     {rev.status === 'approved' ? 'تأییدشده' : rev.status === 'rejected' ? 'ردشده' : 'در انتظار بررسی'}
@@ -405,40 +404,40 @@ export const AdminReviews: React.FC = () => {
               </div>
 
               {/* Comment Body */}
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 text-xs text-slate-800 dark:text-slate-200 leading-relaxed">
-                {rev.comment || <em className="text-slate-400 font-normal">کاربر فقط امتیاز ستاره‌ای ثبت کرده است.</em>}
+              <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-100 dark:border-zinc-800/60 text-xs text-zinc-800 dark:text-zinc-200 leading-relaxed">
+                {rev.comment || <em className="text-zinc-400 font-normal">کاربر فقط امتیاز ستاره‌ای ثبت کرده است.</em>}
               </div>
 
               {/* Admin Reply Section */}
               {rev.adminReply ? (
-                <div className="p-3.5 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                <div className="p-3.5 rounded-xl bg-zinc-100/80 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold text-zinc-900 dark:text-white">
                     <div className="flex items-center gap-1.5">
-                      <CornerDownLeft className="w-4 h-4 text-indigo-600" />
-                      <span>پاسخ ثبت‌شده مدیر ({rev.adminReplyBy})</span>
+                      <CornerDownLeft className="w-3.5 h-3.5 text-[#62DB00]" />
+                      <span>پاسخ رسمی ({rev.adminReplyBy})</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-slate-400 font-normal">{rev.adminReplyAt}</span>
+                      <span className="text-[10px] text-zinc-400 font-mono font-normal">{rev.adminReplyAt}</span>
                       <button
                         onClick={() => {
                           setActiveReplyId(rev.id);
                           setReplyText(rev.adminReply || '');
                         }}
-                        className="p-1 hover:text-indigo-600 transition-colors text-slate-400 cursor-pointer"
+                        className="p-1 hover:text-[#62DB00] transition-colors text-zinc-400 cursor-pointer"
                         title="ویرایش پاسخ"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteReply(rev.id)}
-                        className="p-1 hover:text-rose-600 transition-colors text-slate-400 cursor-pointer"
+                        className="p-1 hover:text-rose-500 transition-colors text-zinc-400 cursor-pointer"
                         title="حذف پاسخ"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed pr-4">
+                  <p className="text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed pr-4">
                     {rev.adminReply}
                   </p>
                 </div>
@@ -446,15 +445,15 @@ export const AdminReviews: React.FC = () => {
 
               {/* Active Reply Input Form */}
               {activeReplyId === rev.id && (
-                <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 space-y-3">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200">
-                    <span>ثبت پاسخ مدیر به نظر کاربر</span>
+                <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 space-y-3">
+                  <div className="flex items-center justify-between text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                    <span>ثبت پاسخ مدیر به دیدگاه مشتری</span>
                     <button
                       onClick={() => {
                         setActiveReplyId(null);
                         setReplyText('');
                       }}
-                      className="text-slate-400 hover:text-slate-600"
+                      className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 cursor-pointer text-xs"
                     >
                       بستن
                     </button>
@@ -465,14 +464,14 @@ export const AdminReviews: React.FC = () => {
                     value={replyText}
                     onChange={e => setReplyText(e.target.value)}
                     placeholder="متن پاسخ رسمی فروشگاه را بنویسید..."
-                    className="w-full p-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs outline-hidden focus:ring-2 focus:ring-indigo-500 resize-none"
+                    className="w-full p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-[#121215] text-xs outline-hidden focus:border-[#62DB00] resize-none text-zinc-900 dark:text-white"
                   />
 
                   <div className="flex justify-end gap-2">
                     <button
                       onClick={() => handleSaveReply(rev.id)}
                       disabled={isSubmittingReply || !replyText.trim()}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-black transition-colors cursor-pointer disabled:opacity-50 shadow-xs"
                     >
                       <Send className="w-3.5 h-3.5 rtl:rotate-180" />
                       <span>ثبت و انتشار پاسخ</span>
@@ -482,12 +481,12 @@ export const AdminReviews: React.FC = () => {
               )}
 
               {/* Card Action Footer */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 flex-wrap gap-2">
+              <div className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex-wrap gap-2">
                 <div className="flex items-center gap-2">
                   {rev.status !== 'approved' && (
                     <button
                       onClick={() => handleUpdateStatus(rev.id, 'approved')}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#62DB00] hover:bg-[#52B800] text-black text-xs font-bold transition-colors cursor-pointer shadow-xs"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>تأیید و انتشار</span>
@@ -497,10 +496,10 @@ export const AdminReviews: React.FC = () => {
                   {rev.status !== 'rejected' && (
                     <button
                       onClick={() => handleUpdateStatus(rev.id, 'rejected')}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 hover:bg-rose-200 text-xs font-semibold transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-500/15 text-rose-500 hover:bg-rose-500/25 border border-rose-500/30 text-xs font-bold transition-colors cursor-pointer"
                     >
                       <XCircle className="w-3.5 h-3.5" />
-                      <span>رد نظر</span>
+                      <span>رد دیدگاه</span>
                     </button>
                   )}
 
@@ -510,9 +509,9 @@ export const AdminReviews: React.FC = () => {
                         setActiveReplyId(rev.id);
                         setReplyText(rev.adminReply || '');
                       }}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 text-xs font-bold transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-xs font-bold transition-colors cursor-pointer border border-zinc-200 dark:border-zinc-700/60"
                     >
-                      <MessageSquare className="w-3.5 h-3.5" />
+                      <MessageSquare className="w-3.5 h-3.5 text-[#62DB00]" />
                       <span>{rev.adminReply ? 'ویرایش پاسخ' : 'پاسخ مدیر'}</span>
                     </button>
                   )}
@@ -522,16 +521,16 @@ export const AdminReviews: React.FC = () => {
                 <div>
                   {deleteTargetId === rev.id ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-rose-600 font-medium">حذف شود؟</span>
+                      <span className="text-xs text-rose-500 font-bold">حذف شود؟</span>
                       <button
                         onClick={() => handleDeleteReview(rev.id)}
-                        className="px-2.5 py-1 rounded-md bg-rose-600 text-white text-xs font-bold hover:bg-rose-700 cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-xs font-bold hover:bg-rose-700 cursor-pointer"
                       >
                         بله
                       </button>
                       <button
                         onClick={() => setDeleteTargetId(null)}
-                        className="px-2.5 py-1 rounded-md bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-bold cursor-pointer"
                       >
                         خیر
                       </button>
@@ -539,8 +538,8 @@ export const AdminReviews: React.FC = () => {
                   ) : (
                     <button
                       onClick={() => setDeleteTargetId(rev.id)}
-                      className="p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950/50 text-slate-400 hover:text-rose-600 rounded-lg transition-colors cursor-pointer"
-                      title="حذف کامل نظر"
+                      className="p-1.5 hover:bg-rose-500/10 text-zinc-400 hover:text-rose-500 rounded-xl transition-colors cursor-pointer"
+                      title="حذف کامل دیدگاه"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

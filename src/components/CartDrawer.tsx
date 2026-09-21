@@ -113,7 +113,7 @@ export const CartDrawer: React.FC = () => {
                       <img
                         src={item.product.images[0]}
                         alt={item.product.name}
-                        className="w-14 h-14 rounded object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200 dark:border-zinc-800"
+                        className="w-14 h-14 rounded object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 img-outline"
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-1">
@@ -122,7 +122,7 @@ export const CartDrawer: React.FC = () => {
                           </h4>
                           <button
                             onClick={() => removeFromCart(item.product.id, item.selectedColor, item.selectedSize)}
-                            className="text-zinc-400 hover:text-rose-500 cursor-pointer shrink-0"
+                            className="text-zinc-400 hover:text-rose-500 cursor-pointer shrink-0 p-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -155,7 +155,7 @@ export const CartDrawer: React.FC = () => {
                             >
                               -
                             </button>
-                            <span className="px-2 py-0.5 font-mono text-[11px] text-zinc-900 dark:text-zinc-100">
+                            <span className="px-2 py-0.5 font-mono tabular-nums text-[11px] text-zinc-900 dark:text-zinc-100">
                               {item.quantity}
                             </span>
                             <button
@@ -167,7 +167,7 @@ export const CartDrawer: React.FC = () => {
                           </div>
 
                           {/* Price */}
-                          <span className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">
+                          <span className="font-mono tabular-nums font-semibold text-zinc-900 dark:text-zinc-100">
                             {formatPrice(item.product.price * item.quantity, (item.product.priceUSD || 0) * item.quantity)}
                           </span>
                         </div>
@@ -188,12 +188,12 @@ export const CartDrawer: React.FC = () => {
                     value={couponCode}
                     onChange={e => setCouponCode(e.target.value.toUpperCase())}
                     placeholder={lang === 'fa' ? 'کد تخفیف (مثلاً LUMINA10)...' : 'Promo code...'}
-                    className="flex-1 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0C0C0E] text-xs font-mono uppercase focus:outline-none focus:border-indigo-500"
+                    className="flex-1 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0C0C0E] text-xs font-mono uppercase focus:outline-none focus:border-[#62DB00]"
                   />
                   <button
                     type="submit"
                     disabled={isApplying}
-                    className="px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs font-mono font-medium hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs font-mono font-medium hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer disabled:opacity-50 tactile-press"
                   >
                     {isApplying ? '...' : lang === 'fa' ? 'اعمال' : 'Apply'}
                   </button>
@@ -212,18 +212,18 @@ export const CartDrawer: React.FC = () => {
                 <div className="space-y-1 pt-1 border-t border-zinc-200 dark:border-zinc-800 text-xs">
                   <div className="flex justify-between text-zinc-400 font-mono text-[11px]">
                     <span>{lang === 'fa' ? 'جمع اقلام:' : 'Subtotal:'}</span>
-                    <span>{formatPrice(currentSubtotal, Math.round(currentSubtotal / 50000))}</span>
+                    <span className="tabular-nums">{formatPrice(currentSubtotal, Math.round(currentSubtotal / 50000))}</span>
                   </div>
                   <div className="flex justify-between font-mono font-semibold text-sm text-zinc-900 dark:text-zinc-100 pt-1">
                     <span>{lang === 'fa' ? 'مبلغ نهایی:' : 'Total:'}</span>
-                    <span>{formatPrice(cartTotal.total, Math.round(cartTotal.total / 50000))}</span>
+                    <span className="tabular-nums">{formatPrice(cartTotal.total, Math.round(cartTotal.total / 50000))}</span>
                   </div>
                 </div>
 
                 {/* Checkout CTA */}
                 <button
                   onClick={handleProceedToCheckout}
-                  className="w-full py-2.5 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  className="w-full py-2.5 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium hover:bg-[#62DB00] hover:text-black dark:hover:bg-[#62DB00] dark:hover:text-black transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs tactile-press"
                 >
                   <span>{lang === 'fa' ? 'تکمیل سفارش و پرداخت' : 'Proceed to Checkout'}</span>
                   <span className="font-mono text-[11px]">→</span>

@@ -340,36 +340,36 @@ export const AvatarUploadManager: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Current Active Avatar Preview Bar */}
-      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800/80">
         <div className="relative group shrink-0">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden bg-white dark:bg-slate-900 border-2 border-[#E80645]/30 p-1 shadow-md">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-700 p-1 shadow-xs">
             <img
               src={userProfile.avatar}
               alt={userProfile.name}
-              className="w-full h-full object-cover rounded-2xl transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
             />
           </div>
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="absolute -bottom-1.5 -right-1.5 p-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            className="absolute -bottom-1.5 -right-1.5 p-2 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 shadow-sm hover:scale-110 active:scale-95 transition-all cursor-pointer"
             title={lang === 'fa' ? 'تغییر عکس پروفایل' : 'Change Photo'}
           >
-            <Camera className="w-4 h-4" />
+            <Camera className="w-3.5 h-3.5" />
           </button>
         </div>
 
         <div className="flex-1 text-center sm:text-right">
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1">
-            <h4 className="text-base font-black text-slate-900 dark:text-white">
+            <h4 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
               {userProfile.name}
             </h4>
-            <span className="px-2 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/80 text-[#E80645] dark:text-rose-400 text-[11px] font-bold">
+            <span className="px-2 py-0.5 rounded-full bg-[#62DB00]/10 text-[#62DB00] text-[11px] font-mono font-semibold">
               {lang === 'fa' ? 'تصویر فعال' : 'Active Avatar'}
             </span>
           </div>
 
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 leading-relaxed">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3 leading-relaxed">
             {lang === 'fa'
               ? 'می‌توانید عکس دلخواه خود (PNG یا JPG تا سقف ۲ مگابایت) را بارگذاری کنید یا از آواتارهای آماده استفاده نمایید.'
               : 'Upload your custom photo (PNG or JPG up to 2MB) or pick one of the minimal preset avatars below.'}
@@ -379,7 +379,7 @@ export const AvatarUploadManager: React.FC = () => {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#E80645] hover:bg-[#c7053b] text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-black text-white dark:bg-[#62DB00] dark:hover:bg-[#52B800] dark:text-black text-xs font-bold shadow-xs transition-all cursor-pointer tactile-press"
             >
               <Upload className="w-3.5 h-3.5" />
               <span>{lang === 'fa' ? 'آپلود عکس جدید' : 'Upload Photo'}</span>
@@ -388,7 +388,7 @@ export const AvatarUploadManager: React.FC = () => {
             <button
               type="button"
               onClick={handleResetToDefault}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 text-xs font-semibold transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-800 text-xs font-semibold transition-all cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>{lang === 'fa' ? 'بازنشانی پیش‌فرض' : 'Reset'}</span>
@@ -399,7 +399,7 @@ export const AvatarUploadManager: React.FC = () => {
 
       {/* Upload Drag & Drop Box */}
       <div>
-        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
+        <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
           {lang === 'fa' ? 'بارگذاری فایل عکس اختصاصی' : 'Upload Custom Avatar'}
         </label>
 
@@ -410,8 +410,8 @@ export const AvatarUploadManager: React.FC = () => {
           onClick={() => fileInputRef.current?.click()}
           className={`relative border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
             isDragging
-              ? 'border-[#E80645] bg-rose-50/50 dark:bg-rose-950/40 scale-[1.01]'
-              : 'border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/40 hover:border-rose-400 hover:bg-rose-50/20'
+              ? 'border-[#62DB00] bg-[#62DB00]/5 scale-[1.01]'
+              : 'border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/40 hover:border-zinc-400 dark:hover:border-zinc-500'
           }`}
         >
           <input
@@ -422,21 +422,21 @@ export const AvatarUploadManager: React.FC = () => {
             className="hidden"
           />
 
-          <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/60 text-[#E80645] dark:text-rose-400 flex items-center justify-center mx-auto mb-3 shadow-2xs">
+          <div className="w-11 h-11 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 flex items-center justify-center mx-auto mb-3 shadow-2xs border border-zinc-200 dark:border-zinc-700">
             {isUploading ? (
-              <RefreshCw className="w-5 h-5 animate-spin" />
+              <RefreshCw className="w-4 h-4 animate-spin text-[#62DB00]" />
             ) : (
-              <Upload className="w-5 h-5" />
+              <Upload className="w-4 h-4" />
             )}
           </div>
 
-          <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">
+          <div className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 mb-1">
             {lang === 'fa'
               ? 'فایل عکس خود را اینجا رها کنید یا برای انتخاب کلیک نمایید'
               : 'Drag & drop image file here, or click to browse'}
           </div>
 
-          <p className="text-[11px] text-slate-400 dark:text-slate-500">
+          <p className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono">
             {lang === 'fa'
               ? 'فرمت‌های مجاز: PNG, JPG • حداکثر حجم مجاز: ۲ مگابایت'
               : 'Supported formats: PNG, JPG • Maximum file size: 2 MB'}
@@ -448,12 +448,12 @@ export const AvatarUploadManager: React.FC = () => {
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+            <Sparkles className="w-3.5 h-3.5 text-[#62DB00]" />
+            <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
               {lang === 'fa' ? 'آواتارهای انیمیشنی و مینیمال آماده' : 'Preset Minimal Animated Avatars'}
             </h4>
           </div>
-          <span className="text-[11px] text-slate-400">
+          <span className="text-[11px] text-zinc-400 font-mono">
             {lang === 'fa' ? 'انتخاب با ۱ کلیک' : '1-Click Selection'}
           </span>
         </div>
@@ -468,28 +468,28 @@ export const AvatarUploadManager: React.FC = () => {
                 key={avatar.id}
                 type="button"
                 onClick={() => handleSelectPreset(avatar)}
-                className={`group relative flex flex-col items-center p-2.5 rounded-2xl border transition-all cursor-pointer ${
+                className={`group relative flex flex-col items-center p-2.5 rounded-xl border transition-all cursor-pointer ${
                   isSelected
-                    ? 'border-[#E80645] dark:border-rose-500 bg-rose-50/70 dark:bg-rose-950/50 shadow-xs scale-105 ring-2 ring-[#E80645]/20'
-                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700 hover:scale-105'
+                    ? 'border-[#62DB00] bg-[#62DB00]/5 shadow-xs scale-105 ring-1 ring-[#62DB00]'
+                    : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-zinc-300 dark:hover:border-zinc-700 hover:scale-102'
                 }`}
                 title={lang === 'fa' ? avatar.nameFa : avatar.name}
               >
                 {/* SVG Avatar Container */}
                 <div
-                  className={`w-14 h-14 rounded-2xl overflow-hidden p-1.5 transition-transform duration-300 group-hover:rotate-6 shadow-2xs ${avatar.bg}`}
+                  className={`w-12 h-12 rounded-xl overflow-hidden p-1 transition-transform duration-300 group-hover:rotate-6 shadow-2xs ${avatar.bg}`}
                 >
                   {avatar.svg}
                 </div>
 
-                <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 mt-2 line-clamp-1 text-center">
+                <span className="text-[11px] font-medium text-zinc-700 dark:text-zinc-300 mt-2 line-clamp-1 text-center">
                   {lang === 'fa' ? avatar.nameFa : avatar.name}
                 </span>
 
                 {/* Selected Indicator */}
                 {isSelected && (
-                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#E80645] text-white flex items-center justify-center shadow-xs">
-                    <Check className="w-3 h-3 stroke-[3]" />
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#62DB00] text-black flex items-center justify-center shadow-xs">
+                    <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </span>
                 )}
               </button>

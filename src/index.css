@@ -2,30 +2,48 @@
 
 @theme {
   --font-sans: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --font-display: 'Alexandria', 'Vazirmatn', system-ui, sans-serif;
-  --font-modern: 'Alexandria', 'Vazirmatn', sans-serif;
-  --font-readex: 'Readex Pro', 'Vazirmatn', sans-serif;
+  --font-mono: 'Vazirmatn', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: 'Vazirmatn', 'Syne', 'Alexandria', system-ui, sans-serif;
+  --font-modern: 'Vazirmatn', 'Space Grotesk', 'Alexandria', sans-serif;
+  --font-readex: 'Vazirmatn', 'Readex Pro', sans-serif;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Persian & Latin Typography Scale - Linear & Vercel Developer Aesthetic */
+/* Persian & Latin Typography Scale - Universal Persian Font Coverage & Numerals */
+*, ::before, ::after {
+  font-family: inherit;
+}
+
+html, body, button, input, optgroup, select, textarea, table, th, td {
+  font-family: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 .font-sans, .font-vazir {
   font-family: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-.font-display, .font-lalezar {
-  font-family: 'Alexandria', 'Vazirmatn', sans-serif;
+.font-display {
+  font-family: 'Vazirmatn', 'Syne', 'Alexandria', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.font-lalezar {
+  font-family: 'Vazirmatn', 'Lalezar', 'Alexandria', sans-serif;
   letter-spacing: -0.02em;
 }
 
 .font-modern, .font-alexandria {
-  font-family: 'Alexandria', 'Vazirmatn', sans-serif;
+  font-family: 'Vazirmatn', 'Space Grotesk', 'Alexandria', sans-serif;
 }
 
-.font-mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+.font-mono, .font-tech {
+  font-family: 'Vazirmatn', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-feature-settings: 'ss01' 1, 'tnum' 1;
+}
+
+.font-readex {
+  font-family: 'Vazirmatn', 'Readex Pro', sans-serif;
 }
 
 @layer base {
@@ -33,7 +51,7 @@
     --font-sans: 'Vazirmatn', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color-scheme: light;
     
-    /* Linear + Vercel Modern Monochrome Theme Tokens */
+    /* Modern Architectural Monochrome & Minimalist Precision Tokens */
     --bg-main: #FFFFFF;
     --bg-subtle: #FAFAFA;
     --surface: #FFFFFF;
@@ -49,7 +67,7 @@
     --border-subtle: #F4F4F5;
     --border-strong: #D4D4D8;
     
-    /* Strong Linear Violet / Indigo Accent */
+    /* Precision Brand Violet / Indigo Accent */
     --primary: #5E6AD2;
     --primary-hover: #4E5AC0;
     --primary-light: #EEF0FD;
@@ -63,31 +81,31 @@
     --radius-xs: 4px;
     --radius-sm: 6px;
     --radius-md: 8px;
-    --radius-lg: 10px;
-    --radius-xl: 12px;
+    --radius-lg: 12px;
+    --radius-xl: 14px;
   }
 
   .dark {
     color-scheme: dark;
     --bg-main: #09090B;
-    --bg-subtle: #0C0C0E;
-    --surface: #0C0C0E;
+    --bg-subtle: #0E0E11;
+    --surface: #121215;
     --surface-hover: #18181B;
-    --surface-secondary: #121215;
-    --surface-tertiary: #18181B;
+    --surface-secondary: #16161A;
+    --surface-tertiary: #202024;
     
     --text-primary: #FAFAFA;
     --text-secondary: #A1A1AA;
     --text-muted: #71717A;
     
     --border: #27272A;
-    --border-subtle: #18181B;
+    --border-subtle: #1C1C20;
     --border-strong: #3F3F46;
     
-    --primary: #5E6AD2;
-    --primary-hover: #6E7AE0;
-    --primary-light: rgba(94, 106, 210, 0.15);
-    --primary-dark: #4E5AC0;
+    --primary: #6E7AE0;
+    --primary-hover: #828DF0;
+    --primary-light: rgba(110, 122, 224, 0.15);
+    --primary-dark: #5E6AD2;
     
     --accent-digital: #38BDF8;
     --success: #10B981;
@@ -100,12 +118,14 @@
   }
 
   html {
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01' 1, 'tnum' 1, 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
     font-family: var(--font-sans);
+    font-feature-settings: 'ss01' 1, 'tnum' 1;
     background-color: var(--bg-main);
     color: var(--text-primary);
     overflow-x: hidden;
@@ -276,5 +296,87 @@
   border: 1px solid var(--border-subtle);
   overflow: hidden;
 }
+
+/* ==========================================================================
+   PRECISION HARDWARE & HIGH-CRAFT DESIGN UTILITIES
+   ========================================================================== */
+
+/* Precision Technical Dot Grid */
+.tech-dot-grid {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.15) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.dark .tech-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Tactile Button / Element Press - Custom high-speed cubic-bezier */
+.tactile-press {
+  transition: transform 0.1s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.1s ease;
+}
+.tactile-press:active {
+  transform: scale(0.97);
+}
+
+/* Pure Inset Image Outline (eliminates tinted edge dirt) */
+.img-outline {
+  outline: 1px solid rgba(0, 0, 0, 0.08);
+  outline-offset: -1px;
+}
+.dark .img-outline {
+  outline: 1px solid rgba(255, 255, 255, 0.1);
+  outline-offset: -1px;
+}
+
+/* Technical Serial Stamp */
+.tech-serial-stamp {
+  font-family: 'Vazirmatn', 'JetBrains Mono', monospace;
+  font-feature-settings: 'ss01' 1, 'tnum' 1;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Recharts and SVG charts Persian typography */
+.recharts-wrapper, .recharts-surface, svg text, .recharts-text, .recharts-cartesian-axis-tick-value {
+  font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif !important;
+  font-feature-settings: 'ss01' 1, 'tnum' 1;
+}
+
+/* Persian digits support for all buttons, inputs, tables and text */
+button, input, select, textarea, table, th, td, pre, code {
+  font-feature-settings: 'ss01' 1, 'tnum' 1;
+}
+
+/* Force Persian digits utility */
+.persian-nums, [dir="rtl"], [lang="fa"] {
+  font-feature-settings: 'ss01' 1, 'tnum' 1;
+}
+
+/* Latin numbers override when specifically needed (e.g. for API keys, email inputs, system tokens) */
+.latin-nums, .font-latin, [dir="ltr"] {
+  font-feature-settings: 'ss01' 0, 'tnum' 0;
+}
+
+/* Signal Indicator Light */
+.signal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #62DB00;
+  box-shadow: 0 0 8px rgba(98, 219, 0, 0.6);
+}
+
+/* Text balance and typography polish */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+p, caption {
+  text-wrap: pretty;
+}
+
 
 

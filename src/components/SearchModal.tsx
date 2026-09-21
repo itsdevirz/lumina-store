@@ -230,7 +230,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                           <img
                             src={product.images[0]}
                             alt={product.name}
-                            className="w-11 h-11 rounded-lg object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/50 dark:border-zinc-700/50 group-hover:scale-105 transition-transform"
+                            className="w-11 h-11 rounded-lg object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 img-outline group-hover:scale-105 transition-transform"
                           />
                           <div className="min-w-0">
                             <div className="flex items-center gap-1.5">
@@ -238,7 +238,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                                 {product.brand}
                               </span>
                               {product.discountPercent && (
-                                <span className="px-1 py-0.2 rounded text-[9px] font-mono font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">
+                                <span className="px-1 py-0.2 rounded text-[9px] font-mono tabular-nums font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">
                                   {product.discountPercent}%
                                 </span>
                               )}
@@ -251,7 +251,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
 
                         <div className="flex items-center gap-3 shrink-0 rtl:mr-2 ltr:ml-2">
                           <div className="text-left rtl:text-right">
-                            <div className="text-xs sm:text-sm font-mono font-bold text-zinc-900 dark:text-zinc-100">
+                            <div className="text-xs sm:text-sm font-mono tabular-nums font-bold text-zinc-900 dark:text-zinc-100">
                               {formatPrice(product.price, product.priceUSD)}
                             </div>
                             {product.stock <= 3 && product.stock > 0 && (
@@ -273,7 +273,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
 
                     <button
                       onClick={() => handleSearchSubmit(query)}
-                      className="w-full mt-3 py-2.5 px-4 rounded-xl bg-zinc-100 dark:bg-zinc-800/80 hover:bg-[#62DB00] hover:text-black dark:hover:bg-[#62DB00] dark:hover:text-black font-medium text-xs text-center transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full mt-3 py-2.5 px-4 rounded-xl bg-zinc-100 dark:bg-zinc-800/80 hover:bg-[#62DB00] hover:text-black dark:hover:bg-[#62DB00] dark:hover:text-black font-medium text-xs text-center transition-colors flex items-center justify-center gap-2 cursor-pointer tactile-press shadow-xs"
                     >
                       <span>
                         {lang === 'fa'
@@ -326,7 +326,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                             setQuery(term);
                             handleSearchSubmit(term);
                           }}
-                          className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200/80 dark:hover:bg-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
+                          className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800/60 hover:bg-zinc-200/80 dark:hover:bg-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer tactile-press"
                         >
                           <span>{term}</span>
                           <button
@@ -355,7 +355,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                           setQuery(term);
                           handleSearchSubmit(term);
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-[#62DB00] dark:hover:border-[#62DB00] bg-white dark:bg-zinc-900 hover:bg-[#62DB00]/5 text-xs text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-[#62DB00] dark:hover:border-[#62DB00] bg-white dark:bg-zinc-900 hover:bg-[#62DB00]/5 text-xs text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer tactile-press"
                       >
                         <Sparkles className="w-3 h-3 text-[#62DB00]" />
                         <span>{term}</span>

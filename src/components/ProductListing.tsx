@@ -137,7 +137,7 @@ export const ProductListing: React.FC = () => {
         {activeFiltersCount > 0 && (
           <button
             onClick={resetFilters}
-            className="flex items-center gap-1 text-[11px] font-mono text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+            className="flex items-center gap-1 text-[11px] font-mono text-[#62DB00] hover:underline cursor-pointer"
           >
             <RotateCcw className="w-3 h-3" />
             <span>{lang === 'fa' ? 'بازنشانی' : 'Reset'}</span>
@@ -195,12 +195,12 @@ export const ProductListing: React.FC = () => {
             onClick={() => setFilters(prev => ({ ...prev, selectedBrand: 'all' }))}
             className={`w-full flex items-center justify-between px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
               filters.selectedBrand === 'all'
-                ? 'text-indigo-600 dark:text-indigo-400 font-medium'
+                ? 'text-[#62DB00] font-semibold'
                 : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
             }`}
           >
             <span>{lang === 'fa' ? 'همه برندها' : 'All Brands'}</span>
-            {filters.selectedBrand === 'all' && <Check className="w-3.5 h-3.5" />}
+            {filters.selectedBrand === 'all' && <Check className="w-3.5 h-3.5 text-[#62DB00]" />}
           </button>
           {brands.map(b => {
             const isSelected = filters.selectedBrand === b;
@@ -210,12 +210,12 @@ export const ProductListing: React.FC = () => {
                 onClick={() => setFilters(prev => ({ ...prev, selectedBrand: isSelected ? 'all' : b }))}
                 className={`w-full flex items-center justify-between px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
                   isSelected
-                    ? 'text-indigo-600 dark:text-indigo-400 font-medium'
+                    ? 'text-[#62DB00] font-semibold'
                     : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
                 }`}
               >
                 <span>{b}</span>
-                {isSelected && <Check className="w-3.5 h-3.5" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-[#62DB00]" />}
               </button>
             );
           })}
@@ -239,7 +239,7 @@ export const ProductListing: React.FC = () => {
           step={500000}
           value={filters.maxPrice}
           onChange={e => setFilters(prev => ({ ...prev, maxPrice: Number(e.target.value) }))}
-          className="w-full accent-indigo-600 cursor-pointer"
+          className="w-full accent-[#62DB00] cursor-pointer"
         />
       </div>
 
@@ -253,7 +253,7 @@ export const ProductListing: React.FC = () => {
             type="checkbox"
             checked={filters.inStockOnly}
             onChange={e => setFilters(prev => ({ ...prev, inStockOnly: e.target.checked }))}
-            className="w-3.5 h-3.5 rounded accent-indigo-600 cursor-pointer"
+            className="w-3.5 h-3.5 rounded accent-[#62DB00] cursor-pointer"
           />
         </label>
 
@@ -265,7 +265,7 @@ export const ProductListing: React.FC = () => {
             type="checkbox"
             checked={filters.onSaleOnly}
             onChange={e => setFilters(prev => ({ ...prev, onSaleOnly: e.target.checked }))}
-            className="w-3.5 h-3.5 rounded accent-indigo-600 cursor-pointer"
+            className="w-3.5 h-3.5 rounded accent-[#62DB00] cursor-pointer"
           />
         </label>
       </div>
@@ -288,7 +288,7 @@ export const ProductListing: React.FC = () => {
                 setFilters(prev => ({ ...prev, searchQuery: e.target.value }));
               }}
               placeholder={lang === 'fa' ? 'فیلتر سریع در میان محصولات...' : 'Filter products...'}
-              className="w-full rtl:pr-8 rtl:pl-7 ltr:pl-8 ltr:pr-7 py-1.5 text-xs rounded-md bg-white dark:bg-[#0C0C0E] border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full rtl:pr-8 rtl:pl-7 ltr:pl-8 ltr:pr-7 py-1.5 text-xs rounded-md bg-white dark:bg-[#0C0C0E] border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-[#62DB00] transition-colors"
             />
             {localSearch && (
               <button
@@ -306,11 +306,11 @@ export const ProductListing: React.FC = () => {
           {/* Mobile Filter Button */}
           <button
             onClick={() => setIsMobileFilterOpen(true)}
-            className="md:hidden flex items-center gap-1 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            className="md:hidden flex items-center gap-1 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-300 tactile-press"
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             {activeFiltersCount > 0 && (
-              <span className="font-mono text-[10px] px-1 rounded bg-indigo-600 text-white">
+              <span className="font-mono text-[10px] px-1 rounded bg-[#62DB00] text-black font-bold">
                 {activeFiltersCount}
               </span>
             )}
@@ -319,7 +319,7 @@ export const ProductListing: React.FC = () => {
 
         {/* Right: Metrics & Sort */}
         <div className="flex items-center justify-between sm:justify-end gap-3 text-xs">
-          <span className="font-mono text-[11px] text-zinc-400">
+          <span className="font-mono tabular-nums text-[11px] text-zinc-400">
             {filteredProducts.length} {lang === 'fa' ? 'مورد' : 'items'}
           </span>
 
@@ -330,7 +330,7 @@ export const ProductListing: React.FC = () => {
             <select
               value={filters.sortBy}
               onChange={e => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
-              className="text-xs bg-white dark:bg-[#0C0C0E] text-zinc-800 dark:text-zinc-200 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:border-indigo-500 cursor-pointer font-sans"
+              className="text-xs bg-white dark:bg-[#0C0C0E] text-zinc-800 dark:text-zinc-200 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 focus:outline-none focus:border-[#62DB00] cursor-pointer font-sans"
             >
               <option value="popular">{lang === 'fa' ? 'محبوب‌ترین' : 'Most Popular'}</option>
               <option value="newest">{lang === 'fa' ? 'جدیدترین' : 'Newest'}</option>
@@ -425,7 +425,7 @@ export const ProductListing: React.FC = () => {
 
               <button
                 onClick={resetFilters}
-                className="font-mono text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline mr-auto rtl:mr-auto rtl:ml-0"
+                className="font-mono text-[10px] text-[#62DB00] hover:underline mr-auto rtl:mr-auto rtl:ml-0"
               >
                 {lang === 'fa' ? 'پاک‌سازی همه' : 'Clear all'}
               </button>
@@ -444,7 +444,7 @@ export const ProductListing: React.FC = () => {
               </p>
               <button
                 onClick={resetFilters}
-                className="px-3 py-1.5 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium"
+                className="px-3 py-1.5 rounded-md bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium tactile-press cursor-pointer"
               >
                 {lang === 'fa' ? 'بازنشانی فیلترها' : 'Reset filters'}
               </button>
@@ -483,7 +483,7 @@ export const ProductListing: React.FC = () => {
                           <img
                             src={product.images[0]}
                             alt={product.name}
-                            className="w-8 h-8 rounded object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200/60 dark:border-zinc-800"
+                            className="w-8 h-8 rounded object-cover bg-zinc-100 dark:bg-zinc-800 shrink-0 img-outline"
                           />
                           <div className="min-w-0">
                             <div className="font-medium text-zinc-900 dark:text-zinc-100 truncate max-w-[140px] sm:max-w-xs">
@@ -504,7 +504,7 @@ export const ProductListing: React.FC = () => {
                       </td>
 
                       {/* Stock Status */}
-                      <td className="py-2 px-3 hidden md:table-cell font-mono text-[11px]">
+                      <td className="py-2 px-3 hidden md:table-cell font-mono tabular-nums text-[11px]">
                         {product.stock > 0 ? (
                           <span className="text-emerald-600 dark:text-emerald-400">
                             ● {product.stock} {lang === 'fa' ? 'عدد در انبار' : 'units'}
@@ -517,7 +517,7 @@ export const ProductListing: React.FC = () => {
                       </td>
 
                       {/* Rating */}
-                      <td className="py-2 px-3 hidden sm:table-cell font-mono text-[11px] text-zinc-500">
+                      <td className="py-2 px-3 hidden sm:table-cell font-mono tabular-nums text-[11px] text-zinc-500">
                         <div className="flex items-center gap-1">
                           <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
                           <span>{product.rating}</span>
@@ -529,11 +529,11 @@ export const ProductListing: React.FC = () => {
                       <td className="py-2 px-3">
                         <div className="flex flex-col">
                           {product.originalPrice && (
-                            <span className="text-[10px] font-mono text-zinc-400 line-through">
+                            <span className="text-[10px] font-mono tabular-nums text-zinc-400 line-through">
                               {formatPrice(product.originalPrice, product.originalPriceUSD)}
                             </span>
                           )}
-                          <span className="font-mono font-semibold text-xs text-zinc-900 dark:text-zinc-100">
+                          <span className="font-mono tabular-nums font-semibold text-xs text-zinc-900 dark:text-zinc-100">
                             {formatPrice(product.price, product.priceUSD)}
                           </span>
                         </div>
@@ -548,7 +548,7 @@ export const ProductListing: React.FC = () => {
                               setQuickViewProduct(product);
                             }}
                             title="Quick View"
-                            className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
+                            className="p-1.5 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer tactile-press"
                           >
                             <Eye className="w-3.5 h-3.5" />
                           </button>
@@ -558,7 +558,7 @@ export const ProductListing: React.FC = () => {
                               addToCart(product, 1);
                             }}
                             title="Add to Cart"
-                            className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
+                            className="p-1.5 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer tactile-press"
                           >
                             <ShoppingBag className="w-3.5 h-3.5" />
                           </button>

@@ -161,7 +161,7 @@ export const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ pr
 
     setIsSubmitting(true);
 
-    const newReviewItem: ProductReview = {
+    let newReviewItem: ProductReview = {
       id: 'rev-' + Date.now(),
       productId,
       userId: currentUser.id,
@@ -204,6 +204,9 @@ export const ProductReviewsSection: React.FC<ProductReviewsSectionProps> = ({ pr
         if (contentType.includes('application/json')) {
           const data = await res.json();
           if (res.ok && data.success) {
+            if (data.review) {
+              newReviewItem = data.review;
+            }
             savedSuccessfully = true;
           }
         }

@@ -9,13 +9,11 @@ import { KeyboardShortcutsModal } from '../KeyboardShortcutsModal';
 interface AppShellProps {
   children: React.ReactNode;
   onGoToAdmin: () => void;
-  onOpenSeoInspector?: () => void;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
   children,
-  onGoToAdmin,
-  onOpenSeoInspector
+  onGoToAdmin
 }) => {
   const {
     lang,
@@ -168,7 +166,6 @@ export const AppShell: React.FC<AppShellProps> = ({
       <ModernHeader
         onGoToAdmin={onGoToAdmin}
         onOpenSearchModal={() => setIsSearchModalOpen(true)}
-        onOpenSeoInspector={onOpenSeoInspector}
       />
 
       {/* Main Workspace Frame */}
@@ -193,7 +190,6 @@ export const AppShell: React.FC<AppShellProps> = ({
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}
         onGoToAdmin={onGoToAdmin}
-        onOpenSeoInspector={onOpenSeoInspector}
       />
 
       {/* Keyboard Shortcuts Cheatsheet (?) */}

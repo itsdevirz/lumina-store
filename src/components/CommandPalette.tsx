@@ -29,14 +29,12 @@ interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
   onGoToAdmin: () => void;
-  onOpenSeoInspector?: () => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,
   onClose,
-  onGoToAdmin,
-  onOpenSeoInspector
+  onGoToAdmin
 }) => {
   const {
     products,
@@ -183,23 +181,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       }
     ];
 
-    if (onOpenSeoInspector) {
-      items.push({
-        id: 'act-seo',
-        label: lang === 'fa' ? 'آنالیز زنده سئو و متادیتا' : 'Live SEO & Meta Inspector',
-        shortcut: 'S',
-        icon: Layers,
-        action: () => {
-          onOpenSeoInspector();
-          onClose();
-        }
-      });
-    }
-
     if (!query.trim()) return items;
     const q = query.toLowerCase().trim();
     return items.filter(item => item.label.toLowerCase().includes(q));
-  }, [lang, darkMode, toggleDarkMode, setLang, onOpenSeoInspector, onClose, query]);
+  }, [lang, darkMode, toggleDarkMode, setLang, onClose, query]);
 
   // Combined flat list for keyboard navigation
   const allItems = useMemo(() => {

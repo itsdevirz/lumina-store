@@ -67,14 +67,14 @@ export const AnalyticsChartsView: React.FC = () => {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-900 text-white p-3 rounded-2xl shadow-xl border border-slate-800 text-xs space-y-1.5 font-sans" dir="rtl">
-          <p className="font-bold text-slate-300 pb-1 border-b border-slate-800">{label}</p>
+        <div className="bg-[#121215] text-white p-3 rounded-2xl shadow-xl border border-zinc-800 text-xs space-y-1.5 font-sans" dir="rtl">
+          <p className="font-bold text-zinc-400 pb-1 border-b border-zinc-800">{label}</p>
           {payload.map((entry: any, index: number) => (
             <div key={`item-${index}`} className="flex items-center justify-between gap-4 text-xs">
               <span style={{ color: entry.color }} className="font-bold">
                 {entry.name}:
               </span>
-              <span className="font-black text-white">
+              <span className="font-black text-white font-mono">
                 {entry.dataKey === 'sales'
                   ? `${entry.value.toLocaleString('fa-IR')} تومان`
                   : entry.value.toLocaleString('fa-IR')}
@@ -94,28 +94,28 @@ export const AnalyticsChartsView: React.FC = () => {
   const totalUsersInPeriod = chartData.reduce((s, d) => s + d.newUsers, 0);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 font-sans">
+    <div className="p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-8 font-sans">
       {/* View Header & Time Range Selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+          <h1 className="text-lg sm:text-2xl font-black text-zinc-900 dark:text-white">
             نمودارهای تحلیلی و آماری
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-[11px] sm:text-xs text-zinc-400 mt-1">
             بررسی روندهای مالی، حجم فروش، نرخ سفارش‌گیری و جریان جذب کاربر
           </p>
         </div>
 
         {/* Time range pill buttons */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80">
+        <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-x-auto max-w-full">
           {ranges.map(r => (
             <button
               key={r.id}
               onClick={() => setRange(r.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all shrink-0 cursor-pointer ${
                 range === r.id
-                  ? 'bg-indigo-600 text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#62DB00] text-black font-black shadow-xs'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
               }`}
             >
               {r.label}
@@ -125,95 +125,95 @@ export const AnalyticsChartsView: React.FC = () => {
       </div>
 
       {/* Metric Quick Stats in Selected Period */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         <button
           onClick={() => setActiveMetric('sales')}
-          className={`p-5 rounded-3xl text-right transition-all border ${
+          className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl text-right transition-all border cursor-pointer ${
             activeMetric === 'sales'
-              ? 'bg-indigo-50/50 dark:bg-indigo-950/40 border-indigo-500 shadow-sm'
-              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
+              ? 'bg-[#62DB00]/10 dark:bg-[#62DB00]/10 border-[#62DB00] shadow-sm'
+              : 'bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800/90 hover:border-zinc-300 dark:hover:border-zinc-700'
           }`}
         >
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-bold">فروش در بازه انتخابی</span>
-            <DollarSign className="w-4 h-4 text-indigo-500" />
+          <div className="flex items-center justify-between text-zinc-400 mb-1.5 sm:mb-2">
+            <span className="text-[11px] sm:text-xs font-bold truncate">فروش کل</span>
+            <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#62DB00] shrink-0" />
           </div>
-          <div className="text-xl font-black text-slate-900 dark:text-white">
-            {totalSalesInPeriod.toLocaleString('fa-IR')} <span className="text-xs font-medium text-slate-400">تومان</span>
+          <div className="text-sm sm:text-xl font-black text-zinc-900 dark:text-white truncate font-mono">
+            {totalSalesInPeriod.toLocaleString('fa-IR')} <span className="text-[10px] sm:text-xs font-medium text-zinc-400 font-sans">تومان</span>
           </div>
         </button>
 
         <button
           onClick={() => setActiveMetric('orders')}
-          className={`p-5 rounded-3xl text-right transition-all border ${
+          className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl text-right transition-all border cursor-pointer ${
             activeMetric === 'orders'
-              ? 'bg-emerald-50/50 dark:bg-emerald-950/40 border-emerald-500 shadow-sm'
-              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
+              ? 'bg-emerald-500/10 dark:bg-emerald-500/10 border-emerald-500 shadow-sm'
+              : 'bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800/90 hover:border-zinc-300 dark:hover:border-zinc-700'
           }`}
         >
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-bold">تعداد سفارش‌ها</span>
-            <ShoppingBag className="w-4 h-4 text-emerald-500" />
+          <div className="flex items-center justify-between text-zinc-400 mb-1.5 sm:mb-2">
+            <span className="text-[11px] sm:text-xs font-bold truncate">سفارش‌ها</span>
+            <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
           </div>
-          <div className="text-xl font-black text-slate-900 dark:text-white">
-            {totalOrdersInPeriod.toLocaleString('fa-IR')} <span className="text-xs font-medium text-slate-400">سفارش</span>
+          <div className="text-sm sm:text-xl font-black text-zinc-900 dark:text-white truncate font-mono">
+            {totalOrdersInPeriod.toLocaleString('fa-IR')} <span className="text-[10px] sm:text-xs font-medium text-zinc-400 font-sans">سفارش</span>
           </div>
         </button>
 
         <button
           onClick={() => setActiveMetric('visitors')}
-          className={`p-5 rounded-3xl text-right transition-all border ${
+          className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl text-right transition-all border cursor-pointer ${
             activeMetric === 'visitors'
-              ? 'bg-rose-50/50 dark:bg-rose-950/40 border-[#E80645] shadow-sm'
-              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
+              ? 'bg-sky-500/10 dark:bg-sky-500/10 border-sky-500 shadow-sm'
+              : 'bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800/90 hover:border-zinc-300 dark:hover:border-zinc-700'
           }`}
         >
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-bold">تعداد بازدیدکنندگان</span>
-            <Eye className="w-4 h-4 text-[#E80645]" />
+          <div className="flex items-center justify-between text-zinc-400 mb-1.5 sm:mb-2">
+            <span className="text-[11px] sm:text-xs font-bold truncate">بازدیدها</span>
+            <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-500 shrink-0" />
           </div>
-          <div className="text-xl font-black text-slate-900 dark:text-white">
-            {totalVisitorsInPeriod.toLocaleString('fa-IR')} <span className="text-xs font-medium text-slate-400">نفر</span>
+          <div className="text-sm sm:text-xl font-black text-zinc-900 dark:text-white truncate font-mono">
+            {totalVisitorsInPeriod.toLocaleString('fa-IR')} <span className="text-[10px] sm:text-xs font-medium text-zinc-400 font-sans">نفر</span>
           </div>
         </button>
 
         <button
           onClick={() => setActiveMetric('newUsers')}
-          className={`p-5 rounded-3xl text-right transition-all border ${
+          className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl text-right transition-all border cursor-pointer ${
             activeMetric === 'newUsers'
-              ? 'bg-purple-50/50 dark:bg-purple-950/40 border-purple-500 shadow-sm'
-              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300'
+              ? 'bg-purple-500/10 dark:bg-purple-500/10 border-purple-500 shadow-sm'
+              : 'bg-white dark:bg-[#121215] border-zinc-200 dark:border-zinc-800/90 hover:border-zinc-300 dark:hover:border-zinc-700'
           }`}
         >
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-bold">کاربران جدید</span>
-            <Users className="w-4 h-4 text-purple-500" />
+          <div className="flex items-center justify-between text-zinc-400 mb-1.5 sm:mb-2">
+            <span className="text-[11px] sm:text-xs font-bold truncate">کاربر جدید</span>
+            <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500 shrink-0" />
           </div>
-          <div className="text-xl font-black text-slate-900 dark:text-white">
-            {totalUsersInPeriod.toLocaleString('fa-IR')} <span className="text-xs font-medium text-slate-400">عضو جدید</span>
+          <div className="text-sm sm:text-xl font-black text-zinc-900 dark:text-white truncate font-mono">
+            {totalUsersInPeriod.toLocaleString('fa-IR')} <span className="text-[10px] sm:text-xs font-medium text-zinc-400 font-sans">عضو جدید</span>
           </div>
         </button>
       </div>
 
       {/* Primary Active Chart */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="p-3.5 sm:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
           <div>
-            <h3 className="text-base font-black text-slate-900 dark:text-white">
+            <h3 className="text-sm sm:text-base font-black text-zinc-900 dark:text-white">
               {activeMetric === 'sales' && 'روند درآمد و فروش در طول زمان'}
               {activeMetric === 'orders' && 'نمودار تعداد سفارش‌های ثبت‌شده'}
               {activeMetric === 'visitors' && 'ترافیک ورودی و تعداد بازدید سایت'}
               {activeMetric === 'newUsers' && 'نرخ رشد ثبت‌نام کاربران جدید'}
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5">
               بازه زمانی فعال: {ranges.find(r => r.id === range)?.label}
             </p>
           </div>
         </div>
 
-        <div className="h-80 w-full" dir="ltr">
+        <div className="h-64 sm:h-80 w-full" dir="ltr">
           {isLoading ? (
-            <div className="h-full flex items-center justify-center text-xs text-slate-400">
+            <div className="h-full flex items-center justify-center text-xs text-zinc-400">
               در حال بارگذاری اطلاعات نمودار...
             </div>
           ) : activeMetric === 'sales' ? (
@@ -221,19 +221,19 @@ export const AnalyticsChartsView: React.FC = () => {
               <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366F1" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#6366F1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#62DB00" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#62DB00" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.3} />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={formatPrice} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" strokeOpacity={0.3} />
+                <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} />
+                <YAxis stroke="#71717a" fontSize={11} tickFormatter={formatPrice} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="sales"
                   name="فروش"
-                  stroke="#6366F1"
+                  stroke="#62DB00"
                   strokeWidth={3}
                   fillOpacity={1}
                   fill="url(#colorSales)"
@@ -243,9 +243,9 @@ export const AnalyticsChartsView: React.FC = () => {
           ) : activeMetric === 'orders' ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.3} />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" strokeOpacity={0.3} />
+                <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} />
+                <YAxis stroke="#71717a" fontSize={11} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Bar dataKey="orders" name="سفارش‌ها" fill="#10B981" radius={[8, 8, 0, 0]} />
               </BarChart>
@@ -255,19 +255,19 @@ export const AnalyticsChartsView: React.FC = () => {
               <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#0EA5E9" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#0EA5E9" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.3} />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" strokeOpacity={0.3} />
+                <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} />
+                <YAxis stroke="#71717a" fontSize={11} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="visitors"
                   name="بازدیدکنندگان"
-                  stroke="#3B82F6"
+                  stroke="#0EA5E9"
                   strokeWidth={3}
                   fillOpacity={1}
                   fill="url(#colorVisits)"
@@ -277,17 +277,17 @@ export const AnalyticsChartsView: React.FC = () => {
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.3} />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" strokeOpacity={0.3} />
+                <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} />
+                <YAxis stroke="#71717a" fontSize={11} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Line
                   type="monotone"
                   dataKey="newUsers"
                   name="کاربر جدید"
-                  stroke="#8B5CF6"
+                  stroke="#A855F7"
                   strokeWidth={3}
-                  dot={{ r: 4, fill: '#8B5CF6' }}
+                  dot={{ r: 4, fill: '#A855F7' }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -296,43 +296,43 @@ export const AnalyticsChartsView: React.FC = () => {
       </div>
 
       {/* Dual Comparative Charts: Sales vs Visits */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-          <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
-            <DollarSign className="w-4 h-4 text-indigo-500" />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6">
+        <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-3 sm:space-y-4">
+          <h4 className="text-xs sm:text-sm font-black text-zinc-900 dark:text-white flex items-center gap-2">
+            <DollarSign className="w-4 h-4 text-[#62DB00]" />
             <span>مقایسه فروش و حجم سفارش‌ها</span>
           </h4>
-          <div className="h-64" dir="ltr">
+          <div className="h-56 sm:h-64" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.3} />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" strokeOpacity={0.3} />
+                <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} />
+                <YAxis stroke="#71717a" fontSize={11} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="orders" name="سفارش‌ها" fill="#6366F1" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="orders" name="سفارش‌ها" fill="#62DB00" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-          <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+        <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800/90 shadow-xs space-y-3 sm:space-y-4">
+          <h4 className="text-xs sm:text-sm font-black text-zinc-900 dark:text-white flex items-center gap-2">
             <Users className="w-4 h-4 text-purple-500" />
             <span>جذب اعضای جدید سایت</span>
           </h4>
-          <div className="h-64" dir="ltr">
+          <div className="h-56 sm:h-64" dir="ltr">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" strokeOpacity={0.3} />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" strokeOpacity={0.3} />
+                <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} />
+                <YAxis stroke="#71717a" fontSize={11} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="newUsers"
                   name="عضو جدید"
-                  stroke="#8B5CF6"
-                  fill="#8B5CF6"
+                  stroke="#A855F7"
+                  fill="#A855F7"
                   fillOpacity={0.2}
                 />
               </AreaChart>
