@@ -38,6 +38,11 @@ async function startServer() {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  // Explicit 404 for any unmatched /api route to prevent falling back to index.html
+  app.all('/api/*', (_req, res) => {
+    res.status(404).json({ success: false, message: 'مسیر API مورد نظر یافت نشد.' });
+  });
+
   // Vite middleware setup
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

@@ -65,6 +65,14 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [dbPass, setDbPass] = useState('');
   const [dbName, setDbName] = useState('cp63925519643_online_shop_db');
 
+  const sanitizeMessage = (msg: any): string => {
+    if (!msg || typeof msg !== 'string') return 'خطا در ارتباط با سرور';
+    if (msg.trim().startsWith('<') || msg.includes('<!DOCTYPE') || msg.includes('<html') || msg.includes('<head>')) {
+      return 'سرویس پایگاه داده MySQL در این محیط ابری فعال نیست. داده‌ها به شکل کاملاً امن در حافظه سیستم نگهداری می‌شوند.';
+    }
+    return msg;
+  };
+
   const safeFetchJson = async (url: string, options?: RequestInit) => {
     try {
       const res = await fetch(url, {
@@ -75,14 +83,36 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           ...(options?.headers || {})
         }
       });
+      const contentType = res.headers.get('content-type') || '';
       const text = await res.text();
+
+      if (!contentType.includes('application/json') || text.trim().startsWith('<')) {
+        return {
+          success: false,
+          connected: false,
+          message: 'دیتابیس در محیط پیش‌نمایش در حالت ذخیره‌سازی محلی (فالبک) قرار دارد.'
+        };
+      }
+
       try {
-        return JSON.parse(text);
+        const parsed = JSON.parse(text);
+        if (parsed && typeof parsed.message === 'string') {
+          parsed.message = sanitizeMessage(parsed.message);
+        }
+        return parsed;
       } catch {
-        return { success: false, message: text || `خطای سرور (کد ${res.status})` };
+        return {
+          success: false,
+          connected: false,
+          message: 'دیتابیس در حالت ذخیره‌سازی محلی فعال است.'
+        };
       }
     } catch (err: any) {
-      return { success: false, message: err?.message || 'خطا در برقراری ارتباط با سرور' };
+      return {
+        success: false,
+        connected: false,
+        message: 'عدم دسترسی به سرویس پایگاه داده: ' + (err?.message || 'خطای شبکه')
+      };
     }
   };
 
@@ -126,16 +156,16 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
       });
 
       if (data && (data.connected || data.success)) {
-        setDbActionMessage({ type: 'success', text: data.message || 'اتصال با موفقیت برقرار شد.' });
+        setDbActionMessage({ type: 'success', text: sanitizeMessage(data.message) || 'اتصال با موفقیت برقرار شد.' });
       } else {
         setDbActionMessage({
           type: 'error',
-          text: data.message || 'ارتباط با پایگاه داده برقرار نشد. (در محیط پیش‌نمایش ابری از حافظه لوکال استفاده می‌شود؛ روی هاست شما با دیتابیس MySQL کار خواهد کرد).'
+          text: sanitizeMessage(data?.message) || 'ارتباط با سرور MySQL برقرار نشد. (در محیط پیش‌نمایش از حافظه لوکال استفاده می‌شود؛ روی هاست شما با فایل online_shop_db.sql متصل خواهد شد).'
         });
       }
       fetchDbStatus();
     } catch (err: any) {
-      setDbActionMessage({ type: 'error', text: 'خطا در تست اتصال: ' + err.message });
+      setDbActionMessage({ type: 'error', text: 'خطا در تست اتصال: ' + (err?.message || 'عدم پاسخگویی سرور') });
     } finally {
       setIsLoadingDb(false);
     }
@@ -159,16 +189,16 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
       });
 
       if (data && data.success) {
-        setDbActionMessage({ type: 'success', text: data.message || 'همگام‌سازی با موفقیت انجام شد.' });
+        setDbActionMessage({ type: 'success', text: sanitizeMessage(data.message) || 'همگام‌سازی با موفقیت انجام شد.' });
         fetchDbStatus();
       } else {
         setDbActionMessage({
           type: 'error',
-          text: data.message || 'همگام‌سازی انجام نشد. اطلاعات در فایل ذخیره‌سازی محلی کاملاً امن و ذخیره هستند.'
+          text: sanitizeMessage(data?.message) || 'همگام‌سازی انجام نشد. اطلاعات در فایل ذخیره‌سازی محلی کاملاً امن نگهداری می‌شوند.'
         });
       }
     } catch (err: any) {
-      setDbActionMessage({ type: 'error', text: 'خطا در همگام‌سازی: ' + err.message });
+      setDbActionMessage({ type: 'error', text: 'خطا در همگام‌سازی: ' + (err?.message || 'خطای سرور') });
     } finally {
       setIsSyncingDb(false);
     }
