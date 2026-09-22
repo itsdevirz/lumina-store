@@ -67,9 +67,13 @@ class MySQLService {
 
   public async testAndReconnect(newConfig?: Partial<MySQLConfig>, initialData?: any): Promise<{ success: boolean; message: string; error?: string; diagnostic?: string }> {
     if (newConfig) {
+      const cleanConfig: Partial<MySQLConfig> = { ...newConfig };
+      if (!cleanConfig.password && this.config.password) {
+        delete cleanConfig.password;
+      }
       this.config = {
         ...this.config,
-        ...newConfig,
+        ...cleanConfig,
         port: Number(newConfig.port) || this.config.port
       };
     }
@@ -97,24 +101,27 @@ class MySQLService {
         } else if (errStr.includes('access denied') || errStr.includes('1045')) {
           diagnostic = 'خطای دسترسی نام کاربری یا رمز عبور: لطفاً در سی‌پنل (MySQL Databases) بررسی کنید که کاربر به این دیتابیس متصل بوده و تیک دسترسی ALL PRIVILEGES خورده باشد.';
         } else if (errStr.includes('timedout') || errStr.includes('econnrefused') || errStr.includes('enotfound')) {
-          diagnostic = 'فایروال هاست اجازه اتصال به پورت 3306 را نداد: در سی‌پنل به منوی «Remote MySQL» بروید و در کادر Host علامت % (درصد) را اضافه کنید تا هاست اجازه اتصال راه دور به MySQL را صادر کند.';
+          diagnostic = `عدم دسترسی به پورت 3306 در سرور ${this.config.host}. لطفاً در سی‌پنل هاست به بخش «Remote MySQL» بروید و در کادر Host علامت % (درصد) را اضافه نمایید تا فایروال هاست اجازه دسترسی از راه دور را بدهد.`;
         } else if (errStr.includes('unknown database') || errStr.includes('1049')) {
           diagnostic = `دیتابیسی با نام «${this.config.database}» در هاست پیدا نشد. لطفاً ابتدا در سی‌پنل این دیتابیس را بسازید.`;
         }
 
         return {
           success: false,
-          message: this.lastError ? `پاسخ سرور دیتابیس: ${this.lastError}` : 'اتصال برقرار نشد.',
+          message: this.lastError ? `پاسخ سرور دیتابیس (${this.config.host}:${this.config.port}): ${this.lastError}` : 'اتصال برقرار نشد.',
           error: this.lastError || undefined,
           diagnostic
         };
       }
     } catch (err: any) {
       this.isConnected = false;
-      this.lastError = err?.message || String(err);
+      const code = err?.code || '';
+      const errno = err?.errno || '';
+      const sqlMsg = err?.sqlMessage || err?.message || String(err);
+      this.lastError = code ? `[${code}${errno ? ` / ${errno}` : ''}] ${sqlMsg}` : sqlMsg;
       return {
         success: false,
-        message: `خطا در اتصال به MySQL: ${this.lastError}`,
+        message: `خطا در اتصال به MySQL (${this.config.host}:${this.config.port}): ${this.lastError}`,
         error: this.lastError
       };
     }
@@ -180,7 +187,10 @@ class MySQLService {
       return true;
     } catch (err: any) {
       this.isConnected = false;
-      this.lastError = err?.message || String(err);
+      const code = err?.code || '';
+      const errno = err?.errno || '';
+      const sqlMsg = err?.sqlMessage || err?.message || String(err);
+      this.lastError = code ? `[${code}${errno ? ` / ${errno}` : ''}] ${sqlMsg}` : sqlMsg;
       console.warn(`[MySQL] Notice: MySQL database connection could not be established (${this.lastError}).`);
       console.warn(`[MySQL] Fallback mode active: Store data will be safely handled locally. Once deployed to your host with MySQL online_shop_db, it will automatically connect.`);
       return false;

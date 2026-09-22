@@ -62,7 +62,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [dbHost, setDbHost] = useState('localhost');
   const [dbPort, setDbPort] = useState('3306');
   const [dbUser, setDbUser] = useState('cp63925519643_dev');
-  const [dbPass, setDbPass] = useState('');
+  const [dbPass, setDbPass] = useState('Alireza23!#');
   const [dbName, setDbName] = useState('cp63925519643_online_shop_db');
 
   const safeFetchJson = async (url: string, options?: RequestInit) => {

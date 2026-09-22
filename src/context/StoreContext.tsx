@@ -1576,9 +1576,18 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       const url = currentUser?.id
         ? `/api/orders?userId=${encodeURIComponent(currentUser.id)}&email=${encodeURIComponent(currentUser.email || '')}`
         : '/api/orders';
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: { 'Accept': 'application/json' }
+      });
       if (res.ok) {
-        const serverOrders = await res.json();
+        const text = await res.text();
+        if (!text || text.trim().startsWith('<')) return;
+        let serverOrders;
+        try {
+          serverOrders = JSON.parse(text);
+        } catch {
+          return;
+        }
         if (Array.isArray(serverOrders) && serverOrders.length > 0) {
           setUserOrders(prevOrders => {
             // Check status changes for toast/sound alerts
