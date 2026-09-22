@@ -9,7 +9,6 @@ export interface MySQLConfig {
   password?: string;
   database: string;
   ssl?: any;
-  databaseUrl?: string;
 }
 
 export interface MySQLStatus {
@@ -18,7 +17,6 @@ export interface MySQLStatus {
   host: string;
   port: number;
   user: string;
-  databaseUrl?: string;
   error?: string;
   tablesCount?: number;
   records?: {
@@ -32,28 +30,6 @@ export interface MySQLStatus {
   };
 }
 
-export function parseDatabaseUrl(urlStr: string): Partial<MySQLConfig> | null {
-  if (!urlStr || typeof urlStr !== 'string') return null;
-  try {
-    const trimmed = urlStr.trim();
-    if (!trimmed.startsWith('mysql://') && !trimmed.startsWith('mysql2://')) {
-      return null;
-    }
-    const parsed = new URL(trimmed);
-    const dbName = parsed.pathname ? parsed.pathname.replace(/^\//, '') : '';
-    return {
-      host: parsed.hostname || 'localhost',
-      port: parsed.port ? Number(parsed.port) : 3306,
-      user: parsed.username ? decodeURIComponent(parsed.username) : 'root',
-      password: parsed.password ? decodeURIComponent(parsed.password) : '',
-      database: dbName ? decodeURIComponent(dbName) : 'online_shop_db',
-    };
-  } catch (e) {
-    console.error('[MySQL] Error parsing database URL:', e);
-    return null;
-  }
-}
-
 class MySQLService {
   private pool: mysql.Pool | null = null;
   private isConnected = false;
@@ -61,32 +37,17 @@ class MySQLService {
   private config: MySQLConfig;
 
   constructor() {
-    const defaultUrl = process.env.DATABASE_URL || process.env.MYSQL_URL || 'mysql://cp63925519643_dev:Alireza23%21%23@localhost:3306/cp63925519643_online_shop_db';
-    const urlParsed = parseDatabaseUrl(defaultUrl);
-
     this.config = {
-      host: process.env.DB_HOST || urlParsed?.host || 'localhost',
-      port: Number(process.env.DB_PORT) || urlParsed?.port || 3306,
-      user: process.env.DB_USER || urlParsed?.user || 'cp63925519643_dev',
-      password: process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD : (urlParsed?.password || 'Alireza23!#'),
-      database: process.env.DB_NAME || urlParsed?.database || 'cp63925519643_online_shop_db',
-      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT) || 3306,
+      user: process.env.DB_USER || 'cp63925519643_dev',
+      password: process.env.DB_PASSWORD || 'Alireza23!#',
+      database: process.env.DB_NAME || 'cp63925519643_online_shop_db',
     };
-  }
-
-  public getDatabaseUrl(masked = false): string {
-    const pwd = masked ? '******' : (this.config.password ? encodeURIComponent(this.config.password) : '');
-    const user = encodeURIComponent(this.config.user || '');
-    const auth = user ? (pwd ? `${user}:${pwd}@` : `${user}@`) : '';
-    return `mysql://${auth}${this.config.host}:${this.config.port}/${encodeURIComponent(this.config.database)}`;
   }
 
   public getConfig(): MySQLConfig {
-    return {
-      ...this.config,
-      password: this.config.password ? '******' : '',
-      databaseUrl: this.getDatabaseUrl(true)
-    };
+    return { ...this.config, password: this.config.password ? '******' : '' };
   }
 
   public getStatus(): MySQLStatus {
@@ -96,7 +57,6 @@ class MySQLService {
       host: this.config.host,
       port: this.config.port,
       user: this.config.user,
-      databaseUrl: this.getDatabaseUrl(false),
       error: this.lastError || undefined,
     };
   }
@@ -105,24 +65,13 @@ class MySQLService {
     return this.isConnected;
   }
 
-  public async testAndReconnect(newConfig?: Partial<MySQLConfig> | { databaseUrl?: string; url?: string }, initialData?: any): Promise<{ success: boolean; message: string; error?: string; diagnostic?: string }> {
+  public async testAndReconnect(newConfig?: Partial<MySQLConfig>, initialData?: any): Promise<{ success: boolean; message: string; error?: string; diagnostic?: string }> {
     if (newConfig) {
-      const inputUrl = (newConfig as any).databaseUrl || (newConfig as any).url;
-      if (inputUrl) {
-        const parsed = parseDatabaseUrl(inputUrl);
-        if (parsed) {
-          this.config = {
-            ...this.config,
-            ...parsed
-          };
-        }
-      } else {
-        this.config = {
-          ...this.config,
-          ...(newConfig as Partial<MySQLConfig>),
-          port: Number((newConfig as any).port) || this.config.port
-        };
-      }
+      this.config = {
+        ...this.config,
+        ...newConfig,
+        port: Number(newConfig.port) || this.config.port
+      };
     }
     try {
       if (this.pool) {
@@ -210,7 +159,6 @@ class MySQLService {
         connectionLimit: 10,
         queueLimit: 0,
         charset: 'utf8mb4',
-        ssl: this.config.ssl,
       });
 
       // Test connection
