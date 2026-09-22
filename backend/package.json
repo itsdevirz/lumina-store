@@ -1,0 +1,32 @@
+{
+  "name": "lumina-shop-backend",
+  "version": "1.0.0",
+  "description": "Lumina E-Commerce Standalone REST API Backend with MySQL & AI Integration",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["ecommerce", "backend", "express", "mysql", "api"],
+  "author": "Lumina Store Dev Team",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^2.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "multer": "^2.3.0",
+    "mysql2": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^22.14.0",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2"
+  }
+}
