@@ -61,7 +61,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
   const [showDbConfigForm, setShowDbConfigForm] = useState(false);
   const [dbHost, setDbHost] = useState('localhost');
   const [dbPort, setDbPort] = useState('3306');
-  const [dbUser, setDbUser] = useState('cp63925519643_user');
+  const [dbUser, setDbUser] = useState('cp63925519643_dev');
   const [dbPass, setDbPass] = useState('');
   const [dbName, setDbName] = useState('cp63925519643_online_shop_db');
 
