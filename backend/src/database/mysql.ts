@@ -1,4 +1,6 @@
 import mysql from 'mysql2/promise';
+import fs from 'fs';
+import path from 'path';
 
 export interface MySQLConfig {
   host: string;
@@ -28,7 +30,7 @@ export interface MySQLStatus {
   };
 }
 
-export class MySQLService {
+class MySQLService {
   private pool: mysql.Pool | null = null;
   private isConnected = false;
   private lastError: string | null = null;
@@ -87,7 +89,7 @@ export class MySQLService {
       if (success) {
         return {
           success: true,
-          message: `اتصال به پایگاه داده MySQL (${this.config.database}) در ${this.config.host}:${this.config.port} با موفقیت برقرار شد.`
+          message: `اتصال به پایگاه داده MySQL (${this.config.database}) در ${this.config.host}:${this.config.port} با موفقیت برقرار شد و آماده همگام‌سازی بلادرنگ است.`
         };
       } else {
         let diagnostic = '';
@@ -95,11 +97,11 @@ export class MySQLService {
         const host = this.config.host;
 
         if (host === 'localhost' || host === '127.0.0.1') {
-          diagnostic = 'نکته مهم: آدرس سرور روی «localhost» قرار دارد. برای اتصال زنده از راه دور به هاست cPanel خود، آدرس IP سرور یا دامنه سایتتان را در فیلد میزبان (Host) وارد کرده و در cPanel بخش Remote MySQL دسترسی % را فعال نمایید.';
+          diagnostic = 'نکته مهم: آدرس سرور روی «localhost» قرار دارد. چون این برنامه فعلاً در سرور ابری در حال اجراست، برای اتصال زنده به هاست cPanel خود باید آدرس IP سرور یا دامنه سایتتان را در فیلد میزبان (Host) وارد کنید و در cPanel بخش Remote MySQL دسترسی را فعال نمایید. پس از استقرار مستقیم برنامه روی هاست، مقدار localhost به طور خودکار کار خواهد کرد.';
         } else if (errStr.includes('access denied') || errStr.includes('1045')) {
           diagnostic = 'خطای دسترسی نام کاربری یا رمز عبور: لطفاً در سی‌پنل (MySQL Databases) بررسی کنید که کاربر به این دیتابیس متصل بوده و تیک دسترسی ALL PRIVILEGES خورده باشد.';
         } else if (errStr.includes('timedout') || errStr.includes('econnrefused') || errStr.includes('enotfound')) {
-          diagnostic = `عدم دسترسی به پورت 3306 در سرور ${this.config.host}. لطفاً در سی‌پنل هاست به بخش «Remote MySQL» بروید و در کادر Host علامت % (درصد) را اضافه نمایید.`;
+          diagnostic = `عدم دسترسی به پورت 3306 در سرور ${this.config.host}. لطفاً در سی‌پنل هاست به بخش «Remote MySQL» بروید و در کادر Host علامت % (درصد) را اضافه نمایید تا فایروال هاست اجازه دسترسی از راه دور را بدهد.`;
         } else if (errStr.includes('unknown database') || errStr.includes('1049')) {
           diagnostic = `دیتابیسی با نام «${this.config.database}» در هاست پیدا نشد. لطفاً ابتدا در سی‌پنل این دیتابیس را بسازید.`;
         }
@@ -120,7 +122,7 @@ export class MySQLService {
       return {
         success: false,
         message: `خطا در اتصال به MySQL (${this.config.host}:${this.config.port}): ${this.lastError}`,
-        error: this.lastError
+        error: this.lastError || undefined
       };
     }
   }
@@ -146,10 +148,14 @@ export class MySQLService {
     }
   }
 
+  /**
+   * Safe initialization: tests connection and if available, sets up tables and schema
+   */
   public async init(initialData?: any): Promise<boolean> {
     try {
       console.log(`[MySQL] Attempting connection to MySQL server at ${this.config.host}:${this.config.port} (database: ${this.config.database})...`);
 
+      // Try connecting directly or check if database needs creation
       this.pool = mysql.createPool({
         host: this.config.host,
         port: this.config.port,
@@ -162,6 +168,7 @@ export class MySQLService {
         charset: 'utf8mb4',
       });
 
+      // Test connection
       const connection = await this.pool.getConnection();
       console.log(`[MySQL] Successfully connected to MySQL database: ${this.config.database}`);
       connection.release();
@@ -169,8 +176,10 @@ export class MySQLService {
       this.isConnected = true;
       this.lastError = null;
 
+      // Ensure tables exist
       await this.createTablesIfNotExist();
 
+      // Seed if tables are empty and initial data provided
       if (initialData) {
         await this.seedInitialDataIfEmpty(initialData);
       }
@@ -183,6 +192,7 @@ export class MySQLService {
       const sqlMsg = err?.sqlMessage || err?.message || String(err);
       this.lastError = code ? `[${code}${errno ? ` / ${errno}` : ''}] ${sqlMsg}` : sqlMsg;
       console.warn(`[MySQL] Notice: MySQL database connection could not be established (${this.lastError}).`);
+      console.warn(`[MySQL] Fallback mode active: Store data will be safely handled locally. Once deployed to your host with MySQL online_shop_db, it will automatically connect.`);
       return false;
     }
   }
@@ -195,6 +205,9 @@ export class MySQLService {
     return this.pool;
   }
 
+  /**
+   * Creates all schema tables if not exist
+   */
   public async createTablesIfNotExist(): Promise<void> {
     if (!this.pool || !this.isConnected) return;
 
@@ -392,6 +405,31 @@ export class MySQLService {
       `);
 
       await this.pool.query(`
+        CREATE TABLE IF NOT EXISTS \`product_events\` (
+          \`id\` VARCHAR(100) PRIMARY KEY,
+          \`productId\` VARCHAR(100) NOT NULL,
+          \`eventType\` VARCHAR(50) NOT NULL,
+          \`timestamp\` BIGINT NOT NULL,
+          \`userId\` VARCHAR(100) DEFAULT NULL,
+          \`metadata\` JSON DEFAULT NULL,
+          INDEX \`idx_product_events_pid\` (\`productId\`),
+          INDEX \`idx_product_events_type\` (\`eventType\`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+      `);
+
+      await this.pool.query(`
+        CREATE TABLE IF NOT EXISTS \`product_favorites\` (
+          \`id\` VARCHAR(100) PRIMARY KEY,
+          \`productId\` VARCHAR(100) NOT NULL,
+          \`userId\` VARCHAR(100) DEFAULT NULL,
+          \`sessionId\` VARCHAR(100) DEFAULT NULL,
+          \`timestamp\` BIGINT NOT NULL,
+          INDEX \`idx_fav_prod\` (\`productId\`),
+          INDEX \`idx_fav_user\` (\`userId\`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+      `);
+
+      await this.pool.query(`
         CREATE TABLE IF NOT EXISTS \`support_sessions\` (
           \`id\` VARCHAR(100) PRIMARY KEY,
           \`userName\` VARCHAR(255) DEFAULT NULL,
@@ -414,8 +452,12 @@ export class MySQLService {
     }
   }
 
+  /**
+   * Seed tables from memory data if empty
+   */
   public async seedInitialDataIfEmpty(data: any): Promise<void> {
     if (!this.pool || !this.isConnected) return;
+
     try {
       const [rows]: any = await this.pool.query('SELECT COUNT(*) as count FROM `products`');
       const count = rows[0]?.count || 0;
@@ -424,12 +466,17 @@ export class MySQLService {
         console.log('[MySQL] MySQL tables are empty. Seeding initial store dataset into online_shop_db...');
         await this.syncAllToMySQL(data);
         console.log('[MySQL] Seeding completed successfully!');
+      } else {
+        console.log(`[MySQL] Database already contains ${count} products. Seeding skipped.`);
       }
     } catch (err) {
       console.error('[MySQL] Error checking/seeding database:', err);
     }
   }
 
+  /**
+   * Complete sync of all memory store data into MySQL tables
+   */
   public async syncAllToMySQL(data: any): Promise<boolean> {
     if (!this.pool || !this.isConnected) return false;
 
@@ -437,6 +484,7 @@ export class MySQLService {
     try {
       await connection.beginTransaction();
 
+      // 1. Categories
       if (Array.isArray(data.categories)) {
         for (const cat of data.categories) {
           await connection.query(`
@@ -456,6 +504,7 @@ export class MySQLService {
         }
       }
 
+      // 2. Products
       if (Array.isArray(data.products)) {
         for (const p of data.products) {
           await connection.query(`
@@ -494,6 +543,7 @@ export class MySQLService {
         }
       }
 
+      // 3. Users
       if (Array.isArray(data.users)) {
         for (const u of data.users) {
           await connection.query(`
@@ -512,6 +562,7 @@ export class MySQLService {
         }
       }
 
+      // 4. Orders
       if (Array.isArray(data.orders)) {
         for (const o of data.orders) {
           await connection.query(`
@@ -536,6 +587,88 @@ export class MySQLService {
         }
       }
 
+      // 5. Coupons
+      if (Array.isArray(data.coupons)) {
+        for (const coup of data.coupons) {
+          await connection.query(`
+            INSERT INTO \`coupons\` (\`id\`, \`code\`, \`discountPercent\`, \`maxDiscount\`, \`minPurchase\`, \`expiresAt\`, \`usageCount\`, \`maxUsage\`, \`isActive\`, \`createdAt\`)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+              \`discountPercent\` = VALUES(\`discountPercent\`), \`maxDiscount\` = VALUES(\`maxDiscount\`),
+              \`minPurchase\` = VALUES(\`minPurchase\`), \`expiresAt\` = VALUES(\`expiresAt\`),
+              \`usageCount\` = VALUES(\`usageCount\`), \`maxUsage\` = VALUES(\`maxUsage\`),
+              \`isActive\` = VALUES(\`isActive\`)
+          `, [
+            coup.id, coup.code, coup.discountPercent || 0, coup.maxDiscount || 0,
+            coup.minPurchase || 0, coup.expiresAt || null, coup.usageCount || 0,
+            coup.maxUsage || 100, coup.isActive !== false ? 1 : 0, new Date().toISOString()
+          ]);
+        }
+      }
+
+      // 6. Festivals
+      if (Array.isArray(data.festivals)) {
+        for (const f of data.festivals) {
+          await connection.query(`
+            INSERT INTO \`festivals\` (
+              \`id\`, \`title\`, \`titleEn\`, \`slogan\`, \`sloganEn\`, \`description\`,
+              \`startDate\`, \`endDate\`, \`startTimestamp\`, \`endTimestamp\`,
+              \`isActive\`, \`priority\`, \`themeColor\`, \`badgeText\`, \`discountPercent\`,
+              \`couponCode\`, \`bannerImage\`, \`products\`, \`coupons\`, \`createdAt\`, \`updatedAt\`
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+              \`title\` = VALUES(\`title\`), \`slogan\` = VALUES(\`slogan\`), \`description\` = VALUES(\`description\`),
+              \`isActive\` = VALUES(\`isActive\`), \`discountPercent\` = VALUES(\`discountPercent\`),
+              \`products\` = VALUES(\`products\`), \`coupons\` = VALUES(\`coupons\`),
+              \`updatedAt\` = VALUES(\`updatedAt\`)
+          `, [
+            f.id, f.title, f.titleEn || null, f.slogan || null, f.sloganEn || null, f.description || null,
+            f.startDate || null, f.endDate || null, f.startTimestamp || null, f.endTimestamp || null,
+            f.isActive !== false ? 1 : 0, f.priority || 0, f.themeColor || 'rose', f.badgeText || null,
+            f.discountPercent || 0, f.couponCode || null, f.bannerImage || null,
+            JSON.stringify(f.products || []), JSON.stringify(f.coupons || []),
+            f.createdAt || new Date().toISOString(), f.updatedAt || new Date().toISOString()
+          ]);
+        }
+      }
+
+      // 7. Reviews
+      if (Array.isArray(data.reviews)) {
+        for (const r of data.reviews) {
+          await connection.query(`
+            INSERT INTO \`reviews\` (
+              \`id\`, \`productId\`, \`productNameFa\`, \`userId\`, \`userName\`,
+              \`userAvatar\`, \`userEmail\`, \`rating\`, \`comment\`, \`status\`,
+              \`isVerifiedPurchase\`, \`adminReply\`, \`adminReplyBy\`, \`adminReplyAt\`,
+              \`createdAt\`, \`timestamp\`
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+              \`status\` = VALUES(\`status\`), \`adminReply\` = VALUES(\`adminReply\`),
+              \`adminReplyBy\` = VALUES(\`adminReplyBy\`), \`adminReplyAt\` = VALUES(\`adminReplyAt\`)
+          `, [
+            r.id, r.productId, r.productNameFa || null, r.userId || null, r.userName,
+            r.userAvatar || null, r.userEmail || null, r.rating, r.comment, r.status || 'approved',
+            r.isVerifiedPurchase ? 1 : 0, r.adminReply || null, r.adminReplyBy || null,
+            r.adminReplyAt || null, r.createdAt || new Date().toISOString(), r.timestamp || Date.now()
+          ]);
+        }
+      }
+
+      // 8. Site Analytics
+      await connection.query(`
+        INSERT INTO \`site_analytics\` (\`key_name\`, \`value_num\`, \`value_json\`, \`updatedAt\`)
+        VALUES ('dailyVisits', ?, NULL, ?),
+               ('weeklyVisits', ?, NULL, ?),
+               ('monthlyVisits', ?, NULL, ?)
+        ON DUPLICATE KEY UPDATE \`value_num\` = VALUES(\`value_num\`), \`updatedAt\` = VALUES(\`updatedAt\`)
+      `, [
+        data.dailyVisits || 3840, new Date().toISOString(),
+        data.weeklyVisits || 26500, new Date().toISOString(),
+        data.monthlyVisits || 114200, new Date().toISOString()
+      ]);
+
       await connection.commit();
       return true;
     } catch (err) {
@@ -546,6 +679,119 @@ export class MySQLService {
       connection.release();
     }
   }
+
+  /**
+   * Loads all records from MySQL into memory structure
+   */
+  public async loadAllFromMySQL(): Promise<any | null> {
+    if (!this.pool || !this.isConnected) return null;
+
+    try {
+      const [categoriesRows]: any = await this.pool.query('SELECT * FROM `categories` ORDER BY `sortOrder` ASC');
+      const [productsRows]: any = await this.pool.query('SELECT * FROM `products` ORDER BY `id` ASC');
+      const [usersRows]: any = await this.pool.query('SELECT * FROM `users` ORDER BY `ordersCount` DESC');
+      const [ordersRows]: any = await this.pool.query('SELECT * FROM `orders` ORDER BY `timestamp` DESC');
+      const [couponsRows]: any = await this.pool.query('SELECT * FROM `coupons`');
+      const [festivalsRows]: any = await this.pool.query('SELECT * FROM `festivals` ORDER BY `priority` DESC');
+      const [reviewsRows]: any = await this.pool.query('SELECT * FROM `reviews` ORDER BY `timestamp` DESC');
+      const [analyticsRows]: any = await this.pool.query('SELECT * FROM `site_analytics`');
+
+      const parseJson = (val: any, fallback: any) => {
+        if (!val) return fallback;
+        if (typeof val === 'object') return val;
+        try {
+          return JSON.parse(val);
+        } catch {
+          return fallback;
+        }
+      };
+
+      const categories = categoriesRows.map((r: any) => ({
+        ...r,
+        isActive: Boolean(r.isActive),
+      }));
+
+      const products = productsRows.map((r: any) => ({
+        ...r,
+        price: Number(r.price),
+        originalPrice: r.originalPrice ? Number(r.originalPrice) : undefined,
+        rating: Number(r.rating),
+        isNew: Boolean(r.isNew),
+        isFeatured: Boolean(r.isFeatured),
+        isBestseller: Boolean(r.isBestseller),
+        isActive: Boolean(r.isActive),
+        images: parseJson(r.images, []),
+        specs: parseJson(r.specs, {}),
+        features: parseJson(r.features, []),
+        featuresFa: parseJson(r.featuresFa, []),
+        colors: parseJson(r.colors, []),
+        variants: parseJson(r.variants, []),
+        tags: parseJson(r.tags, []),
+      }));
+
+      const users = usersRows.map((r: any) => ({
+        ...r,
+        totalSpent: Number(r.totalSpent),
+      }));
+
+      const orders = ordersRows.map((r: any) => ({
+        ...r,
+        subtotal: Number(r.subtotal),
+        discount: Number(r.discount),
+        shipping: Number(r.shipping),
+        total: Number(r.total),
+        customer: parseJson(r.customer, {}),
+        items: parseJson(r.items, []),
+      }));
+
+      const coupons = couponsRows.map((r: any) => ({
+        ...r,
+        maxDiscount: Number(r.maxDiscount),
+        minPurchase: Number(r.minPurchase),
+        isActive: Boolean(r.isActive),
+      }));
+
+      const festivals = festivalsRows.map((r: any) => ({
+        ...r,
+        isActive: Boolean(r.isActive),
+        products: parseJson(r.products, []),
+        coupons: parseJson(r.coupons, []),
+      }));
+
+      const reviews = reviewsRows.map((r: any) => ({
+        ...r,
+        isVerifiedPurchase: Boolean(r.isVerifiedPurchase),
+      }));
+
+      let dailyVisits = 3840;
+      let weeklyVisits = 26500;
+      let monthlyVisits = 114200;
+
+      for (const a of analyticsRows) {
+        if (a.key_name === 'dailyVisits') dailyVisits = Number(a.value_num);
+        if (a.key_name === 'weeklyVisits') weeklyVisits = Number(a.value_num);
+        if (a.key_name === 'monthlyVisits') monthlyVisits = Number(a.value_num);
+      }
+
+      return {
+        categories,
+        products,
+        users,
+        orders,
+        coupons,
+        festivals,
+        reviews,
+        dailyVisits,
+        weeklyVisits,
+        monthlyVisits,
+      };
+    } catch (err) {
+      console.error('[MySQL] Error loading data from MySQL:', err);
+      return null;
+    }
+  }
+
+  // --- Granular entity write methods for real-time MySQL persistence ---
 
   public async saveProduct(p: any): Promise<void> {
     if (!this.pool || !this.isConnected) return;
@@ -594,6 +840,101 @@ export class MySQLService {
       await this.pool.query('DELETE FROM `products` WHERE `id` = ?', [id]);
     } catch (err) {
       console.error('[MySQL] Error deleting product from MySQL:', err);
+    }
+  }
+
+  public async saveOrder(o: any): Promise<void> {
+    if (!this.pool || !this.isConnected) return;
+    try {
+      await this.pool.query(`
+        INSERT INTO \`orders\` (
+          \`id\`, \`date\`, \`timestamp\`, \`customer\`, \`items\`, \`subtotal\`,
+          \`discount\`, \`shipping\`, \`total\`, \`status\`, \`statusFa\`,
+          \`paymentMethod\`, \`trackingNumber\`, \`courierName\`, \`estimatedDelivery\`, \`createdAt\`
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          \`status\` = VALUES(\`status\`), \`statusFa\` = VALUES(\`statusFa\`),
+          \`trackingNumber\` = VALUES(\`trackingNumber\`), \`courierName\` = VALUES(\`courierName\`),
+          \`estimatedDelivery\` = VALUES(\`estimatedDelivery\`)
+      `, [
+        o.id, o.date, o.timestamp || Date.now(),
+        JSON.stringify(o.customer || {}), JSON.stringify(o.items || []),
+        o.subtotal || o.total, o.discount || 0, o.shipping || 0, o.total,
+        o.status, o.statusFa || o.status, o.paymentMethod || 'درگاه آنلاین',
+        o.trackingNumber || null, o.courierName || null, o.estimatedDelivery || null,
+        o.createdAt || new Date().toISOString()
+      ]);
+    } catch (err) {
+      console.error('[MySQL] Error saving order to MySQL:', err);
+    }
+  }
+
+  public async saveUser(u: any): Promise<void> {
+    if (!this.pool || !this.isConnected) return;
+    try {
+      await this.pool.query(`
+        INSERT INTO \`users\` (\`id\`, \`name\`, \`email\`, \`phone\`, \`password\`, \`avatar\`, \`role\`, \`joinedDate\`, \`ordersCount\`, \`totalSpent\`, \`status\`, \`lastActive\`, \`createdAt\`)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          \`name\` = VALUES(\`name\`), \`email\` = VALUES(\`email\`), \`phone\` = VALUES(\`phone\`),
+          \`avatar\` = VALUES(\`avatar\`), \`role\` = VALUES(\`role\`), \`ordersCount\` = VALUES(\`ordersCount\`),
+          \`totalSpent\` = VALUES(\`totalSpent\`), \`status\` = VALUES(\`status\`), \`lastActive\` = VALUES(\`lastActive\`)
+      `, [
+        u.id, u.name, u.email, u.phone, u.password || 'password123',
+        u.avatar || null, u.role || 'regular', u.joinedDate || '۱۴۰۴/۰۱/۰۱',
+        u.ordersCount || 0, u.totalSpent || 0, u.status || 'active',
+        u.lastActive || 'هم‌اکنون', u.createdAt || new Date().toISOString()
+      ]);
+    } catch (err) {
+      console.error('[MySQL] Error saving user to MySQL:', err);
+    }
+  }
+
+  public async saveCategory(c: any): Promise<void> {
+    if (!this.pool || !this.isConnected) return;
+    try {
+      await this.pool.query(`
+        INSERT INTO \`categories\` (\`id\`, \`name\`, \`nameFa\`, \`slug\`, \`icon\`, \`image\`, \`description\`, \`parentId\`, \`isActive\`, \`sortOrder\`, \`createdAt\`, \`updatedAt\`)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          \`name\` = VALUES(\`name\`), \`nameFa\` = VALUES(\`nameFa\`), \`slug\` = VALUES(\`slug\`),
+          \`icon\` = VALUES(\`icon\`), \`image\` = VALUES(\`image\`), \`description\` = VALUES(\`description\`),
+          \`parentId\` = VALUES(\`parentId\`), \`isActive\` = VALUES(\`isActive\`), \`sortOrder\` = VALUES(\`sortOrder\`),
+          \`updatedAt\` = VALUES(\`updatedAt\`)
+      `, [
+        c.id, c.name, c.nameFa, c.slug || c.id, c.icon || 'Folder',
+        c.image || null, c.description || null, c.parentId || null,
+        c.isActive !== false ? 1 : 0, c.sortOrder || 0,
+        c.createdAt || new Date().toISOString(), c.updatedAt || new Date().toISOString()
+      ]);
+    } catch (err) {
+      console.error('[MySQL] Error saving category to MySQL:', err);
+    }
+  }
+
+  public async saveReview(r: any): Promise<void> {
+    if (!this.pool || !this.isConnected) return;
+    try {
+      await this.pool.query(`
+        INSERT INTO \`reviews\` (
+          \`id\`, \`productId\`, \`productNameFa\`, \`userId\`, \`userName\`,
+          \`userAvatar\`, \`userEmail\`, \`rating\`, \`comment\`, \`status\`,
+          \`isVerifiedPurchase\`, \`adminReply\`, \`adminReplyBy\`, \`adminReplyAt\`,
+          \`createdAt\`, \`timestamp\`
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          \`status\` = VALUES(\`status\`), \`adminReply\` = VALUES(\`adminReply\`),
+          \`adminReplyBy\` = VALUES(\`adminReplyBy\`), \`adminReplyAt\` = VALUES(\`adminReplyAt\`)
+      `, [
+        r.id, r.productId, r.productNameFa || null, r.userId || null, r.userName,
+        r.userAvatar || null, r.userEmail || null, r.rating, r.comment, r.status || 'approved',
+        r.isVerifiedPurchase ? 1 : 0, r.adminReply || null, r.adminReplyBy || null,
+        r.adminReplyAt || null, r.createdAt || new Date().toISOString(), r.timestamp || Date.now()
+      ]);
+    } catch (err) {
+      console.error('[MySQL] Error saving review to MySQL:', err);
     }
   }
 }

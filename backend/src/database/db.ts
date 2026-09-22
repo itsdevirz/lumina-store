@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Product, Category, Festival, FestivalProduct, FestivalCoupon, ProductReview, ReviewStats } from '../src/types';
+import { Product, Category, Festival, FestivalProduct, FestivalCoupon, ProductReview, ReviewStats } from '../types';
 import {
   DashboardStats,
   ChartDataPoint,
@@ -10,7 +10,7 @@ import {
   Coupon,
   AdminNotification,
   TimeRange
-} from '../src/types/admin';
+} from '../types/admin';
 import {
   ProductAnalyticsTimeRange,
   ProductAnalyticsEventType,
@@ -22,9 +22,9 @@ import {
   ProductShareOfStore,
   ProductAnalyticsSummary,
   ProductPublicSocialStats
-} from '../src/types/analytics';
-import { PRODUCTS, CATEGORIES } from '../src/data/products';
-import { SupportSession, SupportMessage } from '../src/types/support';
+} from '../types/analytics';
+import { PRODUCTS, CATEGORIES } from '../data/products';
+import { SupportSession, SupportMessage } from '../types/support';
 import { mySQLService } from './mysql';
 
 const DB_FILE = path.join(process.cwd(), 'server_store_db.json');

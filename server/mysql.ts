@@ -122,7 +122,7 @@ class MySQLService {
       return {
         success: false,
         message: `خطا در اتصال به MySQL (${this.config.host}:${this.config.port}): ${this.lastError}`,
-        error: this.lastError
+        error: this.lastError || undefined
       };
     }
   }
