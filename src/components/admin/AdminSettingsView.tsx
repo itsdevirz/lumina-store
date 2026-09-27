@@ -382,7 +382,7 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
                 <span>{dbActionMessage.text}</span>
               </div>
               {dbActionMessage.diagnostic && (
-                <div className="mt-2 p-3 rounded-lg bg-black/10 dark:bg-white/5 border border-rose-200/50 dark:border-rose-700/50 text-xs font-normal leading-relaxed text-zinc-700 dark:text-zinc-300">
+                <div className="mt-2 p-3.5 rounded-lg bg-black/10 dark:bg-white/5 border border-rose-200/50 dark:border-rose-700/50 text-xs font-normal leading-relaxed text-zinc-800 dark:text-zinc-200 whitespace-pre-line">
                   <span className="font-bold text-rose-600 dark:text-rose-400 block mb-1">راهنمای رفع مشکل اتصال:</span>
                   {dbActionMessage.diagnostic}
                 </div>
@@ -464,9 +464,27 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           {/* Optional Form for custom credentials testing */}
           {showDbConfigForm && (
             <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/90 border border-zinc-200 dark:border-zinc-800 text-xs space-y-3 animate-in fade-in">
-              <h4 className="font-bold text-zinc-800 dark:text-zinc-200">
-                تنظیم موقت مشخصات دیتابیس جهت تست اتصال:
-              </h4>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <h4 className="font-bold text-zinc-800 dark:text-zinc-200">
+                  تنظیم مشخصات دیتابیس جهت تست زنده اتصال:
+                </h4>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setDbHost('localhost')}
+                    className="px-2.5 py-1 text-[11px] rounded-lg bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-mono transition-colors cursor-pointer"
+                  >
+                    تنظیم localhost
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDbHost('127.0.0.1')}
+                    className="px-2.5 py-1 text-[11px] rounded-lg bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-mono transition-colors cursor-pointer"
+                  >
+                    تنظیم 127.0.0.1
+                  </button>
+                </div>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
                 <div>
                   <label className="block font-sans text-[11px] font-bold text-zinc-500 mb-1">میزبان (Host)</label>
@@ -533,22 +551,40 @@ export const AdminSettingsView: React.FC<AdminSettingsViewProps> = ({
           )}
 
           {/* Host Setup Instructions Helper Box */}
-          <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/80 dark:border-zinc-800/60 text-xs space-y-2">
-            <h4 className="font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
-              <Server className="w-3.5 h-3.5 text-[#62DB00]" />
-              <span>راهنمای اتصال به هاست شخصی شما (سی‌پنل / دایرکت‌ادمین):</span>
+          <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/80 dark:border-zinc-800/60 text-xs space-y-3">
+            <h4 className="font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
+              <Server className="w-4 h-4 text-[#62DB00]" />
+              <span>چک‌لیست ۳ مرحله‌ای برای اتصال موفق در سی‌پنل (cPanel):</span>
             </h4>
-            <p className="text-zinc-500 leading-relaxed text-[11px]">
-              ۱. در هاست خود وارد <strong>phpMyAdmin</strong> شوید، از ستون سمت چپ روی نام دیتابیس ساخته‌شده کلیک کنید، سپس تب <strong>Import</strong> را انتخاب کرده و فایل <strong>online_shop_db.sql</strong> را بارگذاری نمایید.<br />
-              ۲. توجه: در سی‌پنل، نام دیتابیس و نام کاربر معمولاً دارای پیشوند یوزرنیم هاست شما هستند (مثلاً <code className="text-[#62DB00]">cp63925519643_online_shop_db</code>).<br />
-              ۳. در فایل <strong>.env</strong> هاست، متغیرها را با نام کامل وارد کنید:
-            </p>
+            <div className="space-y-2 text-[11.5px] leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <div className="flex items-start gap-2">
+                <span className="w-5 h-5 rounded-full bg-[#62DB00]/20 text-[#62DB00] font-bold flex items-center justify-center shrink-0 text-[10px]">۱</span>
+                <div>
+                  <strong>اتصال کاربر به دیتابیس در cPanel:</strong> در منوی <em>MySQL Databases</em>، به انتهای صفحه بروید و در بخش <em>Add User To Database</em>، کاربر را به دیتابیس اضافه کرده و تیک <strong>ALL PRIVILEGES</strong> را حتماً علامت بزنید. (پیشوند نام دیتابیس و کاربر مانند <code className="text-[#62DB00]">cp63925519643_</code> الزامی است).
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <span className="w-5 h-5 rounded-full bg-[#62DB00]/20 text-[#62DB00] font-bold flex items-center justify-center shrink-0 text-[10px]">۲</span>
+                <div>
+                  <strong>باز کردن دسترسی Remote MySQL (در صورت تست از راه دور):</strong> اگر در این صفحه یا از خارج هاست تست می‌کنید، در cPanel به بخش <em>Remote MySQL</em> بروید و در کادر Host علامت <strong>%</strong> را اضافه کنید تا فایروال هاست مانع اتصال نشود.
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <span className="w-5 h-5 rounded-full bg-[#62DB00]/20 text-[#62DB00] font-bold flex items-center justify-center shrink-0 text-[10px]">۳</span>
+                <div>
+                  <strong>تنظیم متغیرهای .env در هاست:</strong> هنگام اجرای برنامه روی هاست، در فایل <code>.env</code> مقادیر زیر را قرار دهید (روی خود هاست <code>DB_HOST=localhost</code> یا <code>127.0.0.1</code> به صورت محلی متصل می‌شود):
+                </div>
+              </div>
+            </div>
             <div className="p-2.5 rounded-lg bg-zinc-900 text-zinc-200 font-mono text-[11px] leading-tight space-y-1">
               <div>DB_HOST=localhost</div>
               <div>DB_PORT=3306</div>
-              <div>DB_USER=cp63925519643_نام‌کاربر</div>
+              <div>DB_USER=cp63925519643_dev</div>
               <div>DB_PASSWORD=رمز_عبور_دیتابیس</div>
               <div>DB_NAME=cp63925519643_online_shop_db</div>
+              <div>DB_SSL=false</div>
             </div>
           </div>
         </div>

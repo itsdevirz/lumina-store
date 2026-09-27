@@ -8,6 +8,7 @@ export interface MySQLConfig {
   user: string;
   password?: string;
   database: string;
+  socketPath?: string;
   ssl?: any;
 }
 
@@ -43,6 +44,8 @@ class MySQLService {
       user: process.env.DB_USER || 'cp63925519643_dev',
       password: process.env.DB_PASSWORD || 'Alireza23!#',
       database: process.env.DB_NAME || 'cp63925519643_online_shop_db',
+      socketPath: process.env.DB_SOCKET_PATH || undefined,
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
     };
   }
 
@@ -96,14 +99,33 @@ class MySQLService {
         const errStr = (this.lastError || '').toLowerCase();
         const host = this.config.host;
 
-        if (host === 'localhost' || host === '127.0.0.1') {
-          diagnostic = 'نکته مهم: آدرس سرور روی «localhost» قرار دارد. چون این برنامه فعلاً در سرور ابری در حال اجراست، برای اتصال زنده به هاست cPanel خود باید آدرس IP سرور یا دامنه سایتتان را در فیلد میزبان (Host) وارد کنید و در cPanel بخش Remote MySQL دسترسی را فعال نمایید. پس از استقرار مستقیم برنامه روی هاست، مقدار localhost به طور خودکار کار خواهد کرد.';
-        } else if (errStr.includes('access denied') || errStr.includes('1045')) {
-          diagnostic = 'خطای دسترسی نام کاربری یا رمز عبور: لطفاً در سی‌پنل (MySQL Databases) بررسی کنید که کاربر به این دیتابیس متصل بوده و تیک دسترسی ALL PRIVILEGES خورده باشد.';
-        } else if (errStr.includes('timedout') || errStr.includes('econnrefused') || errStr.includes('enotfound')) {
-          diagnostic = `عدم دسترسی به پورت 3306 در سرور ${this.config.host}. لطفاً در سی‌پنل هاست به بخش «Remote MySQL» بروید و در کادر Host علامت % (درصد) را اضافه نمایید تا فایروال هاست اجازه دسترسی از راه دور را بدهد.`;
-        } else if (errStr.includes('unknown database') || errStr.includes('1049')) {
-          diagnostic = `دیتابیسی با نام «${this.config.database}» در هاست پیدا نشد. لطفاً ابتدا در سی‌پنل این دیتابیس را بسازید.`;
+        if (errStr.includes('access denied') || errStr.includes('1045') || errStr.includes('28000')) {
+          diagnostic = `خطای دسترسی نام کاربری یا رمز عبور (Access Denied - کد 1045):
+۱. در سی‌پنل وارد بخش MySQL Databases شوید.
+۲. بررسی کنید که آیا نام کاربری با پیشوند کامل وارد شده است یا خیر (مثال: ${this.config.user}).
+۳. در انتهای صفحه سی‌پنل زیر بخش «Add User To Database»، نام کاربر «${this.config.user}» را به دیتابیس «${this.config.database}» اضافه کنید و در صفحه بعد حتماً تیک ALL PRIVILEGES را فعال کرده و ذخیره نمایید.
+۴. در صورت عدم اطمینان از رمز عبور، در همان بخش MySQL Databases رمز عبور کاربر را مجدداً تغییر دهید.`;
+        } else if (errStr.includes('unknown database') || errStr.includes('1049') || errStr.includes('42000')) {
+          diagnostic = `دیتابیسی با نام «${this.config.database}» در هاست یافت نشد (کد 1049):
+۱. توجه داشته باشید در سی‌پنل نام دیتابیس معمولاً دارای پیشوند یوزرنیم هاست شماست (مانند: cp63925519643_${this.config.database.replace(/^cp[0-9]+_/, '')}).
+۲. در سی‌پنل به بخش MySQL Databases بروید و مطمئن شوید دیتابیس با این نام دقیق ساخته شده است.
+۳. سپس در phpMyAdmin فایل online_shop_db.sql را ایمپورت کنید.`;
+        } else if (host === 'localhost' || host === '127.0.0.1') {
+          diagnostic = `راهنمای اتصال سرور محلی (Localhost):
+• اگر برنامه روی سرور ابری در حال اجراست و می‌خواهید به هاست راه دور متصل شوید: مقدار localhost را به آدرس IP عمومی هاست خود یا دامنه سایت تغییر دهید و در cPanel بخش Remote MySQL علامت % را اضافه نمایید.
+• اگر برنامه را مستقیماً روی سرور/هاست شخصی خود با node اجرا کرده‌اید: بررسی کنید سرویس MySQL در هاست فعال باشد و در صورت نیاز از 127.0.0.1 به جای localhost استفاده فرمایید.`;
+        } else if (errStr.includes('timedout') || errStr.includes('econnrefused') || errStr.includes('ehostunreach')) {
+          diagnostic = `عدم دسترسی به پورت 3306 در سرور ${this.config.host}:
+فایروال هاست شما اتصالات ورودی از خارج از سرور را مسدود کرده است.
+برای رفع این مورد در هاست cPanel:
+۱. وارد سی‌پنل شوید و به بخش «Remote MySQL» (دیتابیس از راه دور) بروید.
+۲. در کادر «Host (% wildcard is allowed)» علامت % (درصد) را بنویسید و روی دکمه «Add Host» کلیک کنید.
+۳. این کار به فایروال هاست اجازه می‌دهد ارتباط ایمن را تأیید کند.`;
+        } else if (errStr.includes('enotfound') || errStr.includes('eai_again')) {
+          diagnostic = `آدرس میزبان «${this.config.host}» پیدا نشد (کد ENOTFOUND):
+نام دامنه یا آدرس IP وارد شده نامعتبر است یا DNS پاسخ نمی‌دهد. لطفاً آدرس IP سرور هاست (مثلاً 185.x.x.x) یا localhost را وارد نمایید.`;
+        } else {
+          diagnostic = `لطفاً متغیرهای DB_HOST, DB_USER, DB_PASSWORD, DB_NAME را در فایل .env یا فرم بالا بررسی کرده و از درستی نام کاربری، رمز عبور و اتصال کاربر به دیتابیس در cPanel اطمینان حاصل کنید.`;
         }
 
         return {
@@ -152,49 +174,93 @@ class MySQLService {
    * Safe initialization: tests connection and if available, sets up tables and schema
    */
   public async init(initialData?: any): Promise<boolean> {
-    try {
-      console.log(`[MySQL] Attempting connection to MySQL server at ${this.config.host}:${this.config.port} (database: ${this.config.database})...`);
+    const candidates: Array<{ host?: string; port?: number; socketPath?: string; label: string }> = [];
 
-      // Try connecting directly or check if database needs creation
-      this.pool = mysql.createPool({
-        host: this.config.host,
-        port: this.config.port,
-        user: this.config.user,
-        password: this.config.password,
-        database: this.config.database,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
-        charset: 'utf8mb4',
-      });
-
-      // Test connection
-      const connection = await this.pool.getConnection();
-      console.log(`[MySQL] Successfully connected to MySQL database: ${this.config.database}`);
-      connection.release();
-
-      this.isConnected = true;
-      this.lastError = null;
-
-      // Ensure tables exist
-      await this.createTablesIfNotExist();
-
-      // Seed if tables are empty and initial data provided
-      if (initialData) {
-        await this.seedInitialDataIfEmpty(initialData);
-      }
-
-      return true;
-    } catch (err: any) {
-      this.isConnected = false;
-      const code = err?.code || '';
-      const errno = err?.errno || '';
-      const sqlMsg = err?.sqlMessage || err?.message || String(err);
-      this.lastError = code ? `[${code}${errno ? ` / ${errno}` : ''}] ${sqlMsg}` : sqlMsg;
-      console.warn(`[MySQL] Notice: MySQL database connection could not be established (${this.lastError}).`);
-      console.warn(`[MySQL] Fallback mode active: Store data will be safely handled locally. Once deployed to your host with MySQL online_shop_db, it will automatically connect.`);
-      return false;
+    // 1. Primary candidate
+    if (this.config.socketPath) {
+      candidates.push({ socketPath: this.config.socketPath, label: `UNIX Socket (${this.config.socketPath})` });
+    } else {
+      candidates.push({ host: this.config.host, port: this.config.port, label: `${this.config.host}:${this.config.port}` });
     }
+
+    // 2. If host is localhost or 127.0.0.1, add automatic fallbacks
+    if (this.config.host === 'localhost') {
+      candidates.push({ host: '127.0.0.1', port: this.config.port, label: `127.0.0.1:${this.config.port}` });
+      // Common Linux / cPanel socket paths
+      const commonSockets = ['/var/lib/mysql/mysql.sock', '/tmp/mysql.sock', '/run/mysqld/mysqld.sock'];
+      for (const s of commonSockets) {
+        if (fs.existsSync(s)) {
+          candidates.push({ socketPath: s, label: `cPanel Socket (${s})` });
+        }
+      }
+    } else if (this.config.host === '127.0.0.1') {
+      candidates.push({ host: 'localhost', port: this.config.port, label: `localhost:${this.config.port}` });
+    }
+
+    let lastCandidateError: any = null;
+
+    for (const cand of candidates) {
+      try {
+        console.log(`[MySQL] Attempting connection via ${cand.label} (database: ${this.config.database})...`);
+
+        const poolOptions: mysql.PoolOptions = {
+          user: this.config.user,
+          password: this.config.password,
+          database: this.config.database,
+          waitForConnections: true,
+          connectionLimit: 10,
+          queueLimit: 0,
+          charset: 'utf8mb4',
+          connectTimeout: 8000,
+          enableKeepAlive: true,
+          keepAliveInitialDelay: 0,
+          ssl: this.config.ssl,
+        };
+
+        if (cand.socketPath) {
+          poolOptions.socketPath = cand.socketPath;
+        } else {
+          poolOptions.host = cand.host || this.config.host;
+          poolOptions.port = cand.port || this.config.port;
+        }
+
+        const testPool = mysql.createPool(poolOptions);
+        const connection = await testPool.getConnection();
+        console.log(`[MySQL] Successfully connected to MySQL database: ${this.config.database} via ${cand.label}`);
+        connection.release();
+
+        this.pool = testPool;
+        this.isConnected = true;
+        this.lastError = null;
+
+        // If a fallback worked, update host/port
+        if (cand.host && cand.host !== this.config.host) {
+          this.config.host = cand.host;
+        }
+
+        // Ensure tables exist
+        await this.createTablesIfNotExist();
+
+        // Seed if tables are empty and initial data provided
+        if (initialData) {
+          await this.seedInitialDataIfEmpty(initialData);
+        }
+
+        return true;
+      } catch (err: any) {
+        lastCandidateError = err;
+        console.warn(`[MySQL] Candidate ${cand.label} failed: ${err?.message || err}`);
+      }
+    }
+
+    this.isConnected = false;
+    const code = lastCandidateError?.code || '';
+    const errno = lastCandidateError?.errno || '';
+    const sqlMsg = lastCandidateError?.sqlMessage || lastCandidateError?.message || String(lastCandidateError);
+    this.lastError = code ? `[${code}${errno ? ` / ${errno}` : ''}] ${sqlMsg}` : sqlMsg;
+    console.warn(`[MySQL] Notice: MySQL database connection could not be established (${this.lastError}).`);
+    console.warn(`[MySQL] Fallback mode active: Store data will be safely handled locally. Once deployed to your host with MySQL online_shop_db, it will automatically connect.`);
+    return false;
   }
 
   public getIsConnected(): boolean {
