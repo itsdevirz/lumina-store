@@ -26,11 +26,10 @@
   "include": [
     "src/**/*",
     "server.ts",
-    "server/**/*"
+    "backend/src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "backend"
+    "dist"
   ]
 }

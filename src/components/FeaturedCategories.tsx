@@ -1,34 +1,73 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import {
   Laptop,
   Headphones,
   Watch,
   Layers,
   Keyboard,
-  Gamepad2,
-  BatteryCharging,
-  ArrowRight,
+  Briefcase,
+  Coffee,
+  Home,
   ArrowLeft,
-  ChevronLeft
+  ArrowRight
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { CATEGORIES } from '../data/products';
+import { playTactileClick } from '../utils/sound';
 
 export const FeaturedCategories: React.FC = () => {
   const { lang, setFilters, setActiveTab, products } = useStore();
 
-  const categoryIcons: Record<string, React.ReactNode> = {
-    laptops: <Laptop className="w-6 h-6 text-[#62DB00]" />,
-    audio: <Headphones className="w-6 h-6 text-sky-400" />,
-    wearables: <Watch className="w-6 h-6 text-amber-400" />,
-    accessories: <Layers className="w-6 h-6 text-emerald-400" />,
-    peripherals: <Keyboard className="w-6 h-6 text-purple-400" />,
-    gaming: <Gamepad2 className="w-6 h-6 text-rose-400" />,
-    power: <BatteryCharging className="w-6 h-6 text-indigo-400" />
+  const categoryConfigs: Record<
+    string,
+    { icon: React.ReactNode; bgLight: string; textAccent: string; borderTint: string }
+  > = {
+    audio: {
+      icon: <Headphones className="w-5 h-5" />,
+      bgLight: 'bg-[#ECFDF5] dark:bg-emerald-950/40',
+      textAccent: 'text-emerald-600 dark:text-emerald-400',
+      borderTint: 'border-emerald-200/60 dark:border-emerald-900/50'
+    },
+    workspace: {
+      icon: <Laptop className="w-5 h-5" />,
+      bgLight: 'bg-[#EFF6FF] dark:bg-blue-950/40',
+      textAccent: 'text-blue-600 dark:text-blue-400',
+      borderTint: 'border-blue-200/60 dark:border-blue-900/50'
+    },
+    'smart-wear': {
+      icon: <Watch className="w-5 h-5" />,
+      bgLight: 'bg-[#FFF7D6] dark:bg-amber-950/40',
+      textAccent: 'text-amber-600 dark:text-amber-400',
+      borderTint: 'border-amber-200/60 dark:border-amber-900/50'
+    },
+    lifestyle: {
+      icon: <Briefcase className="w-5 h-5" />,
+      bgLight: 'bg-[#FFF1E8] dark:bg-orange-950/40',
+      textAccent: 'text-orange-600 dark:text-orange-400',
+      borderTint: 'border-orange-200/60 dark:border-orange-900/50'
+    },
+    coffee: {
+      icon: <Coffee className="w-5 h-5" />,
+      bgLight: 'bg-[#F5F0FF] dark:bg-purple-950/40',
+      textAccent: 'text-purple-600 dark:text-purple-400',
+      borderTint: 'border-purple-200/60 dark:border-purple-900/50'
+    },
+    'home-design': {
+      icon: <Home className="w-5 h-5" />,
+      bgLight: 'bg-[#FDF2F8] dark:bg-rose-950/40',
+      textAccent: 'text-rose-600 dark:text-rose-400',
+      borderTint: 'border-rose-200/60 dark:border-rose-900/50'
+    },
+    apparel: {
+      icon: <Layers className="w-5 h-5" />,
+      bgLight: 'bg-[#F0FDF4] dark:bg-teal-950/40',
+      textAccent: 'text-teal-600 dark:text-teal-400',
+      borderTint: 'border-teal-200/60 dark:border-teal-900/50'
+    }
   };
 
   const handleSelectCategory = (catId: string) => {
+    playTactileClick();
     setFilters(prev => ({
       ...prev,
       selectedCategory: catId,
@@ -38,68 +77,66 @@ export const FeaturedCategories: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Limit to top 6 categories for a clean grid
+  const displayCategories = CATEGORIES.slice(0, 6);
+
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 select-none">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 select-none">
       {/* Section Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2 h-2 rounded-full bg-[#62DB00]" />
-            <span className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">
-              {lang === 'fa' ? 'دسته‌بندی‌های برگزیده' : 'Curated Categories'}
-            </span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-black text-zinc-900 dark:text-zinc-100">
-            {lang === 'fa' ? 'کاوش در مجموعه‌های تخصصی لومینا' : 'Explore Hardware Collections'}
+          <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            {lang === 'fa' ? 'دسته‌بندی‌های محصولات' : 'Shop by Category'}
           </h2>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            {lang === 'fa' ? 'مجموعه‌های تخصصی و استاندارد لومینا' : 'Explore hardware & lifestyle categories'}
+          </p>
         </div>
 
         <button
           onClick={() => {
-            setFilters(prev => ({ ...prev, selectedCategory: 'all' }));
-            setActiveTab('shop');
+            playTactileClick();
+            setActiveTab('categories');
           }}
-          className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 transition-colors cursor-pointer"
         >
-          <span>{lang === 'fa' ? 'مشاهده همه محصولات' : 'View All Products'}</span>
-          {lang === 'fa' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+          <span>{lang === 'fa' ? 'همه دسته‌بندی‌ها' : 'All Categories'}</span>
+          {lang === 'fa' ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
         </button>
       </div>
 
-      {/* Categories Grid */}
+      {/* Categories Grid (6 columns desktop, 3 tablet, 2 mobile) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-        {CATEGORIES.map(cat => {
+        {displayCategories.map(cat => {
           const count = products.filter(p => p.category === cat.id).length;
+          const config = categoryConfigs[cat.id] || {
+            icon: <Layers className="w-5 h-5" />,
+            bgLight: 'bg-[#F8FAF9] dark:bg-zinc-900',
+            textAccent: 'text-zinc-600 dark:text-zinc-300',
+            borderTint: 'border-zinc-200/60 dark:border-zinc-800'
+          };
 
           return (
-            <motion.div
+            <div
               key={cat.id}
-              whileHover={{ y: -4, scale: 1.02 }}
-              transition={{ duration: 0.2 }}
               onClick={() => handleSelectCategory(cat.id)}
-              className="group relative p-4 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700/80 shadow-xs hover:shadow-md transition-all cursor-pointer text-right rtl:text-right ltr:text-left flex flex-col justify-between min-h-[140px]"
+              className={`group p-3.5 sm:p-4 rounded-2xl ${config.bgLight} border ${config.borderTint} hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col items-center text-center justify-center min-h-[110px] sm:min-h-[120px]`}
             >
-              {/* Icon & Count */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800/70 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  {categoryIcons[cat.id] || <Layers className="w-5 h-5 text-zinc-400" />}
-                </div>
-                <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-semibold">
-                  {count} {lang === 'fa' ? 'کالا' : 'items'}
-                </span>
+              {/* Icon */}
+              <div className={`w-10 h-10 rounded-xl bg-white/80 dark:bg-zinc-900/80 shadow-2xs flex items-center justify-center mb-2.5 ${config.textAccent} transition-transform group-hover:scale-110`}>
+                {config.icon}
               </div>
 
-              {/* Title & Chevron */}
-              <div>
-                <h3 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-[#62DB00] transition-colors leading-snug">
-                  {lang === 'fa' ? cat.nameFa : cat.name}
-                </h3>
-                <div className="flex items-center gap-1 text-[11px] text-zinc-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span>{lang === 'fa' ? 'مشاهده دسته' : 'Explore'}</span>
-                  <ChevronLeft className="w-3 h-3 rtl:rotate-0 ltr:rotate-180" />
-                </div>
-              </div>
-            </motion.div>
+              {/* Title */}
+              <h3 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-600 transition-colors line-clamp-1">
+                {lang === 'fa' ? cat.nameFa : cat.name}
+              </h3>
+
+              {/* Count */}
+              <span className="text-[10px] text-zinc-400 font-mono mt-0.5">
+                {count} {lang === 'fa' ? 'کالا' : 'items'}
+              </span>
+            </div>
           );
         })}
       </div>

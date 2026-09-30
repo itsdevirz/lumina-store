@@ -30,125 +30,90 @@ interface FestivalCardItemProps {
 
 const FestivalCardItem: React.FC<FestivalCardItemProps> = ({ festProd, fullProd }) => {
   const { lang, formatPrice, addFestivalProductToCart, openProductDetails, setQuickViewProduct, toggleWishlist, isInWishlist } = useStore();
-  const { ref, style, handleMouseMove, handleMouseLeave } = useMagneticSnap(10, 8);
 
   const savings = festProd.originalPrice - festProd.discountedPrice;
   const discountPercent = festProd.discountPercent || Math.round((savings / festProd.originalPrice) * 100);
+  const inWishlist = isInWishlist(fullProd.id);
 
   return (
-    <div
-      ref={ref}
-      style={style}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="group relative liquid-glass-card rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between select-none"
+    <article
+      onClick={() => openProductDetails(fullProd)}
+      className="group relative flex flex-col h-full w-full rounded-2xl bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/80 p-3 sm:p-3.5 hover:border-emerald-500/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden select-none"
     >
-      {/* Discount Badge */}
-      <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5 items-end">
-        <span className="px-2.5 py-1 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 text-white font-black text-xs shadow-md shadow-rose-600/30">
-          {discountPercent}٪-
-        </span>
-        {festProd.stock && festProd.stock <= 5 && (
-          <span className="px-2 py-0.5 rounded-lg bg-amber-500 text-white font-bold text-[10px] shadow-xs animate-pulse">
-            {lang === 'fa' ? 'تنها چند عدد باقیست' : 'Few Left'}
-          </span>
-        )}
-      </div>
-
-      {/* Wishlist Button */}
-      <button
-        onClick={() => toggleWishlist(fullProd.id)}
-        className="absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-xs flex items-center justify-center text-slate-400 hover:text-rose-500 shadow-sm transition-colors cursor-pointer"
-      >
-        <Heart
-          className={`w-4 h-4 ${
-            isInWishlist(fullProd.id) ? 'fill-rose-500 text-rose-500' : ''
-          }`}
-        />
-      </button>
-
-      {/* Image Container */}
-      <div
-        onClick={() => openProductDetails(fullProd)}
-        className="relative w-full aspect-square bg-slate-100 dark:bg-slate-800/50 overflow-hidden cursor-pointer flex items-center justify-center p-4"
-      >
+      {/* 1. Fixed Aspect-Ratio Image Container */}
+      <div className="relative aspect-square w-full rounded-xl bg-zinc-50 dark:bg-zinc-900/60 p-2 sm:p-3 flex items-center justify-center overflow-hidden shrink-0">
         <img
-          src={festProd.image || 'https://via.placeholder.com/300'}
+          src={festProd.image || fullProd.images?.[0] || '/images/products/photo-1505740420928-5e560c06d30e.jpg'}
           alt={festProd.nameFa || festProd.name}
-          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-          referrerPolicy="no-referrer"
+          loading="lazy"
+          className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
         />
 
-        {/* Quick View Button on Hover */}
+        {/* Discount Badge */}
+        <div className="absolute top-2 right-2 z-10 flex items-center gap-1 pointer-events-none">
+          <span className="px-1.5 py-0.5 rounded-md text-[10px] font-mono tabular-nums font-bold bg-rose-500 text-white shadow-xs">
+            {discountPercent}٪-
+          </span>
+        </div>
+
+        {/* Action Overlay: Wishlist */}
         <button
+          type="button"
           onClick={(e) => {
             e.stopPropagation();
-            setQuickViewProduct(fullProd);
+            toggleWishlist(fullProd.id);
           }}
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-900 text-white text-xs font-bold backdrop-blur-xs flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shadow-lg"
+          className={`absolute top-2 left-2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer shadow-xs ${
+            inWishlist
+              ? 'bg-rose-500 text-white'
+              : 'bg-white/90 dark:bg-zinc-800/90 text-zinc-400 hover:text-rose-500 border border-zinc-200/60 dark:border-zinc-700/60'
+          }`}
         >
-          <Eye className="w-3.5 h-3.5" />
-          <span>{lang === 'fa' ? 'مشاهده سریع' : 'Quick View'}</span>
+          <Heart className={`w-3.5 h-3.5 ${inWishlist ? 'fill-current' : ''}`} />
         </button>
       </div>
 
-      {/* Content Info */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-        <div className="space-y-1.5">
-          <span className="text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
-            {festProd.brand || 'Lumina Collection'}
-          </span>
-          <h3
-            onClick={() => openProductDetails(fullProd)}
-            className="text-sm font-bold text-slate-800 dark:text-slate-100 hover:text-rose-600 transition-colors line-clamp-2 cursor-pointer leading-snug"
-          >
-            {lang === 'fa' ? festProd.nameFa : (festProd.name || festProd.nameFa)}
-          </h3>
+      {/* 2. Structured Card Information */}
+      <div className="flex flex-col flex-1 min-h-0 pt-2.5 sm:pt-3">
+        <div className="flex items-center gap-1.5 text-[11px] text-zinc-400 font-medium mb-1 truncate">
+          <span className="truncate">{festProd.brand || fullProd.brand || 'Lumina'}</span>
+          <span aria-hidden="true">·</span>
+          <span className="truncate">{lang === 'fa' ? 'جشنواره شگفت‌انگیز' : 'Festival Deal'}</span>
         </div>
 
-        {/* Stock indicator */}
-        {festProd.stock && (
-          <div className="space-y-1">
-            <div className="flex justify-between text-[10px] text-slate-500 dark:text-slate-400 font-medium">
-              <span>{lang === 'fa' ? 'موجودی تخصیص‌یافته جشنواره' : 'Festival Stock'}</span>
-              <span className="text-rose-600 font-bold">{festProd.stock} عدد</span>
-            </div>
-            <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-rose-500 to-amber-500 rounded-full"
-                style={{ width: `${Math.min(100, (festProd.stock / 20) * 100)}%` }}
-              />
-            </div>
-          </div>
-        )}
+        {/* Fixed Height Title */}
+        <h3
+          title={lang === 'fa' ? festProd.nameFa : festProd.name}
+          className="text-xs sm:text-sm font-semibold text-zinc-900 dark:text-zinc-100 leading-snug line-clamp-2 min-h-[2.5rem] max-h-[2.5rem] group-hover:text-emerald-600 transition-colors"
+        >
+          {lang === 'fa' ? festProd.nameFa : (festProd.name || festProd.nameFa)}
+        </h3>
 
-        {/* Pricing & Savings */}
-        <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 space-y-2">
-          <div className="flex items-baseline justify-between">
-            <span className="text-xs text-slate-400 line-through">
+        {/* 3. Card Footer */}
+        <div className="mt-auto pt-3 border-t border-zinc-100 dark:border-zinc-800/60 flex items-center justify-between gap-2">
+          <div className="flex flex-col min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-mono tabular-nums text-zinc-400 line-through leading-none mb-0.5">
               {formatPrice(festProd.originalPrice)}
             </span>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md">
-              {lang === 'fa' ? `سود شما: ${formatPrice(savings)}` : `Save ${formatPrice(savings)}`}
+            <span className="text-xs sm:text-sm font-bold font-mono tabular-nums text-zinc-900 dark:text-zinc-100 leading-none">
+              {formatPrice(festProd.discountedPrice)}
             </span>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-              {formatPrice(festProd.discountedPrice)}
-            </div>
-
-            <button
-              onClick={() => addFestivalProductToCart(fullProd, festProd.discountedPrice, festProd.stock)}
-              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-md shadow-rose-600/30 transition-all active:scale-95 cursor-pointer"
-            >
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>{lang === 'fa' ? 'خرید جشنواره' : 'Add Deal'}</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              addFestivalProductToCart(fullProd, festProd.discountedPrice, festProd.stock);
+            }}
+            className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer shrink-0"
+          >
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">خرید</span>
+          </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
@@ -439,7 +404,7 @@ export const FestivalPage: React.FC = () => {
             </h3>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
             {filteredProducts.map(festProd => {
               // Find matching full product from database if available
               const fullProd = (products.find(p => p.id === festProd.productId) || {

@@ -136,13 +136,13 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 text-[#E80645] dark:text-rose-400 text-[11px] sm:text-xs font-bold border border-rose-200/50 dark:border-rose-900/40 font-modern">
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 text-[11px] sm:text-xs font-bold border border-emerald-200/50 dark:border-emerald-900/40">
               <Flame className="w-3.5 h-3.5" />
               <span>{lang === 'fa' ? 'پیشنهادهای ویژه و پرفروش' : 'Featured & Trending'}</span>
             </span>
           </div>
 
-          <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight font-modern">
+          <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
             {lang === 'fa' ? heading.fa : heading.en}
           </h2>
 
@@ -177,7 +177,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
               setActiveTab('shop');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold hover:opacity-90 transition-all cursor-pointer shadow-xs"
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
           >
             <span>{lang === 'fa' ? 'مشاهده کاتالوگ' : 'View All'}</span>
             <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
@@ -215,7 +215,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
               aria-label={`Slide ${idx + 1}`}
               className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                 currentIndex === idx
-                  ? 'w-5 sm:w-6 bg-[#E80645] shadow-xs'
+                  ? 'w-5 sm:w-6 bg-emerald-600 shadow-xs'
                   : 'w-1.5 sm:w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400'
               }`}
             />

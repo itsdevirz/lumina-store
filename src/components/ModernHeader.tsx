@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import {
   Search,
   ShoppingBag,
@@ -8,23 +7,16 @@ import {
   Menu,
   X,
   ChevronDown,
-  ChevronRight,
-  ChevronLeft,
-  Sparkles,
-  Zap,
-  Globe,
   Sun,
   Moon,
   LogOut,
   LogIn,
   LayoutDashboard,
-  Truck,
   ShieldCheck,
-  Flame,
-  Tag,
-  ArrowRight,
-  SlidersHorizontal,
-  Command
+  TrendingUp,
+  History,
+  PhoneCall,
+  Sparkles
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { CATEGORIES } from '../data/products';
@@ -36,11 +28,21 @@ interface ModernHeaderProps {
   onOpenSearchModal: () => void;
 }
 
+const POPULAR_SEARCH_TERMS = [
+  'هدفون نویز کنسلینگ',
+  'کیبورد مکانیکال',
+  'ساعت هوشمند',
+  'کوله پشتی مسافرتی',
+  'ماگ عایق حرارتی',
+  'چراغ مطالعه ارگونومیک'
+];
+
 export const ModernHeader: React.FC<ModernHeaderProps> = ({
   onGoToAdmin,
   onOpenSearchModal
 }) => {
   const {
+    products,
     cart,
     wishlist,
     lang,
@@ -55,41 +57,60 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
     logout,
     setIsAuthModalOpen,
     cartTotal,
-    formatPrice
+    formatPrice,
+    openProductDetails
   } = useStore();
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const [currency, setCurrency] = useState<'IRR' | 'USD'>('IRR');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(CATEGORIES[0]?.id || null);
 
+  // Search input state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('lumina_search_history');
+      return saved ? JSON.parse(saved) : ['هدفون بیسیم', 'کیبورد مکانیکال', 'ساعت هوشمند'];
+    } catch {
+      return ['هدفون بیسیم', 'کیبورد مکانیکال', 'ساعت هوشمند'];
+    }
+  });
+
+  const searchContainerRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const categoryMenuRef = useRef<HTMLDivElement>(null);
 
-  // Detect scroll for dynamic blur & elevation
+  // Dynamic Live Search Results
+  const liveSearchResults = React.useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.trim().toLowerCase();
+    return products
+      .filter(p =>
+        p.nameFa.toLowerCase().includes(query) ||
+        p.name.toLowerCase().includes(query) ||
+        p.brand.toLowerCase().includes(query) ||
+        p.tags?.some(t => t.toLowerCase().includes(query))
+      )
+      .slice(0, 5);
+  }, [products, searchQuery]);
+
+  // Scroll detection
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 15) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 15);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menus on outside click
+  // Outside click listener
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setIsSearchDropdownOpen(false);
+      }
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
         setIsUserMenuOpen(false);
-      }
-      if (categoryMenuRef.current && !categoryMenuRef.current.contains(e.target as Node)) {
-        setIsCategoryMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -98,575 +119,424 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
 
   const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const handleCategoryClick = (catId: string) => {
+  const executeSearch = (term: string) => {
+    const finalTerm = term.trim();
+    if (!finalTerm) return;
+
+    // Save to history
+    const updated = [finalTerm, ...searchHistory.filter(h => h !== finalTerm)].slice(0, 6);
+    setSearchHistory(updated);
+    try {
+      localStorage.setItem('lumina_search_history', JSON.stringify(updated));
+    } catch {}
+
     setFilters(prev => ({
       ...prev,
-      selectedCategory: catId,
-      searchQuery: ''
+      searchQuery: finalTerm,
+      selectedCategory: 'all'
     }));
     setActiveTab('shop');
-    setIsCategoryMenuOpen(false);
-    setIsMobileMenuOpen(false);
+    setIsSearchDropdownOpen(false);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    executeSearch(searchQuery);
   };
 
   const navLinks = [
     { id: 'home', labelFa: 'صفحه اصلی', labelEn: 'Home' },
-    { id: 'shop', labelFa: 'فروشگاه و محصولات', labelEn: 'Shop All' },
-    { id: 'festival', labelFa: 'جشنواره تخفیف‌ها', labelEn: 'Flash Drops', badge: 'HOT' },
-    { id: 'bestsellers', labelFa: 'پرفروش‌ترین‌ها', labelEn: 'Best Sellers' }
+    { id: 'categories', labelFa: 'دسته‌بندی‌ها', labelEn: 'Categories' },
+    { id: 'bestsellers', labelFa: 'پرفروش‌ترین‌ها', labelEn: 'Best Sellers' },
+    { id: 'festival', labelFa: 'جشنواره تخفیف', labelEn: 'Festival', highlight: true },
+    { id: 'blog', labelFa: 'راهنما و وبلاگ', labelEn: 'Blog' }
   ];
 
   return (
     <>
-      {/* Top Announcement Bar */}
-      <div className="bg-zinc-950 text-zinc-300 text-[11px] py-1.5 px-4 border-b border-zinc-900 select-none">
+      {/* 1. Slim Top Utility Bar */}
+      <div className="bg-zinc-900 text-zinc-300 text-[11px] py-1 px-4 border-b border-zinc-800 select-none">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left: Free shipping promise */}
-          <div className="flex items-center gap-2">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-[#62DB00] animate-pulse" />
-            <span className="font-medium">
-              {lang === 'fa'
-                ? 'ارسال اکسپرس رایگان برای سفارش‌های بالای ۲ میلیون تومان'
-                : 'Free express shipping on all orders over $150'}
-            </span>
-            <span className="hidden md:inline-block text-zinc-600">•</span>
-            <span className="hidden md:inline-block text-zinc-400 font-mono">
-              {lang === 'fa' ? 'ضمانت اصالت ۱۰۰٪ کالاها' : 'Official 2-Year Warranty'}
-            </span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>ارسال رایگان سفارش‌های بالای ۲ میلیون تومان</span>
+            </div>
+            <span className="hidden sm:inline text-zinc-600">|</span>
+            <div className="hidden sm:flex items-center gap-1 text-zinc-400">
+              <PhoneCall className="w-3 h-3 text-emerald-400" />
+              <span>پشتیبانی: ۰۲۱-۸۸۸۸۴۳۲۱</span>
+            </div>
           </div>
 
-          {/* Right: Quick utility switchers */}
-          <div className="flex items-center gap-3 font-mono">
-            {/* Currency selector */}
-            <button
-              onClick={() => setCurrency(currency === 'IRR' ? 'USD' : 'IRR')}
-              className="hover:text-white transition-colors cursor-pointer"
-              title="تغییر واحد پول"
-            >
-              {currency === 'IRR' ? 'تومان (IRR)' : 'USD ($)'}
-            </button>
-
-            <span className="text-zinc-700">|</span>
-
-            {/* Language toggle */}
-            <button
-              onClick={() => setLang(lang === 'fa' ? 'en' : 'fa')}
-              className="hover:text-white transition-colors cursor-pointer flex items-center gap-1"
-            >
-              <Globe className="w-3 h-3 text-[#62DB00]" />
-              <span>{lang === 'fa' ? 'English' : 'فارسی'}</span>
-            </button>
-
+          <div className="flex items-center gap-3">
             {onGoToAdmin && (
-              <>
-                <span className="text-zinc-700">|</span>
-                <button
-                  onClick={onGoToAdmin}
-                  className="text-zinc-400 hover:text-[#62DB00] transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <LayoutDashboard className="w-3 h-3" />
-                  <span>{lang === 'fa' ? 'پنل ادمین' : 'Admin'}</span>
-                </button>
-              </>
+              <button
+                onClick={onGoToAdmin}
+                className="text-zinc-400 hover:text-emerald-400 transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <LayoutDashboard className="w-3 h-3" />
+                <span>{lang === 'fa' ? 'پنل مدیریت' : 'Admin'}</span>
+              </button>
             )}
+            <span className="text-zinc-700">|</span>
+            <button
+              onClick={toggleDarkMode}
+              className="text-zinc-400 hover:text-white transition-colors cursor-pointer flex items-center gap-1"
+              title={darkMode ? 'حالت روشن' : 'حالت تاریک'}
+            >
+              {darkMode ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Main Sticky Header */}
+      {/* 2. Main Navigation Header */}
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-200 ${
           isScrolled
-            ? 'bg-white/95 dark:bg-[#09090B]/95 backdrop-blur-md shadow-xs border-b border-zinc-200/90 dark:border-zinc-800/90'
+            ? 'bg-white/95 dark:bg-[#09090B]/95 backdrop-blur-md shadow-xs border-b border-zinc-200/80 dark:border-zinc-800/80'
             : 'bg-white dark:bg-[#09090B] border-b border-zinc-200/60 dark:border-zinc-800/60'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-18 gap-3 sm:gap-6">
-            {/* Left Area: Mobile Menu Button & Brand Logo */}
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-              {/* Mobile hamburger */}
+            
+            {/* Logo & Mobile Menu Toggle */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 -ml-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
-                aria-label="Toggle menu"
+                className="lg:hidden p-2 rounded-xl text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                aria-label="منو"
               >
                 <Menu className="w-5 h-5" />
               </button>
 
-              {/* Official Brand Logo */}
               <div
-                onClick={() => setActiveTab('home')}
-                className="cursor-pointer transition-transform hover:scale-[1.02] shrink-0"
+                onClick={() => {
+                  playTactileClick();
+                  setActiveTab('home');
+                }}
+                className="cursor-pointer transition-transform hover:scale-[1.02] flex items-center gap-2"
               >
                 <LuminaLogo variant="full" size="md" />
               </div>
             </div>
 
-            {/* Center Area: Animated Search Bar */}
-            <div className="flex-1 max-w-xl hidden md:block">
-              <div
-                onClick={onOpenSearchModal}
-                onFocus={() => setSearchFocused(true)}
-                onBlur={() => setSearchFocused(false)}
-                className={`group relative flex items-center w-full h-11 px-3.5 rounded-xl border transition-all duration-200 cursor-pointer ${
-                  searchFocused
-                    ? 'bg-white dark:bg-zinc-900 border-[#62DB00] shadow-[0_0_12px_rgba(98,219,0,0.15)] ring-2 ring-[#62DB00]/20'
-                    : 'bg-zinc-100/80 dark:bg-zinc-900/60 border-zinc-200/80 dark:border-zinc-800/80 hover:border-zinc-300 dark:hover:border-zinc-700'
-                }`}
-              >
-                <Search className="w-4 h-4 text-zinc-400 group-hover:text-[#62DB00] transition-colors shrink-0" />
-                <span className="flex-1 px-3 text-xs sm:text-sm text-zinc-400 select-none text-right rtl:text-right ltr:text-left truncate">
-                  {lang === 'fa'
-                    ? 'جستجوی لپ‌تاپ، هدفون، ساعت هوشمند و...'
-                    : 'Search laptops, audio gear, smartwatches...'}
-                </span>
-                <div className="flex items-center gap-1 shrink-0 font-mono text-[10px] text-zinc-400 bg-zinc-200/70 dark:bg-zinc-800/70 px-1.5 py-0.5 rounded border border-zinc-300/60 dark:border-zinc-700/60">
-                  <Command className="w-2.5 h-2.5" />
-                  <span>K</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Area: Actions (Theme, Search Mobile, Wishlist, Cart, User) */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              {/* Mobile search trigger */}
-              <button
-                onClick={onOpenSearchModal}
-                className="md:hidden p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors"
-                aria-label="Search"
-              >
-                <Search className="w-5 h-5" />
-              </button>
-
-              {/* Theme Toggle Button */}
-              <button
-                onClick={() => {
-                  playTactileClick(1500);
-                  toggleDarkMode();
-                }}
-                className="p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors cursor-pointer tactile-press"
-                title={darkMode ? 'حالت روشن' : 'حالت تاریک'}
-                aria-label="Toggle theme"
-              >
-                {darkMode ? (
-                  <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-                ) : (
-                  <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-600" />
-                )}
-              </button>
-
-              {/* Wishlist Button */}
-              <button
-                onClick={() => {
-                  playTactileClick(1300);
-                  setActiveTab('wishlist');
-                }}
-                className="relative p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors cursor-pointer tactile-press"
-                aria-label="Wishlist"
-                title={lang === 'fa' ? 'علاقه‌مندی‌ها' : 'Wishlist'}
-              >
-                <Heart
-                  className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                    wishlist.length > 0 ? 'text-rose-500 fill-rose-500' : ''
-                  }`}
-                />
-                {wishlist.length > 0 && (
-                  <span className="absolute top-1 right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-mono font-bold text-white bg-rose-500 rounded-full shadow-xs">
-                    {wishlist.length}
-                  </span>
-                )}
-              </button>
-
-              {/* Shopping Cart Button */}
-              <button
-                id="shopping-cart-button"
-                onClick={() => {
-                  playTactileClick(1100);
-                  setIsCartDrawerOpen(true);
-                }}
-                className="relative flex items-center gap-2 p-2 sm:px-3 sm:py-2 rounded-xl bg-zinc-100/90 dark:bg-zinc-900 hover:border-[#62DB00]/60 text-zinc-800 dark:text-zinc-200 border border-zinc-200/80 dark:border-zinc-800 transition-all duration-150 cursor-pointer group tactile-press"
-                aria-label="Shopping Cart"
-              >
-                <div className="relative shrink-0">
-                  <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-700 dark:text-zinc-200 group-hover:text-[#62DB00] transition-colors" />
-                  {totalCartItems > 0 && (
-                    <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[17px] h-[17px] px-1 text-[10px] font-mono font-bold text-black bg-[#62DB00] rounded-full shadow-xs">
-                      {totalCartItems}
-                    </span>
-                  )}
-                </div>
-
-                <div className="hidden lg:flex flex-col text-right rtl:text-right ltr:text-left leading-tight select-none">
-                  <span className="text-[10px] text-zinc-400 font-medium">
-                    {lang === 'fa' ? 'سبد خرید' : 'My Cart'}
-                  </span>
-                  <span className="text-xs font-mono font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-[#62DB00] transition-colors">
-                    {cartTotal?.total > 0
-                      ? formatPrice(cartTotal.total)
-                      : (lang === 'fa' ? '۰ تومان' : '0 Toman')}
-                  </span>
-                </div>
-              </button>
-
-              {/* User Account Menu */}
-              <div className="relative" ref={userMenuRef}>
-                <button
-                  onClick={() => {
-                    if (currentUser) {
-                      setIsUserMenuOpen(!isUserMenuOpen);
-                    } else {
-                      setIsAuthModalOpen(true);
-                    }
-                  }}
-                  className="flex items-center gap-1.5 p-1.5 sm:p-2 rounded-xl text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 border border-zinc-200/60 dark:border-zinc-800/60 transition-colors cursor-pointer"
-                  aria-label="Account"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-xs">
-                    {currentUser ? currentUser.name.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
-                  </div>
-                  {currentUser && (
-                    <span className="hidden xl:inline-block text-xs font-medium max-w-[90px] truncate">
-                      {currentUser.name}
-                    </span>
-                  )}
-                </button>
-
-                {/* Account Dropdown */}
-                <AnimatePresence>
-                  {isUserMenuOpen && currentUser && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute left-0 rtl:left-0 rtl:right-auto ltr:right-0 ltr:left-auto mt-2 w-56 bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl p-2 z-50 text-zinc-800 dark:text-zinc-200"
-                    >
-                      <div className="px-3 py-2.5 border-b border-zinc-100 dark:border-zinc-800">
-                        <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100 truncate">
-                          {currentUser.name}
-                        </p>
-                        <p className="text-[11px] font-mono text-zinc-400 truncate mt-0.5">
-                          {currentUser.email || currentUser.phone}
-                        </p>
-                      </div>
-
-                      <div className="py-1 space-y-0.5">
-                        <button
-                          onClick={() => {
-                            setActiveTab('account');
-                            setIsUserMenuOpen(false);
-                          }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors text-right rtl:text-right ltr:text-left"
-                        >
-                          <User className="w-4 h-4 text-zinc-400" />
-                          <span>{lang === 'fa' ? 'حساب کاربری و سفارشات' : 'My Account & Orders'}</span>
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            setActiveTab('wishlist');
-                            setIsUserMenuOpen(false);
-                          }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors text-right rtl:text-right ltr:text-left"
-                        >
-                          <Heart className="w-4 h-4 text-zinc-400" />
-                          <span>{lang === 'fa' ? 'لیست علاقه‌مندی‌ها' : 'Wishlist'}</span>
-                        </button>
-                      </div>
-
-                      <div className="pt-1 border-t border-zinc-100 dark:border-zinc-800">
-                        <button
-                          onClick={() => {
-                            logout();
-                            setIsUserMenuOpen(false);
-                          }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors text-right rtl:text-right ltr:text-left font-medium"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          <span>{lang === 'fa' ? 'خروج از حساب' : 'Log Out'}</span>
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-
-          {/* Secondary Sub-Navigation Bar (Categories & Links) */}
-          <nav className="hidden lg:flex items-center justify-between py-2 border-t border-zinc-100 dark:border-zinc-800/70 text-xs font-medium">
-            <div className="flex items-center gap-6">
-              {/* Mega Categories Trigger */}
-              <div className="relative" ref={categoryMenuRef}>
-                <button
-                  onClick={() => setIsCategoryMenuOpen(!isCategoryMenuOpen)}
-                  onMouseEnter={() => setIsCategoryMenuOpen(true)}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all cursor-pointer font-semibold ${
-                    isCategoryMenuOpen
-                      ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 border-transparent shadow-xs'
-                      : 'bg-zinc-50 dark:bg-zinc-900/60 border-zinc-200/80 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700'
-                  }`}
-                >
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#62DB00]" />
-                  <span>{lang === 'fa' ? 'دسته‌بندی کالاها' : 'Categories'}</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      isCategoryMenuOpen ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-
-                {/* Rich Categories Dropdown */}
-                <AnimatePresence>
-                  {isCategoryMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.15 }}
-                      onMouseLeave={() => setIsCategoryMenuOpen(false)}
-                      className="absolute top-full mt-2 w-[720px] bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden z-50 p-4 grid grid-cols-12 gap-4 text-zinc-900 dark:text-zinc-100"
-                    >
-                      {/* Left: Category list */}
-                      <div className="col-span-5 space-y-1 border-l rtl:border-l rtl:border-r-0 ltr:border-r ltr:border-l-0 border-zinc-100 dark:border-zinc-800/80 pr-2 rtl:pr-0 rtl:pl-2">
-                        {CATEGORIES.map(cat => (
-                          <div
-                            key={cat.id}
-                            onMouseEnter={() => setHoveredCategory(cat.id)}
-                            onClick={() => handleCategoryClick(cat.id)}
-                            className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${
-                              hoveredCategory === cat.id
-                                ? 'bg-[#62DB00]/10 text-zinc-950 dark:text-white border border-[#62DB00]/30'
-                                : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/60 text-zinc-600 dark:text-zinc-400'
-                            }`}
-                          >
-                            <span>{lang === 'fa' ? cat.nameFa : cat.name}</span>
-                            <ChevronLeft className="w-3.5 h-3.5 opacity-50 rtl:rotate-0 ltr:rotate-180" />
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Right: Featured Preview for Selected Category */}
-                      <div className="col-span-7 flex flex-col justify-between p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800/60">
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
-                              {lang === 'fa' ? 'پیشنهاد ویژه این دسته' : 'Featured in Category'}
-                            </span>
-                            <span className="text-[10px] font-mono text-[#62DB00] font-semibold">
-                              OFFICIAL WARRANTY
-                            </span>
-                          </div>
-                          <p className="text-xs text-zinc-500 leading-relaxed mb-4">
-                            {lang === 'fa'
-                              ? 'جدیدترین ادوات سخت‌افزاری اورجینال با گارانتی معتبر شرکتی، مهلت تست ۷ روزه و ارسال فوری.'
-                              : 'Next-generation certified electronics with guaranteed authentic build quality and rapid dispatch.'}
-                          </p>
-                        </div>
-
-                        <button
-                          onClick={() => handleCategoryClick(hoveredCategory || 'all')}
-                          className="w-full py-2 px-3 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-[#62DB00] hover:text-black dark:hover:bg-[#62DB00] dark:hover:text-black font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                        >
-                          <span>{lang === 'fa' ? 'مشاهده همه محصولات این بخش' : 'View All Category Items'}</span>
-                          <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Direct links */}
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
               {navLinks.map(link => {
                 const isActive = activeTab === link.id;
                 return (
                   <button
                     key={link.id}
                     onClick={() => {
+                      playTactileClick();
                       setActiveTab(link.id as any);
                     }}
-                    className={`relative py-1 transition-colors cursor-pointer flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                       isActive
-                        ? 'text-zinc-900 dark:text-white font-bold'
-                        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 font-bold'
+                        : 'text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-850'
                     }`}
                   >
                     <span>{lang === 'fa' ? link.labelFa : link.labelEn}</span>
-                    {link.badge && (
-                      <span className="px-1 py-0.2 rounded text-[9px] font-mono font-bold bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-                        {link.badge}
-                      </span>
-                    )}
-                    {isActive && (
-                      <motion.div
-                        layoutId="navIndicator"
-                        className="absolute -bottom-2 inset-x-0 h-0.5 bg-[#62DB00]"
-                      />
-                    )}
                   </button>
                 );
               })}
-            </div>
+            </nav>
 
-            {/* Right micro badge */}
-            <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#62DB00]" />
-              <span>{lang === 'fa' ? 'ضمانت بازگشت ۷ روزه' : '7-Day Return Guarantee'}</span>
-            </div>
-          </nav>
-        </div>
-      </header>
-
-      {/* Mobile Slide-Out Navigation Drawer */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs"
-            />
-
-            {/* Drawer */}
-            <motion.div
-              initial={{ x: lang === 'fa' ? '100%' : '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: lang === 'fa' ? '100%' : '-100%' }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-4/5 max-w-sm h-full bg-white dark:bg-[#0C0C0E] border-r rtl:border-r-0 rtl:border-l border-zinc-200 dark:border-zinc-800 shadow-2xl flex flex-col justify-between overflow-y-auto z-10"
-            >
-              <div>
-                {/* Header with Logo & Close */}
-                <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
-                  <LuminaLogo variant="full" size="sm" />
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-1.5 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {/* Primary Nav Links */}
-                <div className="p-4 space-y-1">
-                  {navLinks.map(link => (
-                    <button
-                      key={link.id}
-                      onClick={() => {
-                        setActiveTab(link.id as any);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between p-2.5 rounded-xl text-sm font-semibold text-right rtl:text-right ltr:text-left transition-colors ${
-                        activeTab === link.id
-                          ? 'bg-[#62DB00]/10 text-zinc-900 dark:text-white border border-[#62DB00]/30'
-                          : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300'
-                      }`}
-                    >
-                      <span>{lang === 'fa' ? link.labelFa : link.labelEn}</span>
-                      {link.badge && (
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/10 text-rose-500">
-                          {link.badge}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Categories Accordion */}
-                <div className="px-4 py-2 border-t border-zinc-100 dark:border-zinc-800/80">
-                  <div className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider mb-2">
-                    {lang === 'fa' ? 'دسته‌بندی‌های کالا' : 'Product Categories'}
-                  </div>
-                  <div className="space-y-1">
-                    {CATEGORIES.map(c => (
-                      <button
-                        key={c.id}
-                        onClick={() => handleCategoryClick(c.id)}
-                        className="w-full flex items-center justify-between p-2 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/40 text-right rtl:text-right ltr:text-left"
-                      >
-                        <span>{lang === 'fa' ? c.nameFa : c.name}</span>
-                        <ChevronLeft className="w-3.5 h-3.5 opacity-50 rtl:rotate-0 ltr:rotate-180" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Drawer Footer with User & Switchers */}
-              <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 space-y-3">
-                {currentUser ? (
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-xs">
-                        {currentUser.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="text-xs">
-                        <div className="font-bold truncate max-w-[120px]">{currentUser.name}</div>
-                        <div className="text-[10px] text-zinc-400 font-mono">
-                          {currentUser.role === 'admin' ? 'مدیر ارشد' : 'کاربر ویژه'}
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        logout();
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg"
-                      title="خروج"
-                    >
-                      <LogOut className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setIsAuthModalOpen(true);
-                      setIsMobileMenuOpen(false);
+            {/* Center/Desktop Search Input */}
+            <div className="flex-1 max-w-xs xl:max-w-sm relative hidden md:block" ref={searchContainerRef}>
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <div
+                  className={`flex items-center w-full h-10 rounded-xl border transition-all duration-200 bg-zinc-50 dark:bg-zinc-900 ${
+                    isSearchDropdownOpen
+                      ? 'border-emerald-500 ring-2 ring-emerald-500/20 bg-white dark:bg-zinc-900 shadow-xs'
+                      : 'border-zinc-200/80 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
+                  }`}
+                >
+                  <Search className="w-4 h-4 text-zinc-400 mr-3 rtl:mr-3 rtl:ml-0 ltr:ml-3 ltr:mr-0 shrink-0" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={e => {
+                      setSearchQuery(e.target.value);
+                      setIsSearchDropdownOpen(true);
                     }}
-                    className="w-full py-2.5 px-4 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-xs flex items-center justify-center gap-2"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span>{lang === 'fa' ? 'ورود / ثبت‌نام در لومینا' : 'Sign In / Register'}</span>
-                  </button>
-                )}
-
-                {/* Language & Currency toggles */}
-                <div className="flex items-center justify-between pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 text-xs font-mono text-zinc-500">
-                  <button
-                    onClick={() => setLang(lang === 'fa' ? 'en' : 'fa')}
-                    className="hover:text-zinc-900 dark:hover:text-zinc-100"
-                  >
-                    {lang === 'fa' ? 'English' : 'فارسی'}
-                  </button>
-                  <button
-                    onClick={() => setCurrency(currency === 'IRR' ? 'USD' : 'IRR')}
-                    className="hover:text-zinc-900 dark:hover:text-zinc-100"
-                  >
-                    {currency}
-                  </button>
-                  {onGoToAdmin && (
+                    onFocus={() => setIsSearchDropdownOpen(true)}
+                    placeholder={lang === 'fa' ? 'جستجوی کالا، برند یا مدل...' : 'Search products...'}
+                    className="w-full bg-transparent text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none px-2 font-sans"
+                  />
+                  {searchQuery && (
                     <button
-                      onClick={() => {
-                        onGoToAdmin();
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="text-[#62DB00] font-bold"
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="p-1 text-zinc-400 hover:text-zinc-600 ml-2 rtl:ml-2 rtl:mr-0 ltr:mr-2 ltr:ml-0"
                     >
-                      {lang === 'fa' ? 'پنل ادمین' : 'Admin'}
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
+              </form>
+
+              {/* Live Search Dropdown */}
+              {isSearchDropdownOpen && (
+                <div className="absolute top-full right-0 left-0 mt-2 bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  {searchQuery.trim() ? (
+                    <div>
+                      <div className="text-[11px] font-bold text-zinc-400 mb-2 px-1">
+                        نتایج هم‌زمان ({liveSearchResults.length} کالا)
+                      </div>
+                      {liveSearchResults.length > 0 ? (
+                        <div className="space-y-1">
+                          {liveSearchResults.map(product => (
+                            <div
+                              key={product.id}
+                              onClick={() => {
+                                openProductDetails(product);
+                                setIsSearchDropdownOpen(false);
+                              }}
+                              className="flex items-center justify-between p-2 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors cursor-pointer"
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <img
+                                  src={product.images[0]}
+                                  alt={product.nameFa}
+                                  className="w-9 h-9 rounded-lg object-contain bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800"
+                                />
+                                <div>
+                                  <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-1">
+                                    {lang === 'fa' ? product.nameFa : product.name}
+                                  </h4>
+                                  <span className="text-[10px] text-zinc-400">{product.brand}</span>
+                                </div>
+                              </div>
+                              <span className="text-xs font-bold font-mono text-zinc-900 dark:text-zinc-100">
+                                {formatPrice(product.price, product.priceUSD)}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="py-4 text-center text-xs text-zinc-400">
+                          کالایی یافت نشد.
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-[11px] font-bold text-zinc-400 mb-2 px-1">
+                        جستجوهای پیشنهادی
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {POPULAR_SEARCH_TERMS.map((term, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              setSearchQuery(term);
+                              executeSearch(term);
+                            }}
+                            className="px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 hover:text-emerald-600 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors"
+                          >
+                            {term}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Actions: Search (mobile), Wishlist, User, Cart */}
+            <div className="flex items-center gap-1.5 sm:gap-2.5">
+              {/* Mobile Search Button */}
+              <button
+                type="button"
+                onClick={onOpenSearchModal}
+                className="md:hidden p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                aria-label="جستجو"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+
+              {/* Wishlist Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  playTactileClick();
+                  setActiveTab('wishlist');
+                }}
+                className="relative p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                title="علاقه‌مندی‌ها"
+              >
+                <Heart className="w-5 h-5" />
+                {wishlist.length > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-mono font-bold flex items-center justify-center shadow-xs">
+                    {wishlist.length}
+                  </span>
+                )}
+              </button>
+
+              {/* User Account Button / Dropdown */}
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    playTactileClick();
+                    if (!currentUser) {
+                      setIsAuthModalOpen(true);
+                    } else {
+                      setIsUserMenuOpen(!isUserMenuOpen);
+                    }
+                  }}
+                  className="flex items-center gap-1.5 p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  title={currentUser ? currentUser.name : 'ورود به حساب'}
+                >
+                  <User className="w-5 h-5" />
+                  {currentUser && (
+                    <span className="hidden xl:inline text-xs font-semibold max-w-[80px] truncate">
+                      {currentUser.name}
+                    </span>
+                  )}
+                </button>
+
+                {/* User Dropdown */}
+                {isUserMenuOpen && currentUser && (
+                  <div className="absolute top-full left-0 rtl:left-0 rtl:right-auto ltr:right-0 ltr:left-auto mt-2 w-48 bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl p-2 z-50">
+                    <div className="px-3 py-2 border-b border-zinc-100 dark:border-zinc-800">
+                      <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                        {currentUser.name}
+                      </p>
+                      <p className="text-[10px] text-zinc-400 truncate mt-0.5">
+                        {currentUser.email}
+                      </p>
+                    </div>
+
+                    <div className="py-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveTab('account');
+                          setIsUserMenuOpen(false);
+                        }}
+                        className="w-full text-right rtl:text-right ltr:text-left px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                      >
+                        حساب کاربری
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveTab('account');
+                          setIsUserMenuOpen(false);
+                        }}
+                        className="w-full text-right rtl:text-right ltr:text-left px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                      >
+                        سفارش‌های من
+                      </button>
+                    </div>
+
+                    <div className="pt-1 border-t border-zinc-100 dark:border-zinc-800">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          logout();
+                          setIsUserMenuOpen(false);
+                        }}
+                        className="w-full text-right rtl:text-right ltr:text-left px-3 py-1.5 rounded-lg text-xs font-medium text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors flex items-center justify-between"
+                      >
+                        <span>خروج از حساب</span>
+                        <LogOut className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            </motion.div>
+
+              {/* Cart Drawer Trigger */}
+              <button
+                type="button"
+                onClick={() => {
+                  playTactileClick();
+                  setIsCartDrawerOpen(true);
+                }}
+                className="h-10 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-xs flex items-center gap-2 transition-all shadow-xs cursor-pointer shrink-0"
+              >
+                <div className="relative">
+                  <ShoppingBag className="w-4 h-4" />
+                  {totalCartItems > 0 && (
+                    <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-white text-emerald-700 text-[10px] font-mono font-bold flex items-center justify-center shadow-xs">
+                      {totalCartItems}
+                    </span>
+                  )}
+                </div>
+                <span className="hidden sm:inline font-mono tabular-nums">
+                  {cartTotal?.total > 0 ? (cartTotal.total / 10).toLocaleString('fa-IR') + ' ت' : 'سبد خرید'}
+                </span>
+              </button>
+            </div>
+
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      </header>
+
+      {/* 3. Mobile Navigation Drawer */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          <div className="fixed inset-y-0 right-0 w-72 max-w-[80vw] bg-white dark:bg-[#111114] border-l border-zinc-200 dark:border-zinc-800 p-6 flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-right duration-200">
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <LuminaLogo variant="full" size="sm" />
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-1 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="space-y-1">
+                {navLinks.map(link => (
+                  <button
+                    key={link.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveTab(link.id as any);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-right px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                      activeTab === link.id
+                        ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 font-bold'
+                        : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                    }`}
+                  >
+                    {lang === 'fa' ? link.labelFa : link.labelEn}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+              <span>لومینا ۲۰۲۶</span>
+              <button
+                type="button"
+                onClick={toggleDarkMode}
+                className="flex items-center gap-1.5 text-zinc-600 dark:text-zinc-300"
+              >
+                {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                <span>{darkMode ? 'حالت روشن' : 'حالت تاریک'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -1,23 +1,23 @@
 import React from 'react';
-import { ArrowRight, ArrowLeft, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from './ProductCard';
 import { playTactileClick } from '../utils/sound';
 
-export const NewArrivalsSection: React.FC = () => {
+export const FeaturedProducts: React.FC = () => {
   const { products, lang, setActiveTab, setFilters } = useStore();
 
-  // Pick 4 newest products (e.g. items 4 to 8)
-  const newProducts = products.slice(4, 8);
+  // Pick 4 curated featured products
+  const featuredList = products.slice(0, 4);
 
-  const handleViewAllNew = () => {
+  const handleViewAll = () => {
     playTactileClick();
-    setFilters(prev => ({ ...prev, selectedCategory: 'all', onSaleOnly: false, sortBy: 'newest' }));
+    setFilters(prev => ({ ...prev, selectedCategory: 'all', onSaleOnly: false, sortBy: 'popular' }));
     setActiveTab('shop');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (newProducts.length === 0) return null;
+  if (featuredList.length === 0) return null;
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 select-none">
@@ -25,19 +25,19 @@ export const NewArrivalsSection: React.FC = () => {
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div>
           <div className="flex items-center gap-1.5 mb-1 text-emerald-600 dark:text-emerald-400">
-            <Zap className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5" />
             <span className="text-[11px] font-bold uppercase tracking-wider">
-              {lang === 'fa' ? 'محصولات تازه افزوده شده' : 'New Arrivals'}
+              {lang === 'fa' ? 'انتخاب ویژه تیم لومینا' : 'Handpicked by Lumina'}
             </span>
           </div>
           <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
-            {lang === 'fa' ? 'جدیدترین ورودی‌های فروشگاه' : 'Latest Hardware Releases'}
+            {lang === 'fa' ? 'محصولات پیشنهادی و برگزیده' : 'Featured Collections'}
           </h2>
         </div>
 
         <button
           type="button"
-          onClick={handleViewAllNew}
+          onClick={handleViewAll}
           className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 transition-colors cursor-pointer"
         >
           <span>{lang === 'fa' ? 'مشاهده همه' : 'View All'}</span>
@@ -47,7 +47,7 @@ export const NewArrivalsSection: React.FC = () => {
 
       {/* 4-Column Responsive Grid with Equal Sized Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
-        {newProducts.map(product => (
+        {featuredList.map(product => (
           <div key={product.id} className="h-full">
             <ProductCard product={product} />
           </div>

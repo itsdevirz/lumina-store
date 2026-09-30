@@ -2,19 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { StoreProvider, useStore } from './context/StoreContext';
 import { AppShell } from './components/layout/AppShell';
 import { Hero } from './components/Hero';
+import { FeaturedCategories } from './components/FeaturedCategories';
+import { FeaturedProducts } from './components/FeaturedProducts';
+import { PromotionalBanners } from './components/PromotionalBanners';
+import { NewArrivalsSection } from './components/NewArrivalsSection';
 import { TrustBadges } from './components/TrustBadges';
 import { FestivalBanner } from './components/FestivalBanner';
 import { FestivalPage } from './components/FestivalPage';
 import { BestsellersPage } from './components/BestsellersPage';
-import { ProductSlider } from './components/ProductSlider';
-import { FlashSale } from './components/FlashSale';
-import { EditorialShowcase } from './components/EditorialShowcase';
-import { NewArrivalsSection } from './components/NewArrivalsSection';
-import { CompactAccessoriesRack } from './components/CompactAccessoriesRack';
-import { PromotionalBanners } from './components/PromotionalBanners';
-import { DiscountSection } from './components/DiscountSection';
-import { BestSellers } from './components/BestSellers';
-import { RecentlyViewed } from './components/RecentlyViewed';
 import { ProductListing } from './components/ProductListing';
 import { ProductDetailView } from './components/ProductDetailView';
 import { CartPage } from './components/CartPage';
@@ -23,6 +18,8 @@ import { CheckoutView } from './components/CheckoutView';
 import { UserDashboard } from './components/UserDashboard';
 import { WishlistView } from './components/WishlistView';
 import { CategoriesPage } from './components/CategoriesPage';
+import { BlogPage } from './components/BlogPage';
+import { BlogSection } from './components/BlogSection';
 import { QuickViewModal } from './components/QuickViewModal';
 import { Footer } from './components/Footer';
 import { ToastContainer } from './components/ToastContainer';
@@ -49,32 +46,19 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
       {/* Dynamic SEO Meta Tags Engine */}
       <DynamicSEO isAdmin={false} />
 
-      {/* Linear + Vercel inspired modern AppShell */}
-      <AppShell
-        onGoToAdmin={onGoToAdmin}
-      >
+      {/* Flagship AppShell */}
+      <AppShell onGoToAdmin={onGoToAdmin}>
         {/* Dynamic View rendering */}
         {activeTab === 'home' && (
           <>
             <FestivalBanner />
             <Hero />
-            <TrustBadges />
-            {/* 1. Asymmetric Flagship Editorial Bento (Featured + Recommended) */}
-            <EditorialShowcase />
-            {/* 2. Urgent Limited Inventory Flash Drops (Discount Composition) */}
-            <FlashSale />
-            {/* 3. Editorial Seasonal Releases & Minimalist Silhouettes (New Arrival Composition) */}
-            <NewArrivalsSection />
-            {/* 4. Architectural Hardware Banners */}
+            <FeaturedCategories />
+            <FeaturedProducts />
             <PromotionalBanners />
-            {/* 5. Prestige Hardware Ranking (Bestseller Composition with #01-#04) */}
-            <BestSellers />
-            {/* 6. High-Density Executive Accessories Rack (Compact Composition) */}
-            <CompactAccessoriesRack />
-            {/* 7. Promotional Coupon Vault */}
-            <DiscountSection />
-            {/* 8. Recently Viewed */}
-            <RecentlyViewed />
+            <NewArrivalsSection />
+            <TrustBadges />
+            <BlogSection />
           </>
         )}
 
@@ -88,6 +72,8 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
 
         {activeTab === 'product-detail' && <ProductDetailView />}
 
+        {activeTab === 'blog' && <BlogPage />}
+
         {activeTab === 'cart' && <CartPage />}
 
         {activeTab === 'checkout' && <CheckoutView />}
@@ -96,7 +82,7 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
 
         {activeTab === 'wishlist' && <WishlistView />}
 
-        {/* Developer-Tool Minimal Footer */}
+        {/* Multi-Column Commercial RTL Footer */}
         <Footer onGoToAdmin={onGoToAdmin} />
       </AppShell>
 

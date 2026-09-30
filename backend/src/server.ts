@@ -49,7 +49,7 @@ app.get('/api/health', (_req, res) => {
     status: 'ok',
     service: 'Lumina Backend REST API',
     version: '1.0.0',
-    mysqlConnected: mySQLService.getIsConnected(),
+    mysqlConnected: mySQLService.isConnectedToMySQL(),
     timestamp: new Date().toISOString()
   });
 });

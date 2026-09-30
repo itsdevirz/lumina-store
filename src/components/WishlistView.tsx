@@ -99,14 +99,14 @@ export const WishlistView: React.FC = () => {
             </p>
             <button
               onClick={() => setActiveTab('shop')}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:bg-[#62DB00] hover:text-black dark:hover:bg-[#62DB00] dark:hover:text-black text-xs font-bold transition-all shadow-md cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
             >
               <span>{lang === 'fa' ? 'مشاهده کاتالوگ فروشگاه' : 'Explore Store'}</span>
               {lang === 'fa' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
             {wishlistProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
