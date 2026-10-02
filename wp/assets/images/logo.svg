@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 220" fill="none">
+  <!-- L -->
+  <path d="M 50 40 H 90 V 140 H 155 V 180 H 50 Z" fill="#62DB00" />
+  
+  <!-- U -->
+  <path d="M 175 40 H 215 V 135 C 215 146 223 154 235 154 C 247 154 255 146 255 135 V 40 H 295 V 135 C 295 162 268 180 235 180 C 202 180 175 162 175 135 Z" fill="#62DB00" />
+  
+  <!-- M -->
+  <path d="M 315 40 H 355 L 395 110 L 435 40 H 475 V 180 H 435 V 105 L 395 165 L 355 105 V 180 H 315 Z" fill="#62DB00" />
+  
+  <!-- I -->
+  <path d="M 495 40 H 535 V 180 H 495 Z" fill="#62DB00" />
+  
+  <!-- N -->
+  <path d="M 555 40 H 595 L 650 125 V 40 H 690 V 180 H 650 L 595 95 V 180 H 555 Z" fill="#62DB00" />
+  
+  <!-- Stylized A -->
+  <g transform="translate(710, 20)">
+    <!-- Head / Dot -->
+    <circle cx="36" cy="30" r="22" fill="#62DB00" />
+    <!-- Chevron / Legs -->
+    <path d="M 0 160 L 70 20 L 140 160 L 105 160 L 70 85 L 35 160 Z" fill="#62DB00" />
+  </g>
+</svg>

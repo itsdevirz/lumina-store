@@ -1,0 +1,30 @@
+/* Lumina Theme - Admin Stylesheet */
+.lumina-admin-wrap {
+  direction: rtl;
+  text-align: right;
+  font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, Tahoma, sans-serif;
+}
+
+.lumina-admin-wrap h1,
+.lumina-admin-wrap h2,
+.lumina-admin-wrap h3,
+.lumina-admin-wrap h4 {
+  font-family: inherit;
+  font-weight: 800;
+}
+
+.lumina-admin-wrap input[type="text"],
+.lumina-admin-wrap textarea,
+.lumina-admin-wrap select {
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.lumina-admin-wrap input[type="text"]:focus,
+.lumina-admin-wrap textarea:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 1px #10b981;
+  outline: none;
+}

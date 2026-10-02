@@ -1,0 +1,128 @@
+/*
+Theme Name: Lumina - قالب فروشگاهی لومینا
+Theme URI: https://lumina.io
+Author: Lumina Studio
+Author URI: https://lumina.io
+Description: قالب فروشگاهی فوق‌العاده مدرن، شیک و سریع لومینا با طراحی اختصاصی ایرانی، راست‌چین (RTL)، تایپوگرافی فارسی وزیرمتن، سازگاری کامل با ووکامرس، تم تاریک و روشن، سبد خرید اسلایدی، اسکرول نامحدود و پنل تنظیمات پیشرفته در پیشخوان وردپرس.
+Version: 2.5.0
+Requires at least: 5.8
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: lumina
+Domain Path: /languages
+Tags: e-commerce, custom-colors, custom-menu, featured-images, full-width-template, rtl-language-support, theme-options, translation-ready, woocommerce
+*/
+
+/* -------------------------------------------------------------
+ * WordPress Required Core Classes & Layout Resets
+ * ----------------------------------------------------------- */
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+  background-color: #f1f1f1;
+  border-radius: 3px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+  clip: auto !important;
+  clip-path: none;
+  color: #21759b;
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  height: auto;
+  left: 5px;
+  line-height: normal;
+  padding: 15px 23px 14px;
+  text-decoration: none;
+  top: 5px;
+  width: auto;
+  z-index: 100000;
+}
+
+.alignnone {
+  margin: 5px 20px 20px 0;
+}
+
+.aligncenter,
+div.aligncenter {
+  display: block;
+  margin: 5px auto 5px auto;
+}
+
+.alignright {
+  float: right;
+  margin: 5px 0 20px 20px;
+}
+
+.alignleft {
+  float: left;
+  margin: 5px 20px 20px 0;
+}
+
+.alignwide {
+  max-width: 1280px;
+  width: 100%;
+}
+
+.alignfull {
+  max-width: 100%;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+.wp-caption {
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  max-width: 96%;
+  padding: 5px 3px 10px;
+  text-align: center;
+}
+
+.wp-caption.alignnone {
+  margin: 5px 20px 20px 0;
+}
+
+.wp-caption.alignleft {
+  margin: 5px 20px 20px 0;
+}
+
+.wp-caption.alignright {
+  margin: 5px 0 20px 20px;
+}
+
+.wp-caption img {
+  border: 0 none;
+  height: auto;
+  margin: 0;
+  max-width: 98.5%;
+  padding: 0;
+  width: auto;
+}
+
+.wp-caption p.wp-caption-text {
+  font-size: 11px;
+  line-height: 17px;
+  margin: 0;
+  padding: 0 4px 5px;
+}
+
+.gallery-caption {
+  font-size: 12px;
+}
+
+.bypostauthor {
+  font-weight: bold;
+}
