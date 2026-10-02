@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StoreProvider, useStore } from './context/StoreContext';
 import { AppShell } from './components/layout/AppShell';
 import { Hero } from './components/Hero';
-import { FeaturedCategories } from './components/FeaturedCategories';
 import { FeaturedProducts } from './components/FeaturedProducts';
 import { PromotionalBanners } from './components/PromotionalBanners';
 import { NewArrivalsSection } from './components/NewArrivalsSection';
@@ -53,7 +52,6 @@ const MainContent: React.FC<MainContentProps> = ({ onGoToAdmin }) => {
           <>
             <FestivalBanner />
             <Hero />
-            <FeaturedCategories />
             <FeaturedProducts />
             <PromotionalBanners />
             <NewArrivalsSection />
